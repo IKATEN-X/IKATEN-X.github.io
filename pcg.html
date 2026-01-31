@@ -1,0 +1,1677 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTML-based Standalone PCG Editor for MSX</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" referrerpolicy="no-referrer" />
+  <style>
+  *,
+*:before,
+*:after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+html {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 62.5%;/*rem算出をしやすくするために*/
+}
+
+.btn,
+a.btn,
+button.btn {
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.5;
+  position: relative;
+  display: inline-block;
+  padding: 0.6rem 1.6rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.2s;
+  text-align: center;
+  vertical-align: middle;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  color: #212529;
+  border-radius: 0.5rem;
+}
+
+.btn--orange,
+a.btn--orange {
+  color: #fff;
+  background-color: #cedaff;
+}
+.btn--orange:hover,
+a.btn--orange:hover {
+  color: #fff;
+  background: #f56500;
+}
+.btn--orange:disabled,
+a.btn--orange:disabled {
+  color: #fff;
+  background: #cedaff;
+  cursor:auto ;
+}
+.title {font-size: 2em; font-weight: bold;}
+    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 0; background:#f4f6f8; }
+    .header { margin-left: 10px; margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: #fff;}
+    .filePanel { margin-left: 10px; margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: #ddcf96;}
+    .wrap{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+      align-items: flex-start;
+    }
+    .panel{
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      background: #e5d3d3;
+
+      /* responsive */
+      flex: 1 1 360px;
+      min-width: 320px;
+      max-width: 520px;
+    
+      box-sizing: border-box;
+    }
+    .editPanel{
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      background: #b7c9cb;
+
+      /* responsive */
+      flex: 2 1 750px;
+      min-width: 320px;
+      max-width: 750px;
+      box-sizing: border-box;
+    }
+    .mapPanel{
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      background: #8eb1ff;
+
+      /* responsive */
+      flex: 2 1 750px;
+      min-width: 320px;
+      max-width: 750px;
+      box-sizing: border-box;
+    }
+    .fileGrid {  display:grid;  grid-template-columns: 175px 550px; grid-template-rows: 20px 50px; }
+    h2 { font-size: 14px; margin: 0 0 8px; }
+    label { display: inline-block; font-size: 12px; margin-right: 8px; }
+    select, button, input[type="checkbox"] { font-size: 12px; }
+    button { padding: 6px 10px; margin: 2px 3px 4px 0; cursor: pointer; }
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
+    .tiny { font-size: 11px; color: #555; line-height: 1.35; }
+    canvas { image-rendering: pixelated; border: 1px solid #ccc; background:#fff; }
+    .grid { display: grid; grid-template-columns: repeat(16, 1fr);gap: 2px;}
+    .thumb { aspect-ratio: 1/1; border: 1px solid #ddd;  cursor: pointer; background: #fafafa; display:flex; align-items:center; justify-content:center; }
+    .thumb.sel { outline: 2px solid #2b6cff; }
+    .thumb canvas { width: 100%; height: 100%; border: 0; }
+    .rowsColor .hdr { font-size: 12px; color:#333; font-weight: 600; }
+    .rowsColor .r { font-size: 12px; text-align:right; color:#444; }
+    .palette { display:grid; grid-template-columns: repeat(8, 1fr); gap:4px; margin-top:8px; }
+    .sw { height: 18px; border-radius: 4px; border: 1px solid #ccc; }
+    .sw[data-i="0"] { outline: 2px dashed #aaa; }
+    .hint { padding:8px; border:1px solid #e3e6ea; border-radius:8px; background:#fbfcfe; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; padding: 1px 6px; border:1px solid #cfd6dd; border-bottom-width: 2px; border-radius: 6px; background:#fff; }
+    .hr { height:1px; background:#e6e9ee; margin:10px 0; }
+    .ok { color:#0a7a34; font-weight: 600; }
+    .bad { color:#b00020; font-weight: 700; }
+    .label { font-size: 14px; color: black; line-height: 1.35;}
+  
+ .rowsEdit{
+      display:grid;
+      grid-template-columns: 256px 256px 120px;
+      grid-template-rows: 20px 256px;
+      gap: 0px 6px;
+      justify-items:start;
+      height: 256px; /* match 8x8 editor height */
+      margin-left: 8px;
+      height: 285px;
+    }
+
+
+    /* Row color selectors aligned to 8x8 grid */
+    .rowsColor{
+      display:grid;
+      grid-template-columns: 56px 56px;
+      grid-template-rows: repeat(8, 32px);
+      gap: 0px 6px;
+      align-items:center;
+      justify-items:start;
+      height: 256px; /* match 8x8 editor height */
+      margin-left: 8px;
+    }
+    .rowsColor .hdr{ align-self:end; padding-bottom:4px; }
+    .rowsColor .r{
+      height:32px;
+      line-height:32px;
+      text-align:right;
+      padding-right:4px;
+    }
+    .rowsColor select{
+      width: 56px;            /* minimum practical width */
+      padding: 2px 4px;
+      font-size: 12px;
+    }
+
+  
+    /* 16x16 thumbnail grid with hex headers */
+    .thumbFrame{
+      display:grid;
+      grid-template-columns: 18px repeat(16, 1fr);
+      grid-template-rows: 18px repeat(16, auto);
+      gap: 2px;
+      align-items: stretch;
+    }
+    .thumbFrame .hex{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 11px;
+      color: #666;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      user-select:none;
+    }
+    .thumbFrame .hex.corner{ background: transparent; }
+    .thumbFrame #thumbGrid{
+      grid-column: 2 / span 16;
+      grid-row: 2 / span 16;
+      margin-top: 0 !important;
+    }
+
+  
+    /* Collapsible top Import/Export block */
+    .ioToggleBtn{
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      border: 1px solid #d6dbe1;
+      border-radius: 10px;
+      background: #f7f9fc;
+      cursor: pointer;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      box-sizing:border-box;
+    }
+    .ioBlock{ margin-top: 8px; }
+    .ioBlock.isHidden{ display:none; }
+    .ioChevron{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#666; }
+
+  
+    /* Backdrop select */
+    #backdropSel{
+      padding: 2px 4px;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+
+  
+  /* Font Awesome icon buttons */
+  button i { margin-right: 6px; }
+  .btnText { vertical-align: middle; }
+
+
+    /* Thumbnail drag & drop swap */
+    .thumb.dragSrc { outline: 2px dashed #ff9800; }
+    .thumb.dragOver { outline: 2px solid #ff9800; background:#fff7e6; }
+
+
+    /* Responsive: stack on narrower screens */
+    @media (max-width: 1200px){
+      .panel{ max-width: none; }
+      .editPanel, .mapPanel{ max-width: none; }
+    }
+    @media (max-width: 900px){
+      .panel, .editPanel, .mapPanel{
+        flex: 1 1 100%;
+        min-width: 0;
+        width: 100%;
+      }
+    }
+
+
+    /* Responsive canvas: fit within panel (smartphone portrait) */
+    @media (max-width: 900px){
+      .editPanel canvas,
+      .mapPanel canvas{
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+    }
+
+
+    /* Extra narrow screens: stack 8x8 editor columns to avoid overflow */
+    @media (max-width: 520px){
+      .rowsEdit{
+        display:flex;
+        flex-direction:column;
+        gap: 10px;
+        height:auto;
+        margin-left:0;
+      }
+      .rowsEdit .label{ display:none; }
+      #prev, #edit{
+        width: 100%;
+        height: auto;
+        max-width: 360px;
+      }
+      .rowsColor{
+        margin-left:0;
+        height:auto;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(8, auto);
+        gap: 6px 10px;
+      }
+      .rowsColor select{
+        width: 100%;
+      }
+    }
+
+
+    /* Import/Export: fit buttons on narrow screens */
+    @media (max-width: 520px){
+      .fileGrid{
+        display: grid;
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto !important;
+        gap: 10px !important;
+        align-items: start;
+      }
+      .fileGrid h2{
+        margin: 0;
+      }
+      .fileGrid h2:nth-of-type(2){
+        display:none; /* hide the "個別" header in stacked mode */
+      }
+      .fileGrid > div{
+        width: 100%;
+      }
+      .fileGrid .btn{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+      /* When multiple buttons are in one cell, stack them */
+      .fileGrid > div > button + input + button,
+      .fileGrid > div > button + button{
+        margin-top: 8px;
+      }
+    }
+
+
+    /* Active row marker (left of edit grid) */
+    .editOuter{
+      position: relative;
+      display: inline-block;
+    }
+    .rowMarker{
+      position: absolute;
+      right: -14px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 12px solid #ff9800;
+      transform: translateY(-50%);
+      pointer-events: none;
+      opacity: 0.95;
+    }
+    @media (max-width: 520px){
+      .rowMarker{ right: -12px; border-top-width: 7px; border-bottom-width: 7px; border-left-width: 10px; }
+    }
+
+</style>
+</head>
+<body>
+<div class="header title">HTML-based Standalone PCG Editor for MSX
+  <div class="filePanel">
+    <button id="ioTopToggle" class="ioToggleBtn" type="button">
+      <i class="fa-solid fa-right-left"></i>
+      <span>Import / Export</span>
+      <span id="ioTopChevron" class="ioChevron">▶</span>
+    </button>
+    <div id="ioTopBlock" class="ioBlock isHidden">
+      <div class="header">
+        <div class="hint tiny" style="margin-bottom:6px;">
+        インポートのSC2ファイルは、BLOAD形式を読み込んでください。エクスポートも同様にBLOAD形式が出力されます。<br />
+        個別はBLOAD形式ではなく、データーのみのバイナリファイルです。<br />
+        ファイルサイズもチェックしています(pattern/color:6144バイト,name:768バイト)ので、合わせてから読み込ませてください。
+        </div>
+        <div class=" fileGrid">
+          <h2>インポート</h2>
+          <h2>個別</h2>
+          <div>
+            <button id="impSc2Btn" title="SC2 Import（pcg.sc2）" aria-label="SC2 Import" class="btn btn--orange">
+              <i class="fa-solid fa-file-import"></i>
+              <span class="btnText">SC2 Import</span>
+            </button>
+            <input id="impSc2" type="file" accept=".sc2,.bin,application/octet-stream" style="display:none;">
+          </div>
+          <div>
+            <button id="impPatternBtn" title="pattern.bin" aria-label="pattern.bin 取込" class="btn btn--orange">
+              <i class="fa-solid fa-file-arrow-up"></i>
+              <span class="btnText">pattern.bin 取込</span>
+            </button>
+            <input id="impPattern" type="file" accept=".bin,application/octet-stream" style="display:none;">
+            <button id="impColorBtn" title="color.bin" aria-label="color.bin 取込" class="btn btn--orange">
+              <i class="fa-solid fa-palette"></i>
+              <span class="btnText">color.bin 取込</span>
+            </button>
+            <input id="impColor" type="file" accept=".bin,application/octet-stream" style="display:none;">
+            <button id="impNameBtn" title="name.bin" aria-label="name.bin 取込" class="btn btn--orange">
+              <i class="fa-solid fa-table-cells"></i>
+              <span class="btnText">name.bin 取込</span>
+            </button>
+            <input id="impName" type="file" accept=".bin,application/octet-stream" style="display:none;">
+          </div>
+        </div>
+        <div class="fileGrid">
+          <h2>エクスポート</h2>
+          <h2>個別</h2>
+          <div>
+            <button id="expSc2" title="SC2 Export（pcg.sc2）" aria-label="SC2 Export" class="btn btn--orange">
+              <i class="fa-solid fa-file-export"></i>
+              <span class="btnText">SC2 Export</span>
+            </button>
+          </div>
+          <div>
+            <button id="expPattern" title="pattern.bin" aria-label="pattern.bin 出力" class="btn btn--orange">
+              <i class="fa-solid fa-file-arrow-down"></i>
+              <span class="btnText">pattern.bin 出力</span>
+            </button>
+            <button id="expColor" title="color.bin" aria-label="color.bin 出力" class="btn btn--orange">
+              <i class="fa-solid fa-palette"></i>
+              <span class="btnText">color.bin 出力</span>
+            </button>
+            <button id="expName" title="name.bin" aria-label="name.bin 出力" class="btn btn--orange">
+              <i class="fa-solid fa-table-cells"></i>
+              <span class="btnText">name.bin 出力</span>
+            </button>
+          </div>
+        </div>
+        <div>状態:
+          <span id="status" class="ok">OK</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <!-- Left: 16x16 thumbnails -->
+    <div class="panel">
+      <h2>文字一覧</h2>
+      <div class="hint tiny" style="margin-bottom:6px;">
+        サムネイルをドラッグ＆ドロップ>すると文字を入れ替えできます。<br />
+        バンク連動中は全てのバンクに編集結果が反映します。
+      </div>
+      <div class="row">
+        <label>バンク
+          <select id="bankSel">
+            <option value="0">0 (上64ライン)</option>
+            <option value="1">1 (中64ライン)</option>
+            <option value="2">2 (下64ライン)</option>
+          </select>
+        </label>
+        <label title="ONにすると編集を3バンクへ同時反映">
+          <input type="checkbox" id="linkBanks" checked>バンク連動</label>
+      </div>
+      <div class="row" style="margin-top:6px;">
+        <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
+          <i class="fa-regular fa-copy"></i>
+          <span class="btnText">コピー</span>
+        </button>
+        <button id="pasteBtn" title="ペースト" aria-label="ペースト" class="btn btn--orange">
+          <i class="fa-solid fa-paste"></i>
+          <span class="btnText">ペースト</span>
+        </button>
+        <span class="tiny" id="clipInfo">クリップ: なし</span>
+      </div>
+      <div class="thumbFrame" style="margin-top:10px;">
+        <div class="hex corner">
+        </div>
+        <div class="hex top">0</div>
+        <div class="hex top">1</div>
+        <div class="hex top">2</div>
+        <div class="hex top">3</div>
+        <div class="hex top">4</div>
+        <div class="hex top">5</div>
+        <div class="hex top">6</div>
+        <div class="hex top">7</div>
+        <div class="hex top">8</div>
+        <div class="hex top">9</div>
+        <div class="hex top">A</div>
+        <div class="hex top">B</div>
+        <div class="hex top">C</div>
+        <div class="hex top">D</div>
+        <div class="hex top">E</div>
+        <div class="hex top">F</div>
+        <div class="hex left">0</div>
+        <div class="hex left">1</div>
+        <div class="hex left">2</div>
+        <div class="hex left">3</div>
+        <div class="hex left">4</div>
+        <div class="hex left">5</div>
+        <div class="hex left">6</div>
+        <div class="hex left">7</div>
+        <div class="hex left">8</div>
+        <div class="hex left">9</div>
+        <div class="hex left">A</div>
+        <div class="hex left">B</div>
+        <div class="hex left">C</div>
+        <div class="hex left">D</div>
+        <div class="hex left">E</div>
+        <div class="hex left">F</div>
+        <div id="thumbGrid" class="grid">
+        </div>
+      </div>
+    </div>
+    <!-- Center: editor + preview + map -->
+    <div class="editPanel">
+      <h2>8×8 編集</h2>
+      <div class="row">
+        <label>文字コード
+          <select id="charSel">
+          </select>
+        </label>
+      </div>
+      <div class="rowsEdit">
+        <div class="label">適用プレビュー</div>
+        <div class="label">ビット編集(1/0)</div>
+        <div class="label">色(FG/BG)</div>
+        <canvas id="prev" width="256" height="256" title="プレビュー（行ごと2色）">
+        </canvas>
+        <div class="editOuter">
+          <div id="rowMarker" class="rowMarker" title="編集中の行"></div>
+          <canvas id="edit" width="256" height="256" title="クリックでON/OFF"></canvas>
+        </div>
+        <div class="rowsColor" id="rowsColor">
+        </div>
+      </div>
+      <div>
+        <h2 style="margin-top:12px;">MSX1パレット(近似)</h2>
+        <div class="row tiny" style="margin-top:6px; align-items:center;">
+          <label>背景色
+            <select id="backdropSel" style="width:72px;">
+            </select>
+          </label>
+          <span>※ 色0はこの色で描画されます</span>
+        </div>
+        <div class="palette" id="pal">
+        </div>
+        <div class="tiny">編集行の色を 左:FG / 右:BG で適用</div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="btn btn--orange">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span class="btnText">Undo</span>
+        </button>
+        <button id="redoBtn" title="Redo (Ctrl+Y / Ctrl+Shift+Z)" aria-label="Redo" class="btn btn--orange">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span class="btnText">Redo</span>
+        </button>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button id="clearBtn" title="クリア" aria-label="クリア" class="btn btn--orange">
+          <i class="fa-solid fa-eraser"></i>
+          <span class="btnText">クリア</span>
+        </button>
+        <button id="invBtn" title="反転(1↔0)" aria-label="反転(1↔0)" class="btn btn--orange">
+          <i class="fa-solid fa-right-left"></i>
+          <span class="btnText">反転(1↔0)</span>
+        </button>
+        <button id="flipHBtn" title="左右反転" aria-label="左右反転" class="btn btn--orange">
+          <i class="fa-solid fa-arrows-left-right"></i>
+          <span class="btnText">左右反転</span>
+        </button>
+        <button id="flipVBtn" title="上下反転" aria-label="上下反転" class="btn btn--orange">
+          <i class="fa-solid fa-arrows-up-down"></i>
+          <span class="btnText">上下反転</span>
+        </button>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <button id="shiftLBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span class="btnText">ローテート</span>
+        </button>
+        <button id="shiftRBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+          <i class="fa-solid fa-arrow-right"></i>
+          <span class="btnText">ローテート</span>
+        </button>
+        <button id="shiftUBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+          <i class="fa-solid fa-arrow-up"></i>
+          <span class="btnText">ローテート</span>
+        </button>
+        <button id="shiftDBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+          <i class="fa-solid fa-arrow-down"></i>
+          <span class="btnText">ローテート</span>
+        </button>
+      </div>
+    </div>
+    <div class="mapPanel">
+      <h2 style="margin-top:14px;">マップ (32×24) : Name Table
+        <span id="mapCoord" class="tiny" style="margin-left:10px;">(x: -, y: -)</span>
+      </h2>
+      <div class="row">
+        <canvas id="map" width="640" height="480" title="左クリック:配置 / 右クリック:消去 / Shift+クリック:スポイト">
+        </canvas>
+      </div>
+      <div class="row">
+        <button id="mapClear" title="マップクリア" aria-label="マップクリア" class="btn btn--orange">
+          <i class="fa-solid fa-broom"></i>
+          <span class="btnText">マップクリア</span>
+        </button>
+      </div>
+      <div class="hint tiny">操作：
+        <span class="kbd">左クリック</span>文字配置 /
+        <span class="kbd">右クリック</span>消去(0) /
+        <span class="kbd">Shift</span>+
+        <span class="kbd">クリック</span>スポイト（そのセルの文字を選択）
+        <br>描画参照：行0-7→bank0、行8-15→bank1、行16-23→bank2
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+
+  // ===== Undo / Redo =====
+  const undoBtn = document.getElementById('undoBtn');
+  const redoBtn = document.getElementById('redoBtn');
+
+  const undoStack = [];
+  const redoStack = [];
+  const MAX_HISTORY = 200;
+
+  // Transaction groups a drag (or multi-step op) into one undo item
+  let tx = null;
+
+  function snapshotState(){
+    return {
+      pattern: new Uint8Array(pattern),
+      color: new Uint8Array(color),
+      nameTable: new Uint8Array(nameTable),
+      backdropIdx,
+      curBank,
+      curChar
+    };
+  }
+
+  function restoreState(st){
+    if (!st) return;
+    pattern.set(st.pattern);
+    color.set(st.color);
+    nameTable.set(st.nameTable);
+    backdropIdx = st.backdropIdx ?? backdropIdx;
+    curBank = st.curBank ?? curBank;
+    curChar = st.curChar ?? curChar;
+
+    bankSel.value = String(curBank);
+    charSel.value = String(curChar);
+
+    if (backdropSel){
+      backdropSel.value = String(backdropIdx);
+    setSelectColorStyle(backdropSel, backdropIdx);
+      setSelectColorStyle(backdropSel, backdropIdx);
+    }
+
+    syncRowUI();
+    redrawAll();
+  updateRowMarker();
+    drawMap();
+    updateUndoRedoUI();
+  }
+
+  function beginTx(label){
+    if (tx) return;
+    tx = { label: label || 'Edit', before: snapshotState(), changed: false };
+  }
+  function markTxChanged(){
+    if (tx) tx.changed = true;
+  }
+  function endTx(){
+    if (!tx) return;
+    if (tx.changed){
+      undoStack.push(tx.before);
+      if (undoStack.length > MAX_HISTORY) undoStack.shift();
+      redoStack.length = 0;
+    }
+    tx = null;
+    updateUndoRedoUI();
+  }
+
+  function updateUndoRedoUI(){
+    if (undoBtn) undoBtn.disabled = (undoStack.length === 0) || !!tx;
+    if (redoBtn) redoBtn.disabled = (redoStack.length === 0) || !!tx;
+  }
+
+  function doUndo(){
+    if (tx) endTx();
+    if (undoStack.length === 0) return;
+    const cur = snapshotState();
+    const prev = undoStack.pop();
+    redoStack.push(cur);
+    restoreState(prev);
+  }
+
+  function doRedo(){
+    if (tx) endTx();
+    if (redoStack.length === 0) return;
+    const cur = snapshotState();
+    const nxt = redoStack.pop();
+    undoStack.push(cur);
+    restoreState(nxt);
+  }
+
+  if (undoBtn) undoBtn.addEventListener('click', doUndo);
+  if (redoBtn) redoBtn.addEventListener('click', doRedo);
+
+  // Keyboard: Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z
+  window.addEventListener('keydown', (e) => {
+    const z = (e.key === 'z' || e.key === 'Z');
+    const y = (e.key === 'y' || e.key === 'Y');
+    if (!e.ctrlKey) return;
+    if (z && !e.shiftKey){
+      e.preventDefault(); doUndo();
+    } else if (y || (z && e.shiftKey)){
+      e.preventDefault(); doRedo();
+    }
+  });
+
+  // ===== Embedded default font (3 banks, 256 chars each, 6144 bytes) =====
+  const DEFAULT_FONT_B64 = "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";
+  function decodeB64ToU8(b64s){
+    const bin = atob(b64s);
+    const out = new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i) & 0xFF;
+    return out;
+  }
+
+  // ===== Sizes =====
+  const PAT_SIZE = 6144;
+  const COL_SIZE = 6144;
+  const NAM_SIZE = 768;
+
+  // ===== SC2 (BLOAD,S VRAM) Header / Layout =====
+  const SC2_FILENAME = 'pcg.sc2';
+
+  // Header: FE 00 00 FF 37 00 00
+  const MSX_BINHDR_SIZE = 7;
+  const MSX_LOAD_START = 0x0000;
+  const MSX_LOAD_END   = 0x37FF; // inclusive
+  const MSX_EXEC_ADDR  = 0x0000;
+
+  const MSX_PAYLOAD_SIZE = (MSX_LOAD_END - MSX_LOAD_START + 1); // 0x3800 = 14336
+  const SC2_TOTAL = MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE;
+
+  // SCREEN2 default VRAM layout for this tool
+  const VRAM_PAT_OFF  = 0x0000; // 6144
+  const VRAM_NAME_OFF = 0x1800; // 768
+  const VRAM_COL_OFF  = 0x2000; // 6144
+
+  // ===== MSX1 palette (approx) =====
+  const MSX = [
+    [0,0,0],[0,0,0],[33,200,66],[94,220,120],
+    [84,85,237],[125,118,252],[212,82,77],[66,235,245],
+    [252,85,84],[255,121,120],[212,193,84],[230,206,128],
+    [33,176,59],[201,91,186],[204,204,204],[255,255,255]
+  ];
+  const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+  // Backdrop color (MSX VDP reg7 lower nibble equivalent): used when FG/BG nibble is 0
+  let backdropIdx = 4; // default: dark blue-ish (more MSX-like than black)
+  function effIdx(idx){
+    idx = idx & 15;
+    return (idx === 0) ? backdropIdx : idx;
+  }
+
+
+  // ===== Data =====
+  const pattern = new Uint8Array(PAT_SIZE);
+  const color   = new Uint8Array(COL_SIZE);
+  const nameTable = new Uint8Array(NAM_SIZE);
+
+  // init colors default (ink=15, paper=1)
+  for (let i=0; i<COL_SIZE; i++) color[i] = (15<<4) | 0;
+
+
+  // Load embedded default font into PCG patterns (bank0..2)
+  (function loadDefaultFont(){
+    try{
+      const buf = decodeB64ToU8(DEFAULT_FONT_B64);
+      if (buf.length !== PAT_SIZE){
+        console.warn('DEFAULT_FONT size mismatch', buf.length);
+        return;
+      }
+      pattern.set(buf); // bank0..2 contiguous
+    }catch(err){
+      console.warn('DEFAULT_FONT decode failed', err);
+    }
+  })();
+
+  // ===== UI =====
+  const bankSel   = document.getElementById('bankSel');
+  const linkBanks = document.getElementById('linkBanks');
+  const charSel   = document.getElementById('charSel');
+
+  const editCv    = document.getElementById('edit');
+  const prevCv    = document.getElementById('prev');
+  const mapCv     = document.getElementById('map');
+
+  const mapCoordEl = document.getElementById('mapCoord');
+  function setMapCoordText(mx, my){
+    if (mx < 0 || my < 0) mapCoordEl.textContent = '(x: -, y: -)';
+    else mapCoordEl.textContent = `(x: ${mx}, y: ${my})`;
+  }
+  function mapCoordFromEvent(e){
+    // Use the same coordinate mapping as map editing to stay correct under CSS scaling
+    return mapCoordsFromEvent(e);
+  }
+
+  const ectx = editCv.getContext('2d');
+  const pctx = prevCv.getContext('2d');
+  const mctx = mapCv.getContext('2d');
+
+  const thumbGrid = document.getElementById('thumbGrid');
+  const rowsColor = document.getElementById('rowsColor');
+  const palDiv    = document.getElementById('pal');
+  const backdropSel = document.getElementById('backdropSel');
+const statusEl  = document.getElementById('status');
+
+  // ===== Collapsible top Import/Export =====
+  const ioTopToggle = document.getElementById('ioTopToggle');
+  const ioTopBlock  = document.getElementById('ioTopBlock');
+  const ioTopChevron= document.getElementById('ioTopChevron');
+  if (ioTopToggle && ioTopBlock && ioTopChevron){
+    ioTopToggle.addEventListener('click', () => {
+      const hidden = ioTopBlock.classList.toggle('isHidden');
+      ioTopChevron.textContent = hidden ? '▶' : '▼';
+    });
+  }
+
+  // Export/Import controls
+  const expSc2Btn = document.getElementById('expSc2');
+  const impSc2Btn = document.getElementById('impSc2Btn');
+  const impSc2Inp = document.getElementById('impSc2');
+
+  const impPatternBtn = document.getElementById('impPatternBtn');
+  const impColorBtn   = document.getElementById('impColorBtn');
+  const impNameBtn    = document.getElementById('impNameBtn');
+  const impPatternInp = document.getElementById('impPattern');
+  const impColorInp   = document.getElementById('impColor');
+  const impNameInp    = document.getElementById('impName');
+
+  // ===== State =====
+  const CELL = 32;      // 256/8
+  const TH_SIZE = 16;
+  let curBank = 0;
+  let curChar = 0;
+  let clip = null;
+  let activeRow = 0; // last touched row (0-7)
+
+  const rowMarkerEl = document.getElementById('rowMarker');
+  function updateRowMarker(){
+    if (!rowMarkerEl) return;
+    // place at center of active row (0..7)
+    rowMarkerEl.style.top = ((activeRow + 0.5) * 100 / 8) + '%';
+  }
+  // ===== Helpers =====
+  const addr = (bank, ch, row) => bank*2048 + ch*8 + row;
+  const clampNibble = (n) => Math.max(0, Math.min(15, n|0));
+
+  function setStatus(msg, ok=true){
+    statusEl.textContent = msg;
+    statusEl.className = ok ? 'ok' : 'bad';
+  }
+
+  function getRowPattern(bank, ch, row){ return pattern[addr(bank,ch,row)]; }
+  function setRowPattern(bank, ch, row, v){ pattern[addr(bank,ch,row)] = v & 0xFF; }
+  function getRowColor(bank, ch, row){ return color[addr(bank,ch,row)]; }
+  function setRowColor(bank, ch, row, v){ color[addr(bank,ch,row)] = v & 0xFF; }
+
+  function applyToBanks(fn){
+    if (linkBanks.checked) for (let b=0;b<3;b++) fn(b);
+    else fn(curBank);
+  }
+
+  function downloadBytes(bytes, filename){
+    const blob = new Blob([bytes], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  async function readFileToUint8(file){
+    return new Uint8Array(await file.arrayBuffer());
+  }
+
+  function importInto(target, bytes, expectedSize, label){
+    if (bytes.byteLength !== expectedSize){
+      alert(`${label} のサイズが違います。\n期待: ${expectedSize} bytes\n実際: ${bytes.byteLength} bytes`);
+      setStatus(`${label} import NG`, false);
+      return false;
+    }
+    target.set(bytes);
+    setStatus(`${label} import OK`);
+    return true;
+  }
+
+  // ===== Build char select =====
+  for (let i=0; i<256; i++){
+    const o = document.createElement('option');
+    o.value = String(i);
+    o.textContent = i.toString(10).padStart(3,'0') + ` (0x${i.toString(16).toUpperCase().padStart(2,'0')})`;
+    charSel.appendChild(o);
+  }
+
+  // ===== Row color selects =====
+  function setSelectColorStyle(sel, idx){
+    // Give the select itself a preview color (works in most browsers)
+    sel.style.background = rgb(MSX[effIdx(idx)]);
+    // Choose text color based on luminance
+    const c = MSX[idx];
+    const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+    sel.style.color = (lum < 140) ? '#fff' : '#111';
+  }
+
+  function fillColorOptions(sel){
+    sel.innerHTML = '';
+    for (let i=0; i<16; i++){
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = String(i).padStart(2,'0');
+      // Option styling (supported on many browsers; if ignored, text still works)
+      o.style.background = rgb(MSX[effIdx(i)]);
+      const c = MSX[i];
+      const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+      o.style.color = (lum < 140) ? '#fff' : '#111';
+      sel.appendChild(o);
+    }
+  }
+
+  const inkSel = [];
+  const papSel = [];
+  for (let r=0; r<8; r++){
+    const si = document.createElement('select');
+    const sp = document.createElement('select');
+    fillColorOptions(si);
+    fillColorOptions(sp);
+    inkSel.push(si); papSel.push(sp);
+    setSelectColorStyle(si, 15);
+    setSelectColorStyle(sp, 1);
+
+    const onChange = () => {
+      beginTx('Row color');
+      const ink = clampNibble(parseInt(si.value,10));
+      const pap = clampNibble(parseInt(sp.value,10));
+      setSelectColorStyle(si, ink);
+      setSelectColorStyle(sp, pap);
+      applyToBanks((b) => setRowColor(b, curChar, r, (ink<<4)|pap));
+      markTxChanged();
+      redrawAll();
+      endTx();
+    };
+    si.addEventListener('change', onChange);
+    sp.addEventListener('change', onChange);
+
+    // Track last touched row for palette targeting
+    const setActive = () => { activeRow = r;
+      updateRowMarker(); };
+    si.addEventListener('pointerdown', setActive);
+    sp.addEventListener('pointerdown', setActive);
+    si.addEventListener('focus', setActive);
+    sp.addEventListener('focus', setActive);
+
+    rowsColor.appendChild(si);
+    rowsColor.appendChild(sp);
+  }
+
+  // ===== Palette UI =====
+  // Right click menu suppress (so BG assignment via right click works)
+  palDiv.addEventListener('contextmenu', (e) => e.preventDefault());
+  for (let i=0; i<16; i++){
+    const d = document.createElement('div');
+    d.className = 'sw';
+    d.dataset.i = String(i);
+    d.style.background = rgb(MSX[i]);
+    d.title = `Color ${i}`;
+
+    // 左クリック=FG / 右クリック=BG を、選択中Rowへ即反映
+    d.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const row = activeRow;
+      const col = i & 15;
+      if (e.button === 2) {
+        // BG
+        papSel[row].value = String(col);
+      } else {
+        // FG
+        inkSel[row].value = String(col);
+      }
+      // 既存のchange処理に任せて反映（バンク連動・再描画含む）
+      inkSel[row].dispatchEvent(new Event('change'));
+    });
+
+    palDiv.appendChild(d);
+  }
+
+  // ===== Backdrop (color 0) selector =====
+  (function initBackdrop(){
+    if (!backdropSel) return;
+
+    // populate 0..15
+    backdropSel.innerHTML = '';
+    for (let i=0; i<16; i++){
+      const o = document.createElement('option');
+      o.value = String(i);
+      o.textContent = String(i).padStart(2,'0');
+      o.style.background = rgb(MSX[i]);
+      const c = MSX[i];
+      const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+      o.style.color = (lum < 140) ? '#fff' : '#111';
+      backdropSel.appendChild(o);
+    }
+    backdropSel.value = String(backdropIdx);
+    setSelectColorStyle(backdropSel, backdropIdx);
+
+    const refreshAllSelectOptions = () => {
+      // Refill options so option[0] uses new backdrop preview color
+      for (let r=0; r<8; r++){
+        fillColorOptions(inkSel[r]);
+        fillColorOptions(papSel[r]);
+        const cb = getRowColor(curBank, curChar, r);
+        inkSel[r].value = String((cb>>4)&15);
+        papSel[r].value = String(cb&15);
+        setSelectColorStyle(inkSel[r], (cb>>4)&15);
+        setSelectColorStyle(papSel[r], cb&15);
+      }
+    };
+
+    backdropSel.addEventListener('change', () => {
+      beginTx('Backdrop');
+      backdropIdx = clampNibble(parseInt(backdropSel.value,10));
+      setSelectColorStyle(backdropSel, backdropIdx);
+      markTxChanged();
+      refreshAllSelectOptions();
+      redrawAll();
+      endTx();
+    });
+  })();
+
+
+  // ===== Thumbnails =====
+  const thCanvases = [];
+// Drag & drop swap (HTML5 DnD)
+  let dragSrcChar = -1;
+
+  function swapChars(a, b){
+    a &= 0xFF; b &= 0xFF;
+    if (a === b) return;
+
+    beginTx('Swap chars');
+
+    applyToBanks((bank)=> {
+      const tp = new Uint8Array(8);
+      const tc = new Uint8Array(8);
+      for (let r=0; r<8; r++){
+        tp[r] = getRowPattern(bank, a, r);
+        tc[r] = getRowColor(bank, a, r);
+      }
+      for (let r=0; r<8; r++){
+        setRowPattern(bank, a, r, getRowPattern(bank, b, r));
+        setRowColor  (bank, a, r, getRowColor  (bank, b, r));
+      }
+      for (let r=0; r<8; r++){
+        setRowPattern(bank, b, r, tp[r]);
+        setRowColor  (bank, b, r, tc[r]);
+      }
+    });
+
+    
+    // Keep map appearance: swap indices A<->B in nameTable
+    for (let i = 0; i < nameTable.length; i++){
+      const v = nameTable[i] & 0xFF;
+      if (v === a) {
+        nameTable[i] = b;
+      } else if (v === b) {
+        nameTable[i] = a;
+      }
+    }
+
+    markTxChanged();
+    syncRowUI();
+    redrawAll();
+    drawMap();
+    endTx();
+  }
+  function makeThumb(i){
+    const box = document.createElement('div');
+    box.className = 'thumb';
+    box.dataset.idx = String(i);
+    box.draggable = true;
+
+    const c = document.createElement('canvas');
+    c.width = TH_SIZE; c.height = TH_SIZE;
+    box.appendChild(c);
+
+    // click selects
+    box.addEventListener('click', () => {
+      curChar = i;
+      charSel.value = String(i);
+      syncRowUI();
+      redrawAll();
+    });
+
+    // HTML5 drag & drop swap
+    box.addEventListener('dragstart', (e) => {
+      dragSrcChar = i;
+      box.classList.add('dragSrc');
+      if (e.dataTransfer){
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(i));
+      }
+    });
+
+    box.addEventListener('dragend', () => {
+      dragSrcChar = -1;
+      box.classList.remove('dragSrc');
+      // clear highlights
+      for (let k=0;k<thCanvases.length;k++){
+        thCanvases[k].box.classList.remove('dragOver');
+        thCanvases[k].box.classList.remove('dragSrc');
+      }
+    });
+
+    box.addEventListener('dragover', (e) => {
+      // required to allow drop
+      e.preventDefault();
+      if (dragSrcChar >= 0 && dragSrcChar !== i){
+        box.classList.add('dragOver');
+        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      }
+    });
+
+    box.addEventListener('dragleave', () => box.classList.remove('dragOver'));
+
+    box.addEventListener('drop', (e) => {
+      e.preventDefault();
+      box.classList.remove('dragOver');
+      let src = dragSrcChar;
+      if (e.dataTransfer){
+        const t = e.dataTransfer.getData('text/plain');
+        const n = parseInt(t, 10);
+        if (!Number.isNaN(n)) src = n;
+      }
+      const dst = i;
+      if (src >= 0 && src !== dst){
+        swapChars(src, dst);
+      }
+    });
+
+    thumbGrid.appendChild(box);
+    thCanvases.push({ box, ctx: c.getContext('2d') });
+  }
+  for (let i=0; i<256; i++) makeThumb(i);
+
+  // ===== Rendering =====
+  function drawCharTo(ctx, bank, ch, w, h){
+    const img = ctx.createImageData(w,h);
+    for (let y=0; y<h; y++){
+      const row = Math.floor(y * 8 / h);
+      const colByte = getRowColor(bank, ch, row);
+      const ink = (colByte>>4)&15;
+      const pap = colByte&15;
+      const pat = getRowPattern(bank, ch, row);
+
+      for (let x=0; x<w; x++){
+        const bit = 7 - Math.floor(x * 8 / w);
+        const on = (pat >> bit) & 1;
+        const c = MSX[effIdx(on ? ink : pap)];
+        const p = (y*w + x)*4;
+        img.data[p+0]=c[0]; img.data[p+1]=c[1]; img.data[p+2]=c[2]; img.data[p+3]=255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  function redrawThumb(i){
+    const t = thCanvases[i];
+    drawCharTo(t.ctx, curBank, i, TH_SIZE, TH_SIZE);
+    t.box.classList.toggle('sel', i === curChar);
+  }
+  function redrawAllThumbs(){ for (let i=0;i<256;i++) redrawThumb(i); }
+
+  function drawEditorGrid(){
+    ectx.clearRect(0,0,editCv.width,editCv.height);
+    ectx.fillStyle = '#fafafa';
+    ectx.fillRect(0,0,editCv.width,editCv.height);
+
+    for (let y=0; y<8; y++){
+      const pat = getRowPattern(curBank, curChar, y);
+      for (let x=0; x<8; x++){
+        const on = (pat >> (7-x)) & 1;
+        ectx.fillStyle = on ? '#fff' : '#111';
+        ectx.fillRect(x*CELL, y*CELL, CELL, CELL);
+        ectx.strokeStyle = '#ddd';
+        ectx.strokeRect(x*CELL+0.5, y*CELL+0.5, CELL-1, CELL-1);
+      }
+      ectx.strokeStyle = '#bbb';
+      ectx.strokeRect(0.5, y*CELL+0.5, editCv.width-1, CELL-1);
+    }
+  }
+
+  function drawPreview(){
+    drawCharTo(pctx, curBank, curChar, prevCv.width, prevCv.height);
+    pctx.strokeStyle = 'rgba(0,0,0,0.12)';
+    for (let i=1; i<8; i++){
+      pctx.beginPath(); pctx.moveTo(i*CELL+0.5,0); pctx.lineTo(i*CELL+0.5,prevCv.height); pctx.stroke();
+      pctx.beginPath(); pctx.moveTo(0,i*CELL+0.5); pctx.lineTo(prevCv.width,i*CELL+0.5); pctx.stroke();
+    }
+  }
+
+  function syncRowUI(){
+    for (let r=0; r<8; r++){
+      const cb = getRowColor(curBank, curChar, r);
+      inkSel[r].value = String((cb>>4)&15);
+      papSel[r].value = String(cb&15);
+      setSelectColorStyle(inkSel[r], (cb>>4)&15);
+      setSelectColorStyle(papSel[r], cb&15);
+    }
+  }
+
+  // ===== Map =====
+  const MAP_W = 32, MAP_H = 24;
+  const MAP_CELL_W = mapCv.width / MAP_W;
+  const MAP_CELL_H = mapCv.height / MAP_H;
+
+  function bankForMapRow(my){ return my < 8 ? 0 : (my < 16 ? 1 : 2); }
+
+  const off = document.createElement('canvas');
+  off.width = 16; off.height = 16;
+  const octx = off.getContext('2d');
+
+  let mapCursor = { mx: -1, my: -1 };
+
+  function drawMap(){
+    mctx.fillStyle = '#f8f8f8';
+    mctx.fillRect(0,0,mapCv.width,mapCv.height);
+
+    for (let my=0; my<MAP_H; my++){
+      const bank = bankForMapRow(my);
+      for (let mx=0; mx<MAP_W; mx++){
+        const code = nameTable[my*MAP_W + mx];
+        drawCharTo(octx, bank, code, 16, 16);
+        mctx.drawImage(off, mx*MAP_CELL_W, my*MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
+      }
+    }
+
+    for (let x=0; x<=MAP_W; x++){
+      mctx.strokeStyle = (x % 8 === 0) ? 'rgba(0,0,0,0.22)' : 'rgba(0,0,0,0.14)';
+      mctx.beginPath(); mctx.moveTo(x*MAP_CELL_W+0.5,0); mctx.lineTo(x*MAP_CELL_W+0.5,mapCv.height); mctx.stroke();
+    }
+    for (let y=0; y<=MAP_H; y++){
+      const strong = (y === 8 || y === 16 || y === 0 || y === MAP_H);
+      mctx.strokeStyle = strong ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.14)';
+      mctx.beginPath(); mctx.moveTo(0,y*MAP_CELL_H+0.5); mctx.lineTo(mapCv.width,y*MAP_CELL_H+0.5); mctx.stroke();
+    }
+
+    if (mapCursor.mx >= 0 && mapCursor.my >= 0){
+      mctx.strokeStyle = 'rgba(43,108,255,0.9)';
+      mctx.lineWidth = 2;
+      mctx.strokeRect(mapCursor.mx*MAP_CELL_W+1, mapCursor.my*MAP_CELL_H+1, MAP_CELL_W-2, MAP_CELL_H-2);
+      mctx.lineWidth = 1;
+    }
+  }
+
+  function mapCoordsFromEvent(evt){
+    const rect = mapCv.getBoundingClientRect();
+    const x = (evt.clientX - rect.left) * mapCv.width / rect.width;
+    const y = (evt.clientY - rect.top) * mapCv.height / rect.height;
+    const mx = Math.floor(x / MAP_CELL_W);
+    const my = Math.floor(y / MAP_CELL_H);
+    if (mx<0||mx>=MAP_W||my<0||my>=MAP_H) return null;
+    return { mx, my };
+  }
+  function setMapCell(mx, my, code){
+    const idx = my*MAP_W + mx;
+    const v = code & 0xFF;
+    if (nameTable[idx] !== v){ nameTable[idx] = v; markTxChanged(); }
+  }
+
+  function pickFromMap(mx, my){
+    const code = nameTable[my*MAP_W + mx];
+    curChar = code;
+    charSel.value = String(code);
+    syncRowUI();
+    drawEditorGrid(); drawPreview(); redrawAllThumbs();
+  }
+
+  function updateMapCursor(evt){
+    const c = mapCoordsFromEvent(evt);
+    if (!c) return;
+    if (c.mx !== mapCursor.mx || c.my !== mapCursor.my){
+      mapCursor = c;
+      drawMap();
+    }
+  }
+
+  mapCv.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  let mapPainting = false;
+  let mapErasing = false;
+
+  function mapApplyAt(evt){
+    const c = mapCoordsFromEvent(evt);
+    if (!c) return;
+
+    if (evt.shiftKey){
+      pickFromMap(c.mx, c.my);
+      mapCursor = c;
+      drawMap();
+      return;
+    }
+
+    if (mapErasing) setMapCell(c.mx, c.my, 0);
+    else setMapCell(c.mx, c.my, curChar);
+
+    mapCursor = c;
+    drawMap();
+  }
+
+  mapCv.addEventListener('pointermove', (e) => {
+    updateMapCursor(e);
+
+  // Map cursor coordinate display (0..31, 0..23)
+  mapCv.addEventListener('mousemove', (e)=>{
+    const p = mapCoordFromEvent(e);
+    if (!p) return setMapCoordText(-1,-1);
+    setMapCoordText(p.mx, p.my);
+  });
+  mapCv.addEventListener('mouseleave', ()=> setMapCoordText(-1,-1));
+  mapCv.addEventListener('pointermove', (e)=>{
+    const p = mapCoordFromEvent(e);
+    if (!p) return;
+    setMapCoordText(p.mx, p.my);
+  });
+  mapCv.addEventListener('pointerleave', ()=> setMapCoordText(-1,-1));
+    if (!mapPainting) return;
+    if (e.shiftKey) return;
+    mapApplyAt(e);
+  });
+  mapCv.addEventListener('pointerdown', (e) => {
+    mapCv.setPointerCapture(e.pointerId);
+    if (e.shiftKey){
+      mapPainting = false; mapErasing = false;
+      mapApplyAt(e);
+      return;
+    }
+    beginTx('Map paint');
+    mapPainting = true;
+    mapErasing = (e.button === 2);
+    mapApplyAt(e);
+  });
+  mapCv.addEventListener('pointerup', () => { mapPainting = false; mapErasing = false; endTx(); });
+  mapCv.addEventListener('pointercancel', () => { mapPainting = false; mapErasing = false; endTx(); });
+  // ===== 8x8 Edit interaction =====
+  // Drag paint:
+  // - On pointerdown, determine the new value by toggling the first cell.
+  // - While dragging, force all hovered cells to that same value (paint / erase).
+  let editDragging = false;
+  let editPaintValue = 1;   // 1=paint(on), 0=erase(off)
+  let editPointerId = -1;
+  let lastCellKey = "";     // avoid re-applying to same cell repeatedly
+
+  function cellFromEvent(evt){
+    const rect = editCv.getBoundingClientRect();
+    const x = Math.floor((evt.clientX - rect.left) * editCv.width / rect.width);
+    const y = Math.floor((evt.clientY - rect.top) * editCv.height / rect.height);
+    const cx = Math.floor(x / CELL);
+    const cy = Math.floor(y / CELL);
+    if (cx<0||cx>7||cy<0||cy>7) return null;
+    return { cx, cy };
+  }
+
+  function getBitAt(bank, ch, cy, cx){
+    const a = addr(bank, ch, cy);
+    const pat = pattern[a];
+    return (pat >> (7 - cx)) & 1;
+  }
+
+  function setBitAt(bank, ch, cy, cx, value){
+    const a = addr(bank, ch, cy);
+    const pat = pattern[a];
+    const mask = 1 << (7 - cx);
+    const nv = value ? (pat | mask) : (pat & (~mask));
+    pattern[a] = nv & 0xFF;
+  }
+
+  function applyPaintAtCell(cx, cy, value){
+    // Track last touched row (for palette targeting)
+    activeRow = cy;
+    updateRowMarker();
+
+    applyToBanks((b) => {
+      const cur = getBitAt(b, curChar, cy, cx);
+      if (cur === value) return;
+      setBitAt(b, curChar, cy, cx, value);
+      markTxChanged();
+    });
+    redrawAll();
+  }
+
+  editCv.addEventListener('pointerdown', (e) => {
+    const c = cellFromEvent(e);
+    if (!c) return;
+    beginTx('Draw');
+
+    editPointerId = e.pointerId;
+    editCv.setPointerCapture(editPointerId);
+    editDragging = true;
+    lastCellKey = "";
+
+    // determine paint value by toggling the first cell
+    const cur = getBitAt(curBank, curChar, c.cy, c.cx);
+    editPaintValue = cur ? 0 : 1;
+
+    // apply to first cell
+    lastCellKey = `${c.cx},${c.cy}`;
+    applyPaintAtCell(c.cx, c.cy, editPaintValue);
+  });
+
+  editCv.addEventListener('pointermove', (e) => {
+    if (!editDragging || e.pointerId !== editPointerId) return;
+    const c = cellFromEvent(e);
+    if (!c) return;
+    const key = `${c.cx},${c.cy}`;
+    if (key === lastCellKey) return;
+    lastCellKey = key;
+    applyPaintAtCell(c.cx, c.cy, editPaintValue);
+  });
+
+  function endEditDrag(e){
+    if (e.pointerId !== editPointerId) return;
+    editDragging = false;
+    editPointerId = -1;
+    lastCellKey = "";
+    endTx();
+  }
+  editCv.addEventListener('pointerup', endEditDrag);
+  editCv.addEventListener('pointercancel', endEditDrag);
+
+  // ===== Tools =====
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    beginTx('Clear');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,0x00); });
+    redrawAll();
+    markTxChanged();
+    endTx();
+  });
+
+  document.getElementById('invBtn').addEventListener('click', () => {
+    beginTx('Invert');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,(~getRowPattern(b,curChar,r))&0xFF); });
+    redrawAll();
+    markTxChanged();
+    endTx();
+  });
+
+  document.getElementById('flipHBtn').addEventListener('click', () => {
+    beginTx('Flip H');
+    const rev8 = (v) => {
+      v = ((v & 0xF0) >> 4) | ((v & 0x0F) << 4);
+      v = ((v & 0xCC) >> 2) | ((v & 0x33) << 2);
+      v = ((v & 0xAA) >> 1) | ((v & 0x55) << 1);
+      return v & 0xFF;
+    };
+    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rev8(getRowPattern(b,curChar,r))); });
+    redrawAll();
+    markTxChanged();
+    endTx();
+  });
+
+  document.getElementById('flipVBtn').addEventListener('click', () => {
+    beginTx('Flip V');
+    applyToBanks((b)=> {
+      const tp = new Uint8Array(8);
+      const tc = new Uint8Array(8);
+      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[7-r]); setRowColor(b,curChar,r,tc[7-r]); }
+    markTxChanged();
+    endTx();
+  });
+    syncRowUI();
+    redrawAll();
+  });
+
+  const rotRowBits = (v, dir) => {
+    v &= 0xFF;
+    if (dir==='L') return ((v<<1) | (v>>7)) & 0xFF;
+    if (dir==='R') return ((v>>1) | ((v&1)<<7)) & 0xFF;
+    return v;
+  };
+
+  document.getElementById('shiftLBtn').addEventListener('click', () => {
+    beginTx('Rotate L');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'L')); });
+    markTxChanged();
+    redrawAll();
+    endTx();
+  });
+  document.getElementById('shiftRBtn').addEventListener('click', () => {
+    beginTx('Rotate R');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'R')); });
+    markTxChanged();
+    redrawAll();
+    endTx();
+  });
+
+  document.getElementById('shiftUBtn').addEventListener('click', () => {
+    beginTx('Rotate Up');
+    applyToBanks((b)=> {
+      const tp = new Uint8Array(8);
+      const tc = new Uint8Array(8);
+      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+1)&7]); setRowColor(b,curChar,r,tc[(r+1)&7]); }
+    });
+    markTxChanged();
+    syncRowUI(); redrawAll();
+    endTx();
+  });
+
+  document.getElementById('shiftDBtn').addEventListener('click', () => {
+    beginTx('Rotate Down');
+    applyToBanks((b)=> {
+      const tp = new Uint8Array(8);
+      const tc = new Uint8Array(8);
+      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+7)&7]); setRowColor(b,curChar,r,tc[(r+7)&7]); }
+    });
+    markTxChanged();
+    syncRowUI(); redrawAll();
+    endTx();
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const pat = new Uint8Array(8);
+    const col = new Uint8Array(8);
+    for (let r=0;r<8;r++){ pat[r]=getRowPattern(curBank,curChar,r); col[r]=getRowColor(curBank,curChar,r); }
+    clip = { pat, col };
+    redrawAll();
+  });
+
+  document.getElementById('pasteBtn').addEventListener('click', () => {
+    if (!clip) return;
+    beginTx('Paste');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); setRowColor(b,curChar,r,clip.col[r]); } });
+    markTxChanged();
+    syncRowUI(); redrawAll();
+    endTx();
+  });
+
+  // ===== Bank/Char selection =====
+  bankSel.addEventListener('change', () => {
+    curBank = parseInt(bankSel.value,10);
+    syncRowUI();
+    redrawAll();
+  });
+  charSel.addEventListener('change', () => {
+    curChar = parseInt(charSel.value,10);
+    syncRowUI();
+    redrawAll();
+  });
+
+  // ===== Individual Export =====
+  document.getElementById('expPattern').addEventListener('click', () => downloadBytes(pattern, 'pattern.bin'));
+  document.getElementById('expColor').addEventListener('click',   () => downloadBytes(color,   'color.bin'));
+  //document.getElementById('expBoth').addEventListener('click', () => { downloadBytes(pattern,'pattern.bin'); downloadBytes(color,'color.bin'); });
+
+  document.getElementById('expName').addEventListener('click', () => downloadBytes(nameTable, 'name.bin'));
+
+  // ===== Individual Import =====
+  impPatternBtn.addEventListener('click', () => impPatternInp.click());
+  impColorBtn.addEventListener('click',   () => impColorInp.click());
+  impNameBtn.addEventListener('click',    () => impNameInp.click());
+
+  impPatternInp.addEventListener('change', async () => {
+    const f = impPatternInp.files?.[0];
+    impPatternInp.value = "";
+    if (!f) return;
+    const bytes = await readFileToUint8(f);
+    if (importInto(pattern, bytes, PAT_SIZE, "pattern.bin")) redrawAll();
+  });
+
+  impColorInp.addEventListener('change', async () => {
+    const f = impColorInp.files?.[0];
+    impColorInp.value = "";
+    if (!f) return;
+    const bytes = await readFileToUint8(f);
+    if (importInto(color, bytes, COL_SIZE, "color.bin")) { syncRowUI(); redrawAll(); }
+  });
+
+  impNameInp.addEventListener('change', async () => {
+    const f = impNameInp.files?.[0];
+    impNameInp.value = "";
+    if (!f) return;
+    const bytes = await readFileToUint8(f);
+    if (importInto(nameTable, bytes, NAM_SIZE, "name.bin")) drawMap();
+  });
+
+  // ===== Map Clear =====
+  document.getElementById('mapClear').addEventListener('click', () => {
+    nameTable.fill(0);
+    drawMap();
+  });
+
+  // ===== SC2 Export/Import (VRAM layout) =====
+  function buildSc2PayloadVRAM(){
+    const vram = new Uint8Array(MSX_PAYLOAD_SIZE); // 0埋め
+    vram.set(pattern,   VRAM_PAT_OFF);
+    vram.set(nameTable, VRAM_NAME_OFF);
+    vram.set(color,     VRAM_COL_OFF);
+    return vram;
+  }
+
+  function buildSc2File(){
+    const payload = buildSc2PayloadVRAM();
+    const out = new Uint8Array(SC2_TOTAL);
+
+    // MSX binary header: FE 00 00 FF 37 00 00
+    out[0] = 0xFE;
+    out[1] = MSX_LOAD_START & 0xFF;
+    out[2] = (MSX_LOAD_START >> 8) & 0xFF;
+    out[3] = MSX_LOAD_END & 0xFF;
+    out[4] = (MSX_LOAD_END >> 8) & 0xFF;
+    out[5] = MSX_EXEC_ADDR & 0xFF;
+    out[6] = (MSX_EXEC_ADDR >> 8) & 0xFF;
+
+    out.set(payload, MSX_BINHDR_SIZE);
+    return out;
+  }
+
+  function tryParseSc2File(bytes){
+    if (bytes.byteLength !== SC2_TOTAL) return { ok:false, reason:`size ${bytes.byteLength} != ${SC2_TOTAL}` };
+    if (bytes[0] !== 0xFE) return { ok:false, reason:`missing 0xFE` };
+
+    const start = bytes[1] | (bytes[2]<<8);
+    const end   = bytes[3] | (bytes[4]<<8);
+    const exec  = bytes[5] | (bytes[6]<<8);
+
+    // ヘッダはあなた指定に合わせて厳密チェック
+    if (start !== MSX_LOAD_START || end !== MSX_LOAD_END || exec !== MSX_EXEC_ADDR) {
+      return { ok:false, reason:`header mismatch start=0x${start.toString(16)} end=0x${end.toString(16)} exec=0x${exec.toString(16)}` };
+    }
+
+    const vram = bytes.subarray(MSX_BINHDR_SIZE, MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE);
+
+    // Extract by VRAM layout
+    pattern.set(vram.subarray(VRAM_PAT_OFF,  VRAM_PAT_OFF  + PAT_SIZE));
+    nameTable.set(vram.subarray(VRAM_NAME_OFF, VRAM_NAME_OFF + NAM_SIZE));
+    color.set(vram.subarray(VRAM_COL_OFF,  VRAM_COL_OFF  + COL_SIZE));
+
+    return { ok:true, reason:'ok' };
+  }
+
+  expSc2Btn.addEventListener('click', () => {
+    downloadBytes(buildSc2File(), SC2_FILENAME);
+    setStatus('SC2 Export OK');
+  });
+
+  impSc2Btn.addEventListener('click', () => impSc2Inp.click());
+  impSc2Inp.addEventListener('change', async () => {
+    const f = impSc2Inp.files?.[0];
+    impSc2Inp.value = "";
+    if (!f) return;
+
+    const bytes = await readFileToUint8(f);
+    const r = tryParseSc2File(bytes);
+    if (!r.ok){
+      alert(`SC2 Import失敗: ${r.reason}`);
+      setStatus('SC2 Import NG', false);
+      return;
+    }
+    syncRowUI();
+    redrawAll();
+    setStatus('SC2 Import OK');
+  });
+
+  // ===== Final redraw =====
+  function redrawAll(){
+    drawEditorGrid();
+    drawPreview();
+    redrawAllThumbs();
+    drawMap();
+    document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
+  
+    updateRowMarker();
+  }
+
+  // ===== Init =====
+  curBank = 0; curChar = 0;
+  bankSel.value = "0";
+  charSel.value = "0";
+  syncRowUI();
+  redrawAll();
+  setStatus('OK');
+  updateUndoRedoUI();
+})();
+</script>
+</body>
+</html>
