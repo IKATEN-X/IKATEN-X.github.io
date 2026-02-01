@@ -27,7 +27,7 @@ button.btn {
   line-height: 1.5;
   position: relative;
   display: inline-block;
-  padding: 0.6rem 1.6rem;
+  padding: 0.6rem 0.8rem;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -80,7 +80,8 @@ a.btn--orange:disabled {
       flex: 1 1 360px;
       min-width: 320px;
       max-width: 520px;
-    
+      
+      height: auto;
       box-sizing: border-box;
     }
     .editPanel{
@@ -92,7 +93,7 @@ a.btn--orange:disabled {
       /* responsive */
       flex: 2 1 750px;
       min-width: 320px;
-      max-width: 750px;
+      max-width: 700px;
       box-sizing: border-box;
     }
     .mapPanel{
@@ -106,6 +107,9 @@ a.btn--orange:disabled {
       min-width: 320px;
       max-width: 750px;
       box-sizing: border-box;
+    }
+    .mapCanvasRow {
+      justify-content: center;
     }
     .fileGrid {  display:grid;  grid-template-columns: 175px 550px; grid-template-rows: 20px 50px; }
     h2 { font-size: 14px; margin: 0 0 8px; }
@@ -337,6 +341,99 @@ a.btn--orange:disabled {
       .rowMarker{ right: -12px; border-top-width: 7px; border-bottom-width: 7px; border-left-width: 10px; }
     }
 
+
+    /* Draggable panels (reorder within .wrap) */
+    .dragHandle{
+      cursor: grab;
+      user-select: none;
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 8px;
+      background-color: #feffff78;
+      padding-left: 8px;
+      padding-right: 8px;
+      font-size: 0.8em;
+      border-radius: 4px;
+    }
+    .dragHandle:active{ cursor: grabbing; }
+    .panelDrag{
+      position: relative;
+    }
+    .panelDrag[draggable="true"]{ -webkit-user-drag: element; }
+    .panelDrag.isDragging{
+      opacity: 0.55;
+      outline: 2px dashed #ff9800;
+    }
+    .dragHint{
+      font-size: 11px;
+      color:#666;
+      margin-left: 8px;
+    }
+
+
+    /* Button group (paste) */
+    .btnGroup{
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      padding: 6px;
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.45);
+    }
+    @media (max-width: 520px){
+      .btnGroup{ width: 100%; }
+      .btnGroup .btn{ flex: 1 1 auto; }
+    }
+
+
+    /* Labeled button group */
+    fieldset.btnGroupField{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px 8px 10px;
+      border: 1px solid rgba(0,0,0,0.18);
+      border-radius: 10px;
+      background: rgba(255,255,255,0.45);
+      min-height: 42px; /* align with single button row */
+      box-sizing: border-box;
+    }
+    fieldset.btnGroupField legend{
+      padding: 0 6px;
+      font-size: 12px;
+      color:#333;
+    }
+    fieldset.btnGroupField .btnGroup{
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+    @media (max-width: 520px){
+      fieldset.btnGroupField{
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+
+    .copyPasteRow{
+      display:flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 520px){
+      .copyPasteRow{
+        width: 100%;
+      }
+      .copyPasteRow > .btn{
+        flex: 0 0 auto;
+      }
+    }
+
 </style>
 </head>
 <body>
@@ -344,7 +441,7 @@ a.btn--orange:disabled {
   <div class="filePanel">
     <button id="ioTopToggle" class="ioToggleBtn" type="button">
       <i class="fa-solid fa-right-left"></i>
-      <span>Import / Export</span>
+      <span>インポート / エクスポート</span>
       <span id="ioTopChevron" class="ioChevron">▶</span>
     </button>
     <div id="ioTopBlock" class="ioBlock isHidden">
@@ -408,14 +505,14 @@ a.btn--orange:disabled {
         </div>
         <div>状態:
           <span id="status" class="ok">OK</span>
-        </div>
+        </div></fieldset>
       </div>
     </div>
   </div>
   <div class="wrap">
     <!-- Left: 16x16 thumbnails -->
-    <div class="panel">
-      <h2>文字一覧</h2>
+    <div class="panel panelDrag" data-panel-id="chars" draggable="true">
+      <h2 class="dragHandle"><span>文字一覧</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span></h2>
       <div class="hint tiny" style="margin-bottom:6px;">
         サムネイルをドラッグ＆ドロップ>すると文字を入れ替えできます。<br />
         バンク連動中は全てのバンクに編集結果が反映します。
@@ -432,14 +529,27 @@ a.btn--orange:disabled {
           <input type="checkbox" id="linkBanks" checked>バンク連動</label>
       </div>
       <div class="row" style="margin-top:6px;">
+        <div class="copyPasteRow">
+          <fieldset class="btnGroupField"><legend>コピー</legend><div class="btnGroup" aria-label="ペーストオプション"></div>
         <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
           <i class="fa-regular fa-copy"></i>
           <span class="btnText">コピー</span>
         </button>
-        <button id="pasteBtn" title="ペースト" aria-label="ペースト" class="btn btn--orange">
+        </div>
+        <fieldset class="btnGroupField"><legend>ペースト</legend><div class="btnGroup" aria-label="ペーストオプション">
+        <button id="pasteBtn" title="ペースト（パターン+色）" aria-label="ペースト（パターン+色）" class="btn btn--orange">
           <i class="fa-solid fa-paste"></i>
-          <span class="btnText">ペースト</span>
+          <span class="btnText">パターン+色</span>
         </button>
+        <button id="pastePatBtn" title="パターンのみペースト" aria-label="パターンのみペースト" class="btn btn--orange">
+          <i class="fa-solid fa-border-all"></i>
+          <span class="btnText">パターン</span>
+        </button>
+        <button id="pasteColBtn" title="色のみペースト" aria-label="色のみペースト" class="btn btn--orange">
+          <i class="fa-solid fa-palette"></i>
+          <span class="btnText">色</span>
+        </button>
+      </div>
         <span class="tiny" id="clipInfo">クリップ: なし</span>
       </div>
       <div class="thumbFrame" style="margin-top:10px;">
@@ -482,8 +592,8 @@ a.btn--orange:disabled {
       </div>
     </div>
     <!-- Center: editor + preview + map -->
-    <div class="editPanel">
-      <h2>8×8 編集</h2>
+    <div class="editPanel panelDrag" data-panel-id="edit" draggable="true">
+      <h2 class="dragHandle"><span>タイル編集</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span></h2>
       <div class="row">
         <label>文字コード
           <select id="charSel">
@@ -563,14 +673,14 @@ a.btn--orange:disabled {
         </button>
       </div>
     </div>
-    <div class="mapPanel">
-      <h2 style="margin-top:14px;">マップ (32×24) : Name Table
-        <span id="mapCoord" class="tiny" style="margin-left:10px;">(x: -, y: -)</span>
+    <div class="mapPanel panelDrag" data-panel-id="map" draggable="true">
+      <h2 class="dragHandle"><span>マップ (32×24)</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span>
       </h2>
-      <div class="row">
+      <div class="row mapCanvasRow">
         <canvas id="map" width="640" height="480" title="左クリック:配置 / 右クリック:消去 / Shift+クリック:スポイト">
         </canvas>
       </div>
+      <div id="mapCoord" class="row tiny" style="margin-left:10px;">(x: -, y: -)</div>
       <div class="row">
         <button id="mapClear" title="マップクリア" aria-label="マップクリア" class="btn btn--orange">
           <i class="fa-solid fa-broom"></i>
@@ -590,6 +700,123 @@ a.btn--orange:disabled {
 
 <script>
 (() => {
+
+  // ===== Panel reorder (drag within .wrap) =====
+  const wrapEl = document.querySelector('.wrap');
+  const panelEls = () => wrapEl ? Array.from(wrapEl.querySelectorAll('.panelDrag')) : [];
+
+  function savePanelOrder(){
+    try{
+      const order = panelEls().map(p => p.dataset.panelId);
+      localStorage.setItem('pcg_panel_order', JSON.stringify(order));
+    }catch(_){}
+  }
+
+  function loadPanelOrder(){
+    try{
+      if (!wrapEl) return;
+      const raw = localStorage.getItem('pcg_panel_order');
+      if (!raw) return;
+      const order = JSON.parse(raw);
+      if (!Array.isArray(order)) return;
+
+      const map = new Map(panelEls().map(p => [p.dataset.panelId, p]));
+      for (const id of order){
+        const el = map.get(id);
+        if (el) wrapEl.appendChild(el);
+      }
+      // any new panels not in order go to the end
+      for (const [_, el] of map.entries()){
+        if (el.parentElement !== wrapEl) wrapEl.appendChild(el);
+      }
+    }catch(_){}
+  }
+
+  // Compute insertion point based on nearest panel center (works with flex-wrap)
+  function getInsertBeforeEl(draggingEl, clientX, clientY){
+    const els = panelEls().filter(el => el !== draggingEl);
+    let bestEl = null;
+    let bestRect = null;
+    let bestDist = Infinity;
+
+    for (const el of els){
+      const r = el.getBoundingClientRect();
+      const cx = r.left + r.width * 0.5;
+      const cy = r.top  + r.height * 0.5;
+      const dx = clientX - cx;
+      const dy = clientY - cy;
+      const d2 = dx*dx + dy*dy;
+      if (d2 < bestDist){
+        bestDist = d2;
+        bestEl = el;
+        bestRect = r;
+      }
+    }
+    if (!bestEl || !bestRect) return null;
+
+    const cx = bestRect.left + bestRect.width * 0.5;
+    const cy = bestRect.top  + bestRect.height * 0.5;
+    const before = (clientY < cy) || (Math.abs(clientY - cy) < 40 && clientX < cx);
+    return before ? bestEl : bestEl.nextSibling;
+  }
+
+  let draggingPanel = null;
+  let dragEnabled = false;
+
+  function isFromHandle(e){
+    return !!(e.target && e.target.closest && e.target.closest('.dragHandle'));
+  }
+  function setDraggableMode(on){
+    dragEnabled = on;
+    for (const p of panelEls()) p.draggable = on;
+  }
+
+  // Enable dragging only when starting from header (prevents interfering with editing)
+  for (const p of panelEls()){
+    p.addEventListener('pointerdown', (e) => setDraggableMode(isFromHandle(e)));
+    p.addEventListener('pointerup', () => setDraggableMode(false));
+    p.addEventListener('pointercancel', () => setDraggableMode(false));
+
+    p.addEventListener('dragstart', (e) => {
+      // dragEnabled is set by pointerdown on the header handle
+      if (!dragEnabled){
+        e.preventDefault();
+        return;
+      }
+      draggingPanel = p;
+      p.classList.add('isDragging');
+      if (e.dataTransfer){
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', p.dataset.panelId || '');
+      }
+    });
+
+    p.addEventListener('dragend', () => {
+      if (draggingPanel){
+        draggingPanel.classList.remove('isDragging');
+        draggingPanel = null;
+        savePanelOrder();
+      }
+      setDraggableMode(false);
+    });
+  }
+
+  if (wrapEl){
+    wrapEl.addEventListener('dragover', (e) => {
+      if (!draggingPanel) return;
+      e.preventDefault();
+      const beforeEl = getInsertBeforeEl(draggingPanel, e.clientX, e.clientY);
+      if (beforeEl === null) return;
+      wrapEl.insertBefore(draggingPanel, beforeEl);
+    });
+    wrapEl.addEventListener('drop', (e) => {
+      if (!draggingPanel) return;
+      e.preventDefault();
+    });
+  }
+
+  loadPanelOrder();
+
 
   // ===== Undo / Redo =====
   const undoBtn = document.getElementById('undoBtn');
@@ -1525,6 +1752,24 @@ const statusEl  = document.getElementById('status');
     syncRowUI(); redrawAll();
     endTx();
   });
+  document.getElementById('pastePatBtn').addEventListener('click', () => {
+    if (!clip) return;
+    beginTx('Paste Pattern');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); } });
+    markTxChanged();
+    redrawAll();
+    endTx();
+  });
+
+  document.getElementById('pasteColBtn').addEventListener('click', () => {
+    if (!clip) return;
+    beginTx('Paste Color');
+    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowColor(b,curChar,r,clip.col[r]); } });
+    markTxChanged();
+    syncRowUI(); redrawAll();
+    endTx();
+  });
+
 
   // ===== Bank/Char selection =====
   bankSel.addEventListener('change', () => {
