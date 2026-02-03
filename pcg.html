@@ -79,7 +79,7 @@ a.btn--orange:disabled {
       /* responsive */
       flex: 1 1 360px;
       min-width: 320px;
-      max-width: 520px;
+      max-width: 560px;
       
       height: auto;
       box-sizing: border-box;
@@ -437,7 +437,7 @@ a.btn--orange:disabled {
 </style>
 </head>
 <body>
-<div class="header title">HTML-based Standalone PCG Editor for MSX <span class="tiny">Ver.1.0.1</span>
+<div class="header title">HTML-based Standalone PCG Editor for MSX <span class="tiny">Ver.1.0.2</span>
   <div class="filePanel">
     <button id="ioTopToggle" class="ioToggleBtn" type="button">
       <i class="fa-solid fa-right-left"></i>
@@ -503,7 +503,28 @@ a.btn--orange:disabled {
             </button>
           </div>
         </div>
-        <div>状態:
+        
+        <div class="fileGrid">
+          <h2>クイック</h2>
+          <h2></h2>
+          <div>
+            <button id="qsSave" title="Quick Save (localStorage)" aria-label="Quick Save" class="btn btn--orange">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span class="btnText">Save(<span style="text-decoration: underline;">S</span>)</span>
+            </button>
+          </div>
+          <div>
+            <button id="qsLoad" title="Quick Load (localStorage)" aria-label="Quick Load" class="btn btn--orange">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span class="btnText">Load</span>
+            </button>
+            <button id="qsClear" title="Quick Save Clear" aria-label="Quick Save Clear" class="btn btn--orange">
+              <i class="fa-solid fa-trash"></i>
+              <span class="btnText">Clear</span>
+            </button>
+          </div>
+        </div>
+<div>状態:
           <span id="status" class="ok">OK</span>
         </div></fieldset>
       </div>
@@ -533,13 +554,13 @@ a.btn--orange:disabled {
           <fieldset class="btnGroupField"><legend>コピー</legend><div class="btnGroup" aria-label="ペーストオプション"></div>
         <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
           <i class="fa-regular fa-copy"></i>
-          <span class="btnText">コピー</span>
+          <span class="btnText">コピー(<span style="text-decoration: underline;">S</span>)</span>
         </button>
         </div>
         <fieldset class="btnGroupField"><legend>ペースト</legend><div class="btnGroup" aria-label="ペーストオプション">
         <button id="pasteBtn" title="ペースト（パターン+色）" aria-label="ペースト（パターン+色）" class="btn btn--orange">
           <i class="fa-solid fa-paste"></i>
-          <span class="btnText">パターン+色</span>
+          <span class="btnText">パターン+色(<span style="text-decoration: underline;">V</span>)</span>
         </button>
         <button id="pastePatBtn" title="パターンのみペースト" aria-label="パターンのみペースト" class="btn btn--orange">
           <i class="fa-solid fa-border-all"></i>
@@ -629,11 +650,11 @@ a.btn--orange:disabled {
       <div class="row" style="margin-top:10px;">
         <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="btn btn--orange">
           <i class="fa-solid fa-rotate-left"></i>
-          <span class="btnText">Undo</span>
+          <span class="btnText">Undo(<span style="text-decoration: underline;">Z</span>)</span>
         </button>
         <button id="redoBtn" title="Redo (Ctrl+Y / Ctrl+Shift+Z)" aria-label="Redo" class="btn btn--orange">
           <i class="fa-solid fa-rotate-right"></i>
-          <span class="btnText">Redo</span>
+          <span class="btnText">Redo(<span style="text-decoration: underline;">Y</span>)</span>
         </button>
       </div>
       <div class="row" style="margin-top:10px;">
@@ -778,8 +799,10 @@ a.btn--orange:disabled {
     p.addEventListener('pointercancel', () => setDraggableMode(false));
 
     p.addEventListener('dragstart', (e) => {
-      // dragEnabled is set by pointerdown on the header handle
+      // dragEnabled is set by pointerdown on the header handle.
+      // IMPORTANT: Do not block drag&drop that starts from inside the panel content (e.g. character thumbnails).
       if (!dragEnabled){
+        if (e.target !== p) return; // allow child drag to bubble through
         e.preventDefault();
         return;
       }
@@ -859,7 +882,7 @@ a.btn--orange:disabled {
     }
 
     syncRowUI();
-    redrawAll();
+  redrawAllFull();
   updateRowMarker();
     drawMap();
     updateUndoRedoUI();
@@ -909,19 +932,47 @@ a.btn--orange:disabled {
   if (undoBtn) undoBtn.addEventListener('click', doUndo);
   if (redoBtn) redoBtn.addEventListener('click', doRedo);
 
-  // Keyboard: Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z
+    // Keyboard: Ctrl/Cmd+Z / Ctrl/Cmd+Y / Ctrl/Cmd+Shift+Z / Ctrl/Cmd+S / Ctrl/Cmd+C / Ctrl/Cmd+V
   window.addEventListener('keydown', (e) => {
-    const z = (e.key === 'z' || e.key === 'Z');
-    const y = (e.key === 'y' || e.key === 'Y');
-    if (!e.ctrlKey) return;
-    if (z && !e.shiftKey){
-      e.preventDefault(); doUndo();
-    } else if (y || (z && e.shiftKey)){
-      e.preventDefault(); doRedo();
+    const key = e.key.toLowerCase();
+    const isMac = navigator.platform.toUpperCase().includes('MAC');
+    const ctrl = isMac ? e.metaKey : e.ctrlKey;
+
+    if (!ctrl) return;
+
+    // Don't steal shortcuts while typing
+    const t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+
+    // Undo / Redo
+    if (key === 'z' && !e.shiftKey){
+      e.preventDefault(); doUndo(); return;
+    }
+    if (key === 'y' || (key === 'z' && e.shiftKey)){
+      e.preventDefault(); doRedo(); return;
+    }
+
+    // Quick Save
+    if (key === 's'){
+      e.preventDefault();
+      if (typeof quickSave === 'function') quickSave();
+      return;
+    }
+
+    // Copy / Paste (character clipboard)
+    if (key === 'c'){
+      e.preventDefault();
+      document.getElementById('copyBtn')?.click();
+      return;
+    }
+    if (key === 'v'){
+      e.preventDefault();
+      document.getElementById('pasteBtn')?.click();
+      return;
     }
   });
 
-  // ===== Embedded default font (3 banks, 256 chars each, 6144 bytes) =====
+// ===== Embedded default font (3 banks, 256 chars each, 6144 bytes) =====
   const DEFAULT_FONT_B64 = "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";
   function decodeB64ToU8(b64s){
     const bin = atob(b64s);
@@ -1238,7 +1289,7 @@ const statusEl  = document.getElementById('status');
       setSelectColorStyle(backdropSel, backdropIdx);
       markTxChanged();
       refreshAllSelectOptions();
-      redrawAll();
+      redrawAllFull();
       endTx();
     });
   })();
@@ -1285,8 +1336,7 @@ const statusEl  = document.getElementById('status');
 
     markTxChanged();
     syncRowUI();
-    redrawAll();
-    drawMap();
+    redrawAllFull();
     endTx();
   }
   function makeThumb(i){
@@ -1384,7 +1434,40 @@ const statusEl  = document.getElementById('status');
     drawCharTo(t.ctx, curBank, i, TH_SIZE, TH_SIZE);
     t.box.classList.toggle('sel', i === curChar);
   }
-  function redrawAllThumbs(){ for (let i=0;i<256;i++) redrawThumb(i); }
+  // ===== Thumbnails: incremental redraw (dirty) =====
+  const dirtyThumbs = new Set();
+  let thumbsRaf = 0;
+
+  function updateThumbSelection(){
+    for (let i=0;i<256;i++){
+      const t = thCanvases[i];
+      if (!t) continue;
+      t.box.classList.toggle('sel', i === curChar);
+    }
+  }
+
+  function redrawAllThumbs(){
+    // Full refresh (used on bank/backdrop/import/restore)
+    for (let i=0;i<256;i++) dirtyThumbs.add(i);
+    flushThumbsNow();
+  }
+
+  function markDirtyThumb(i){
+    dirtyThumbs.add(i & 0xFF);
+    scheduleThumbFlush();
+  }
+  function scheduleThumbFlush(){
+    if (thumbsRaf) return;
+    thumbsRaf = requestAnimationFrame(() => {
+      thumbsRaf = 0;
+      flushThumbsNow();
+    });
+  }
+  function flushThumbsNow(){
+    if (dirtyThumbs.size === 0) return;
+    for (const i of dirtyThumbs) redrawThumb(i);
+    dirtyThumbs.clear();
+  }
 
   function drawEditorGrid(){
     ectx.clearRect(0,0,editCv.width,editCv.height);
@@ -1448,6 +1531,7 @@ const statusEl  = document.getElementById('status');
         drawCharTo(octx, bank, code, 16, 16);
         mctx.drawImage(off, mx*MAP_CELL_W, my*MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
       }
+
     }
 
     for (let x=0; x<=MAP_W; x++){
@@ -1468,6 +1552,15 @@ const statusEl  = document.getElementById('status');
     }
   }
 
+  // Throttle map redraw to once per animation frame (improves drag responsiveness)
+  let mapRaf = 0;
+  function scheduleMapRedraw(){
+    if (mapRaf) return;
+    mapRaf = requestAnimationFrame(() => { mapRaf = 0; drawMap(); });
+  }
+
+
+
   function mapCoordsFromEvent(evt){
     const rect = mapCv.getBoundingClientRect();
     const x = (evt.clientX - rect.left) * mapCv.width / rect.width;
@@ -1485,10 +1578,16 @@ const statusEl  = document.getElementById('status');
 
   function pickFromMap(mx, my){
     const code = nameTable[my*MAP_W + mx];
+    const prevChar = curChar;
     curChar = code;
     charSel.value = String(code);
     syncRowUI();
-    drawEditorGrid(); drawPreview(); redrawAllThumbs();
+    drawEditorGrid();
+    drawPreview();
+    updateThumbSelection();
+    // Only redraw the two thumbnails involved (old selection and new selection)
+    redrawThumb(prevChar);
+    redrawThumb(curChar);
   }
 
   function updateMapCursor(evt){
@@ -1496,7 +1595,7 @@ const statusEl  = document.getElementById('status');
     if (!c) return;
     if (c.mx !== mapCursor.mx || c.my !== mapCursor.my){
       mapCursor = c;
-      drawMap();
+      scheduleMapRedraw();
     }
   }
 
@@ -1512,7 +1611,7 @@ const statusEl  = document.getElementById('status');
     if (evt.shiftKey){
       pickFromMap(c.mx, c.my);
       mapCursor = c;
-      drawMap();
+      scheduleMapRedraw();
       return;
     }
 
@@ -1520,25 +1619,27 @@ const statusEl  = document.getElementById('status');
     else setMapCell(c.mx, c.my, curChar);
 
     mapCursor = c;
-    drawMap();
+    scheduleMapRedraw();
   }
 
-  mapCv.addEventListener('pointermove', (e) => {
-    updateMapCursor(e);
+  mapCv.addEventListener('contextmenu', (e) => e.preventDefault());
 
   // Map cursor coordinate display (0..31, 0..23)
   mapCv.addEventListener('mousemove', (e)=>{
-    const p = mapCoordFromEvent(e);
+    const p = mapCoordsFromEvent(e);
     if (!p) return setMapCoordText(-1,-1);
     setMapCoordText(p.mx, p.my);
   });
-  mapCv.addEventListener('mouseleave', ()=> setMapCoordText(-1,-1));
   mapCv.addEventListener('pointermove', (e)=>{
-    const p = mapCoordFromEvent(e);
+    const p = mapCoordsFromEvent(e);
     if (!p) return;
     setMapCoordText(p.mx, p.my);
   });
+  mapCv.addEventListener('mouseleave', ()=> setMapCoordText(-1,-1));
   mapCv.addEventListener('pointerleave', ()=> setMapCoordText(-1,-1));
+
+  mapCv.addEventListener('pointermove', (e) => {
+    updateMapCursor(e);
     if (!mapPainting) return;
     if (e.shiftKey) return;
     mapApplyAt(e);
@@ -1601,12 +1702,27 @@ const statusEl  = document.getElementById('status');
       setBitAt(b, curChar, cy, cx, value);
       markTxChanged();
     });
-    redrawAll();
+
+    // Lightweight redraw while dragging (avoid expensive map/full thumb redraw each cell)
+    drawEditorGrid();
+    drawPreview();
+    redrawThumb(curChar);
+    updateThumbSelection();
   }
 
-  editCv.addEventListener('pointerdown', (e) => {
+    editCv.addEventListener('contextmenu', (e)=> e.preventDefault());
+
+editCv.addEventListener('pointerdown', (e) => {
     const c = cellFromEvent(e);
     if (!c) return;
+    // Right click: change active row only (no edit / no undo)
+    if (e.button === 2){
+      activeRow = c.cy;
+      updateRowMarker();
+      drawEditorGrid();
+      drawPreview();
+      return;
+    }
     beginTx('Draw');
 
     editPointerId = e.pointerId;
@@ -1638,7 +1754,10 @@ const statusEl  = document.getElementById('status');
     editDragging = false;
     editPointerId = -1;
     lastCellKey = "";
+    const wasChanged = !!(tx && tx.changed);
     endTx();
+    // Reflect edited character into map only when an undoable change was made
+    if (wasChanged) drawMap();
   }
   editCv.addEventListener('pointerup', endEditDrag);
   editCv.addEventListener('pointercancel', endEditDrag);
@@ -1775,7 +1894,7 @@ const statusEl  = document.getElementById('status');
   bankSel.addEventListener('change', () => {
     curBank = parseInt(bankSel.value,10);
     syncRowUI();
-    redrawAll();
+    redrawAllFull();
   });
   charSel.addEventListener('change', () => {
     curChar = parseInt(charSel.value,10);
@@ -1800,7 +1919,7 @@ const statusEl  = document.getElementById('status');
     impPatternInp.value = "";
     if (!f) return;
     const bytes = await readFileToUint8(f);
-    if (importInto(pattern, bytes, PAT_SIZE, "pattern.bin")) redrawAll();
+    if (importInto(pattern, bytes, PAT_SIZE, "pattern.bin")) redrawAllFull();
   });
 
   impColorInp.addEventListener('change', async () => {
@@ -1808,7 +1927,7 @@ const statusEl  = document.getElementById('status');
     impColorInp.value = "";
     if (!f) return;
     const bytes = await readFileToUint8(f);
-    if (importInto(color, bytes, COL_SIZE, "color.bin")) { syncRowUI(); redrawAll(); }
+    if (importInto(color, bytes, COL_SIZE, "color.bin")) { syncRowUI(); redrawAllFull(); }
   });
 
   impNameInp.addEventListener('change', async () => {
@@ -1893,7 +2012,7 @@ const statusEl  = document.getElementById('status');
       return;
     }
     syncRowUI();
-    redrawAll();
+    redrawAllFull();
     setStatus('SC2 Import OK');
   });
 
@@ -1901,21 +2020,152 @@ const statusEl  = document.getElementById('status');
   function redrawAll(){
     drawEditorGrid();
     drawPreview();
-    redrawAllThumbs();
+
+    // Fast path: redraw only the currently edited character thumbnail
+    redrawThumb(curChar);
+    updateThumbSelection();
+
+    // Map can be heavy, but keep it here for non-drag operations
     drawMap();
     document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
-  
+
     updateRowMarker();
   }
 
-  // ===== Init =====
+  // Full refresh (all thumbnails) when global state changes
+  function redrawAllFull(){
+    drawEditorGrid();
+    drawPreview();
+    redrawAllThumbs();
+    updateThumbSelection();
+    drawMap();
+    document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
+    updateRowMarker();
+  }
+
+
+
+  
+  // ===== Quick Save / Load (localStorage) =====
+  const QS_KEY = 'pcg_quicksave_v1';
+
+  function u8ToB64(u8){
+    // Chunked to avoid call stack limits
+    let s = '';
+    const chunk = 0x8000;
+    for (let i=0;i<u8.length;i+=chunk){
+      s += String.fromCharCode.apply(null, u8.subarray(i, i+chunk));
+    }
+    return btoa(s);
+  }
+  function b64ToU8(b64){
+    const bin = atob(b64);
+    const u8 = new Uint8Array(bin.length);
+    for (let i=0;i<bin.length;i++) u8[i] = bin.charCodeAt(i) & 0xFF;
+    return u8;
+  }
+
+  function buildQuickSaveObject(){
+    return {
+      v: 1,
+      t: Date.now(),
+      curBank,
+      curChar,
+      backdropIdx,
+      linkBanks: !!document.getElementById('linkBanks')?.checked,
+
+      // arrays
+      pattern_b64: u8ToB64(new Uint8Array(pattern)),
+      color_b64:   u8ToB64(new Uint8Array(color)),
+      name_b64:    u8ToB64(new Uint8Array(nameTable)),
+    };
+  }
+
+  function applyQuickSaveObject(obj){
+    if (!obj || obj.v !== 1) throw new Error('Unknown quicksave version');
+    const p = b64ToU8(obj.pattern_b64);
+    const c = b64ToU8(obj.color_b64);
+    const n = b64ToU8(obj.name_b64);
+    if (p.length !== 6144 || c.length !== 6144 || n.length !== 768) throw new Error('Bad quicksave sizes');
+
+    // overwrite buffers
+    pattern.set(p);
+    color.set(c);
+    nameTable.set(n);
+
+    backdropIdx = (obj.backdropIdx ?? backdropIdx) & 0x0F;
+    curBank = (obj.curBank ?? curBank) | 0;
+    curChar = (obj.curChar ?? curChar) | 0;
+    bankSel.value = String(curBank);
+    charSel.value = String(curChar);
+    const lb = document.getElementById('linkBanks');
+    if (lb) lb.checked = !!obj.linkBanks;
+
+    syncRowUI();
+
+    // Reset undo/redo as this is a "new loaded state"
+    undoStack.length = 0;
+    redoStack.length = 0;
+
+    redrawAllFull();
+  }
+
+  function quickSave(){
+    try{
+      const obj = buildQuickSaveObject();
+      localStorage.setItem(QS_KEY, JSON.stringify(obj));
+      setStatus('Quick Saved');
+    }catch(e){
+      console.error(e);
+      alert('Quick Save できませんでした: ' + e.message);
+    }
+  }
+
+  function quickLoad(){
+    try{
+      const raw = localStorage.getItem(QS_KEY);
+      if (!raw){
+        alert('Quick Save がありません。');
+        return;
+      }
+      const obj = JSON.parse(raw);
+      applyQuickSaveObject(obj);
+      setStatus('Quick Loaded');
+    }catch(e){
+      console.error(e);
+      alert('Quick Load できませんでした: ' + e.message);
+    }
+  }
+
+  function quickClear(){
+    try{
+      localStorage.removeItem(QS_KEY);
+      setStatus('Quick Cleared');
+    }catch(e){
+      console.error(e);
+      alert('Clear できませんでした: ' + e.message);
+    }
+  }
+
+  const qsSaveBtn = document.getElementById('qsSave');
+  const qsLoadBtn = document.getElementById('qsLoad');
+  const qsClearBtn = document.getElementById('qsClear');
+  if (qsSaveBtn) qsSaveBtn.addEventListener('click', quickSave);
+  if (qsLoadBtn) qsLoadBtn.addEventListener('click', quickLoad);
+  if (qsClearBtn) qsClearBtn.addEventListener('click', quickClear);
+
+
+// ===== Init =====
   curBank = 0; curChar = 0;
   bankSel.value = "0";
   charSel.value = "0";
   syncRowUI();
-  redrawAll();
-  setStatus('OK');
-  updateUndoRedoUI();
+  // Initial full render after layout (thumbnails)
+  requestAnimationFrame(() => {
+    redrawAllFull();
+    setStatus('OK');
+    updateUndoRedoUI();
+  });
 })();
 </script>
 <!-- Google tag (gtag.js) -->
