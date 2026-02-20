@@ -2116,7 +2116,11 @@ fieldset.btnGroupField .btnGroup {
     d0.textContent = '';
     none.appendChild(c0); none.appendChild(t0); none.appendChild(d0);
     none.addEventListener('click', () => {
-      if (metaSel){ metaSel.value = ''; metaUpdatePreview(); metaDropdownSyncFromSelect(); }
+      if (metaSel){
+        metaSel.value = '';
+        // Ensure the normal change handler runs (updates active stamp too)
+        metaSel.dispatchEvent(new Event('change'));
+      }
       metaDropdownClose();
     });
     metaDropList.appendChild(none);
@@ -2142,8 +2146,8 @@ fieldset.btnGroupField .btnGroup {
       row.addEventListener('click', () => {
         if (metaSel){
           metaSel.value = m.id;
-          metaUpdatePreview();
-          metaDropdownSyncFromSelect();
+          // Ensure the normal change handler runs (updates active stamp too)
+          metaSel.dispatchEvent(new Event('change'));
         }
         metaDropdownClose();
       });
@@ -2372,7 +2376,15 @@ fieldset.btnGroupField .btnGroup {
   
     metaLoad();
     metaRefreshSelect();
-    if (metaSel) metaSel.addEventListener('change', ()=> { metaUpdatePreview(); metaDropdownSyncFromSelect(); if (metaActiveId){ metaSetActive(metaSel.value||null); } metaUpdateStampUi(); });
+    if (metaSel) metaSel.addEventListener('change', ()=> {
+      metaUpdatePreview();
+      metaDropdownSyncFromSelect();
+      // If stamp mode is ON, switching selection should immediately change the active metatile
+      if (metaStampChk && metaStampChk.checked){
+        metaSetActive(metaSel.value||null);
+      }
+      metaUpdateStampUi();
+    });
     // MetaTile dropdown UI
     if (metaDropBtn){
       metaDropBtn.addEventListener('click', (e)=>{ e.stopPropagation(); metaDropdownToggle(); });
