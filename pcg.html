@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>HTML-based Standalone PCG Editor for MSX</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" referrerpolicy="no-referrer">
   <style>
   *,
 *:before,
@@ -16,7 +17,8 @@
 html {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  font-size: 62.5%;/*rem算出をしやすくするために*/
+  font-size: 62.5%;
+  /*rem算出をしやすくするために*/
 }
 
 .btn,
@@ -48,2134 +50,3216 @@ a.btn--orange {
   color: #fff;
   background-color: #cedaff;
 }
+
 .btn--orange:hover,
 a.btn--orange:hover {
   color: #fff;
   background: #f56500;
 }
+
 .btn--orange:disabled,
 a.btn--orange:disabled {
   color: #fff;
   background: #cedaff;
-  cursor:auto ;
+  cursor: auto;
 }
-.title {font-size: 2em; font-weight: bold;}
-    body { font-family: system-ui, -apple-system, Segoe UI, sans-serif; margin: 0; background:#f4f6f8; }
-    .header { margin-left: 10px; margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: #fff;}
-    .filePanel { margin-left: 10px; margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 10px; background: #ddcf96;}
-    .wrap{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      padding: 12px;
-      align-items: flex-start;
-    }
-    .panel{
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-      background: #e5d3d3;
 
-      /* responsive */
-      flex: 1 1 360px;
-      min-width: 320px;
-      max-width: 560px;
-      
-      height: auto;
-      box-sizing: border-box;
-    }
-    .editPanel{
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-      background: #b7c9cb;
+.title {
+  font-size: 2em;
+  font-weight: bold;
+}
 
-      /* responsive */
-      flex: 2 1 750px;
-      min-width: 320px;
-      max-width: 700px;
-      box-sizing: border-box;
-    }
-    .mapPanel{
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 10px;
-      background: #8eb1ff;
+body {
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  margin: 0;
+  background: #f4f6f8;
+}
 
-      /* responsive */
-      flex: 2 1 750px;
-      min-width: 320px;
-      max-width: 750px;
-      box-sizing: border-box;
-    }
-    .mapCanvasRow {
-      justify-content: center;
-    }
-    .fileGrid {  display:grid;  grid-template-columns: 175px 550px; grid-template-rows: 20px 50px; }
-    h2 { font-size: 14px; margin: 0 0 8px; }
-    label { display: inline-block; font-size: 12px; margin-right: 8px; }
-    select, button, input[type="checkbox"] { font-size: 12px; }
-    button { padding: 6px 10px; margin: 2px 3px 4px 0; cursor: pointer; }
-    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0; }
-    .tiny { font-size: 11px; color: #555; line-height: 1.35; }
-    canvas { image-rendering: pixelated; border: 1px solid #ccc; background:#fff; }
-    .grid { display: grid; grid-template-columns: repeat(16, 1fr);gap: 2px;}
-    .thumb { aspect-ratio: 1/1; border: 1px solid #ddd;  cursor: pointer; background: #fafafa; display:flex; align-items:center; justify-content:center; }
-    .thumb.sel { outline: 2px solid #2b6cff; }
-    .thumb canvas { width: 100%; height: 100%; border: 0; }
-    .rowsColor .hdr { font-size: 12px; color:#333; font-weight: 600; }
-    .rowsColor .r { font-size: 12px; text-align:right; color:#444; }
-    .palette { display:grid; grid-template-columns: repeat(8, 1fr); gap:4px; margin-top:8px; }
-    .sw { height: 18px; border-radius: 4px; border: 1px solid #ccc; }
-    .sw[data-i="0"] { outline: 2px dashed #aaa; }
-    .hint { padding:8px; border:1px solid #e3e6ea; border-radius:8px; background:#fbfcfe; }
-    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11px; padding: 1px 6px; border:1px solid #cfd6dd; border-bottom-width: 2px; border-radius: 6px; background:#fff; }
-    .hr { height:1px; background:#e6e9ee; margin:10px 0; }
-    .ok { color:#0a7a34; font-weight: 600; }
-    .bad { color:#b00020; font-weight: 700; }
-    .label { font-size: 14px; color: black; line-height: 1.35;}
-  
- .rowsEdit{
-      display:grid;
-      grid-template-columns: 256px 256px 120px;
-      grid-template-rows: 20px 256px;
-      gap: 0px 6px;
-      justify-items:start;
-      height: 256px; /* match 8x8 editor height */
-      margin-left: 8px;
-      height: 285px;
-    }
+.header {
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+}
 
+.filePanel {
+  margin-left: 10px;
+  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #ddcf96;
+}
 
-    /* Row color selectors aligned to 8x8 grid */
-    .rowsColor{
-      display:grid;
-      grid-template-columns: 56px 56px;
-      grid-template-rows: repeat(8, 32px);
-      gap: 0px 6px;
-      align-items:center;
-      justify-items:start;
-      height: 256px; /* match 8x8 editor height */
-      margin-left: 8px;
-    }
-    .rowsColor .hdr{ align-self:end; padding-bottom:4px; }
-    .rowsColor .r{
-      height:32px;
-      line-height:32px;
-      text-align:right;
-      padding-right:4px;
-    }
-    .rowsColor select{
-      width: 56px;            /* minimum practical width */
-      padding: 2px 4px;
-      font-size: 12px;
-    }
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
+  align-items: flex-start;
+}
 
-  
-    /* 16x16 thumbnail grid with hex headers */
-    .thumbFrame{
-      display:grid;
-      grid-template-columns: 18px repeat(16, 1fr);
-      grid-template-rows: 18px repeat(16, auto);
-      gap: 2px;
-      align-items: stretch;
-    }
-    .thumbFrame .hex{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 11px;
-      color: #666;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      user-select:none;
-    }
-    .thumbFrame .hex.corner{ background: transparent; }
-    .thumbFrame #thumbGrid{
-      grid-column: 2 / span 16;
-      grid-row: 2 / span 16;
-      margin-top: 0 !important;
-    }
+.panel {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  background: #e5d3d3;
 
-  
-    /* Collapsible top Import/Export block */
-    .ioToggleBtn{
-      width: 100%;
-      text-align: left;
-      padding: 8px 10px;
-      border: 1px solid #d6dbe1;
-      border-radius: 10px;
-      background: #f7f9fc;
-      cursor: pointer;
-      font-size: 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      box-sizing:border-box;
-    }
-    .ioBlock{ margin-top: 8px; }
-    .ioBlock.isHidden{ display:none; }
-    .ioChevron{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color:#666; }
+  /* responsive */
+  flex: 1 1 360px;
+  min-width: 320px;
+  max-width: 520px;
 
-  
-    /* Backdrop select */
-    #backdropSel{
-      padding: 2px 4px;
-      font-size: 12px;
-      box-sizing: border-box;
-    }
+  height: auto;
+  box-sizing: border-box;
+}
 
-  
-  /* Font Awesome icon buttons */
-  button i { margin-right: 6px; }
-  .btnText { vertical-align: middle; }
+.editPanel {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  background: #b7c9cb;
+
+  /* responsive */
+  flex: 2 1 750px;
+  min-width: 320px;
+  max-width: 700px;
+  box-sizing: border-box;
+}
+
+.mapPanel {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px;
+  background: #8eb1ff;
+
+  /* responsive */
+  flex: 2 1 750px;
+  min-width: 320px;
+  max-width: 750px;
+  box-sizing: border-box;
+}
+
+.mapCanvasRow {
+  justify-content: center;
+}
+
+.metaTilePanel {
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  margin-top: 8px;
+}
+
+.metaTilePanel .row {
+  margin: 4px 0;
+}
+
+.metaTilePanel select {
+  max-width: 260px;
+}
+
+.metaTilePanel canvas#metaPreview {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+  background: #fff;
+  image-rendering: pixelated;
+}
 
 
-    /* Thumbnail drag & drop swap */
-    .thumb.dragSrc { outline: 2px dashed #ff9800; }
-    .thumb.dragOver { outline: 2px solid #ff9800; background:#fff7e6; }
+.fileGrid {
+  display: grid;
+  grid-template-columns: 175px 550px;
+  grid-template-rows: 20px 50px;
+}
+
+h2 {
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+label {
+  display: inline-block;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+select,
+button,
+input[type="checkbox"] {
+  font-size: 12px;
+}
+
+button {
+  padding: 6px 10px;
+  margin: 2px 3px 4px 0;
+  cursor: pointer;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 6px 0;
+}
+
+.tiny {
+  font-size: 11px;
+  color: #555;
+  line-height: 1.35;
+}
+
+canvas {
+  image-rendering: pixelated;
+  border: 1px solid #ccc;
+  background: #fff;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+}
+
+.thumb {
+  aspect-ratio: 1/1;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  background: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumb.sel {
+  outline: 2px solid #2b6cff;
+}
+
+.thumb canvas {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.rowsColor .hdr {
+  font-size: 12px;
+  color: #333;
+  font-weight: 600;
+}
+
+.rowsColor .r {
+  font-size: 12px;
+  text-align: right;
+  color: #444;
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.sw {
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.sw[data-i="0"] {
+  outline: 2px dashed #aaa;
+}
+
+.hint {
+  padding: 8px;
+  border: 1px solid #e3e6ea;
+  border-radius: 8px;
+  background: #fbfcfe;
+}
+
+.kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  padding: 1px 6px;
+  border: 1px solid #cfd6dd;
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.hr {
+  height: 1px;
+  background: #e6e9ee;
+  margin: 10px 0;
+}
+
+.ok {
+  color: #0a7a34;
+  font-weight: 600;
+}
+
+.bad {
+  color: #b00020;
+  font-weight: 700;
+}
+
+.label {
+  font-size: 14px;
+  color: black;
+  line-height: 1.35;
+}
+
+.shortcutText {
+  text-decoration: underline;
+}
+
+.rowsEdit {
+  display: grid;
+  grid-template-columns: 256px 256px 120px;
+  grid-template-rows: 20px 256px;
+  gap: 0px 6px;
+  justify-items: start;
+  height: 256px;
+  /* match 8x8 editor height */
+  margin-left: 8px;
+  height: 285px;
+}
 
 
-    /* Responsive: stack on narrower screens */
-    @media (max-width: 1200px){
-      .panel{ max-width: none; }
-      .editPanel, .mapPanel{ max-width: none; }
-    }
-    @media (max-width: 900px){
-      .panel, .editPanel, .mapPanel{
-        flex: 1 1 100%;
-        min-width: 0;
-        width: 100%;
-      }
-    }
+/* Row color selectors aligned to 8x8 grid */
+.rowsColor {
+  display: grid;
+  grid-template-columns: 56px 56px;
+  grid-template-rows: repeat(8, 32px);
+  gap: 0px 6px;
+  align-items: center;
+  justify-items: start;
+  height: 256px;
+  /* match 8x8 editor height */
+  margin-left: 8px;
+}
+
+.rowsColor .hdr {
+  align-self: end;
+  padding-bottom: 4px;
+}
+
+.rowsColor .r {
+  height: 32px;
+  line-height: 32px;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.rowsColor select {
+  width: 56px;
+  /* minimum practical width */
+  padding: 2px 4px;
+  font-size: 12px;
+}
 
 
-    /* Responsive canvas: fit within panel (smartphone portrait) */
-    @media (max-width: 900px){
-      .editPanel canvas,
-      .mapPanel canvas{
-        max-width: 100%;
-        height: auto;
-        display: block;
-      }
-    }
+/* 16x16 thumbnail grid with hex headers */
+.thumbFrame {
+  display: grid;
+  grid-template-columns: 18px repeat(16, 1fr);
+  grid-template-rows: 18px repeat(16, auto);
+  gap: 2px;
+  align-items: stretch;
+}
+
+.thumbFrame .hex {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.thumbFrame .hex.corner {
+  background: transparent;
+}
+
+.thumbFrame #thumbGrid {
+  grid-column: 2 / span 16;
+  grid-row: 2 / span 16;
+  margin-top: 0 !important;
+}
 
 
-    /* Extra narrow screens: stack 8x8 editor columns to avoid overflow */
-    @media (max-width: 520px){
-      .rowsEdit{
-        display:flex;
-        flex-direction:column;
-        gap: 10px;
-        height:auto;
-        margin-left:0;
-      }
-      .rowsEdit .label{ display:none; }
-      #prev, #edit{
-        width: 100%;
-        height: auto;
-        max-width: 360px;
-      }
-      .rowsColor{
-        margin-left:0;
-        height:auto;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(8, auto);
-        gap: 6px 10px;
-      }
-      .rowsColor select{
-        width: 100%;
-      }
-    }
+/* Collapsible top Import/Export block */
+.ioToggleBtn {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid #d6dbe1;
+  border-radius: 10px;
+  background: #f7f9fc;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.ioBlock {
+  margin-top: 8px;
+}
+
+.ioBlock.isHidden {
+  display: none;
+}
+
+.ioChevron {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #666;
+}
 
 
-    /* Import/Export: fit buttons on narrow screens */
-    @media (max-width: 520px){
-      .fileGrid{
-        display: grid;
-        grid-template-columns: 1fr !important;
-        grid-template-rows: auto !important;
-        gap: 10px !important;
-        align-items: start;
-      }
-      .fileGrid h2{
-        margin: 0;
-      }
-      .fileGrid h2:nth-of-type(2){
-        display:none; /* hide the "個別" header in stacked mode */
-      }
-      .fileGrid > div{
-        width: 100%;
-      }
-      .fileGrid .btn{
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        box-sizing: border-box;
-      }
-      /* When multiple buttons are in one cell, stack them */
-      .fileGrid > div > button + input + button,
-      .fileGrid > div > button + button{
-        margin-top: 8px;
-      }
-    }
+/* Backdrop select */
+#backdropSel {
+  padding: 2px 4px;
+  font-size: 12px;
+  box-sizing: border-box;
+}
 
 
-    /* Active row marker (left of edit grid) */
-    .editOuter{
-      position: relative;
-      display: inline-block;
-    }
-    .rowMarker{
-      position: absolute;
-      right: -14px;
-      width: 0;
-      height: 0;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      border-left: 12px solid #ff9800;
-      transform: translateY(-50%);
-      pointer-events: none;
-      opacity: 0.95;
-    }
-    @media (max-width: 520px){
-      .rowMarker{ right: -12px; border-top-width: 7px; border-bottom-width: 7px; border-left-width: 10px; }
-    }
+/* Font Awesome icon buttons */
+button i {
+  margin-right: 6px;
+}
+
+.btnText {
+  vertical-align: middle;
+}
+
+.selectSmall {
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid #666;
+  background: #222;
+  color: #eee;
+}
 
 
-    /* Draggable panels (reorder within .wrap) */
-    .dragHandle{
-      cursor: grab;
-      user-select: none;
-      display:flex;
-      align-items:center;
-      justify-content: space-between;
-      gap: 8px;
-      background-color: #feffff78;
-      padding-left: 8px;
-      padding-right: 8px;
-      font-size: 0.8em;
-      border-radius: 4px;
-    }
-    .dragHandle:active{ cursor: grabbing; }
-    .panelDrag{
-      position: relative;
-    }
-    .panelDrag[draggable="true"]{ -webkit-user-drag: element; }
-    .panelDrag.isDragging{
-      opacity: 0.55;
-      outline: 2px dashed #ff9800;
-    }
-    .dragHint{
-      font-size: 11px;
-      color:#666;
-      margin-left: 8px;
-    }
+/* Thumbnail drag & drop swap */
+.thumb.dragSrc {
+  outline: 2px dashed #ff9800;
+}
+
+.thumb.dragOver {
+  outline: 2px solid #ff9800;
+  background: #fff7e6;
+}
 
 
-    /* Button group (paste) */
-    .btnGroup{
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      align-items: center;
-      padding: 6px;
-      border: 1px solid rgba(0,0,0,0.12);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.45);
-    }
-    @media (max-width: 520px){
-      .btnGroup{ width: 100%; }
-      .btnGroup .btn{ flex: 1 1 auto; }
-    }
+/* Responsive: stack on narrower screens */
+@media (max-width: 1200px) {
+  .panel {
+    max-width: none;
+  }
+
+  .editPanel,
+  .mapPanel {
+    max-width: none;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .panel,
+  .editPanel,
+  .mapPanel {
+    flex: 1 1 100%;
+    min-width: 0;
+    width: 100%;
+  }
+}
 
 
-    /* Labeled button group */
-    fieldset.btnGroupField{
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px 8px 10px;
-      border: 1px solid rgba(0,0,0,0.18);
-      border-radius: 10px;
-      background: rgba(255,255,255,0.45);
-      min-height: 42px; /* align with single button row */
-      box-sizing: border-box;
-    }
-    fieldset.btnGroupField legend{
-      padding: 0 6px;
-      font-size: 12px;
-      color:#333;
-    }
-    fieldset.btnGroupField .btnGroup{
-      padding: 0;
-      border: 0;
-      background: transparent;
-    }
-    @media (max-width: 520px){
-      fieldset.btnGroupField{
-        width: 100%;
-        justify-content: center;
-      }
-    }
+/* Responsive canvas: fit within panel (smartphone portrait) */
+@media (max-width: 900px) {
+
+  .editPanel canvas,
+  .mapPanel canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
 
 
-    .copyPasteRow{
-      display:flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    @media (max-width: 520px){
-      .copyPasteRow{
-        width: 100%;
-      }
-      .copyPasteRow > .btn{
-        flex: 0 0 auto;
-      }
-    }
+/* Extra narrow screens: stack 8x8 editor columns to avoid overflow */
+@media (max-width: 520px) {
+  .rowsEdit {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: auto;
+    margin-left: 0;
+  }
 
-</style>
+  .rowsEdit .label {
+    display: none;
+  }
+
+  #prev,
+  #edit {
+    width: 100%;
+    height: auto;
+    max-width: 360px;
+  }
+
+  .rowsColor {
+    margin-left: 0;
+    height: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(8, auto);
+    gap: 6px 10px;
+  }
+
+  .rowsColor select {
+    width: 100%;
+  }
+}
+
+
+/* Import/Export: fit buttons on narrow screens */
+@media (max-width: 520px) {
+  .fileGrid {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 10px !important;
+    align-items: start;
+  }
+
+  .fileGrid h2 {
+    margin: 0;
+  }
+
+  .fileGrid h2:nth-of-type(2) {
+    display: none;
+    /* hide the "個別" header in stacked mode */
+  }
+
+  .fileGrid>div {
+    width: 100%;
+  }
+
+  .fileGrid .btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* When multiple buttons are in one cell, stack them */
+  .fileGrid>div>button+input+button,
+  .fileGrid>div>button+button {
+    margin-top: 8px;
+  }
+}
+
+
+/* Active row marker (left of edit grid) */
+.editOuter {
+  position: relative;
+  display: inline-block;
+}
+
+.rowMarker {
+  position: absolute;
+  right: -14px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 12px solid #ff9800;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+@media (max-width: 520px) {
+  .rowMarker {
+    right: -12px;
+    border-top-width: 7px;
+    border-bottom-width: 7px;
+    border-left-width: 10px;
+  }
+}
+
+
+/* Draggable panels (reorder within .wrap) */
+.dragHandle {
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background-color: #feffff78;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 0.8em;
+  border-radius: 4px;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.panelDrag {
+  position: relative;
+}
+
+.panelDrag[draggable="true"] {
+  -webkit-user-drag: element;
+}
+
+.panelDrag.isDragging {
+  opacity: 0.55;
+  outline: 2px dashed #ff9800;
+}
+
+.dragHint {
+  font-size: 11px;
+  color: #666;
+  margin-left: 8px;
+}
+
+
+/* Button group (paste) */
+.btnGroup {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 520px) {
+  .btnGroup {
+    width: 100%;
+  }
+
+  .btnGroup .btn {
+    flex: 1 1 auto;
+  }
+}
+
+
+/* Labeled button group */
+fieldset.btnGroupField {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px 8px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  min-height: 42px;
+  /* align with single button row */
+  box-sizing: border-box;
+}
+
+fieldset.btnGroupField legend {
+  padding: 0 6px;
+  font-size: 12px;
+  color: #333;
+}
+
+fieldset.btnGroupField .btnGroup {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+@media (max-width: 520px) {
+  fieldset.btnGroupField {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+.copyPasteRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 520px) {
+  .copyPasteRow {
+    width: 100%;
+  }
+
+  .copyPasteRow>.btn {
+    flex: 0 0 auto;
+  }
+}
+
+
+/* --- MetaTile thumbnail dropdown --- */
+.metaDropdown {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.metaDropBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  height: 28px;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.metaDropBtn:hover {
+  background: #f5f5f5;
+}
+
+.metaDropBtn canvas {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  image-rendering: pixelated;
+}
+
+.metaDropText {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metaDropCaret {
+  margin-left: auto;
+  opacity: 0.65;
+}
+
+.metaDropList {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  min-width: 260px;
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+.metaDropItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.metaDropItem canvas {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  image-rendering: pixelated;
+}
+
+.metaDropItem:hover {
+  background: #f3f6ff;
+}
+
+.metaDropItem.sel {
+  background: #e7efff;
+}
+
+.metaDropItem .metaDim {
+  margin-left: auto;
+  opacity: 0.65;
+  font-size: 11px;
+}
+
+
+.metaToggle {
+  display: inline-flex;
+  align-items: center;   /* ← 縦中央 */
+  gap: 6px;
+  padding: 4px 4px;
+  border-radius: 8px;
+  background: #f3f3f3;
+}
+
+.metaToggle input {
+  margin-right: 6px;
+}
+
+.metaToggle canvas {
+  flex: 0 0 auto;
+}
+
+.metaToggle[data-on="1"] {
+  background: #e7efff;
+  border-color: #7aa0ff;
+}
+
+  </style>
 </head>
+
 <body>
-<div class="header title">HTML-based Standalone PCG Editor for MSX <span class="tiny">Ver.1.0.2</span>
-  <div class="filePanel">
-    <button id="ioTopToggle" class="ioToggleBtn" type="button">
-      <i class="fa-solid fa-right-left"></i>
-      <span>インポート / エクスポート</span>
-      <span id="ioTopChevron" class="ioChevron">▶</span>
-    </button>
-    <div id="ioTopBlock" class="ioBlock isHidden">
-      <div class="header">
-        <div class="hint tiny" style="margin-bottom:6px;">
-        インポートのSC2ファイルは、BLOAD形式を読み込んでください。エクスポートも同様にBLOAD形式が出力されます。<br />
-        個別はBLOAD形式ではなく、データーのみのバイナリファイルです。<br />
-        ファイルサイズもチェックしています(pattern/color:6144バイト,name:768バイト)ので、合わせてから読み込ませてください。
-        </div>
-        <div class=" fileGrid">
-          <h2>インポート</h2>
-          <h2>個別</h2>
-          <div>
-            <button id="impSc2Btn" title="SC2 Import（pcg.sc2）" aria-label="SC2 Import" class="btn btn--orange">
-              <i class="fa-solid fa-file-import"></i>
-              <span class="btnText">SC2 Import</span>
-            </button>
-            <input id="impSc2" type="file" accept=".sc2,.bin,application/octet-stream" style="display:none;">
+  <div class="header title">HTML-based Standalone PCG Editor for MSX
+    <span class="tiny">Ver.1.0.1</span>
+    <div class="filePanel">
+      <button id="ioTopToggle" class="ioToggleBtn" type="button">
+        <i class="fa-solid fa-right-left"></i>
+        <span>インポート / エクスポート</span>
+        <span id="ioTopChevron" class="ioChevron">▶</span>
+      </button>
+      <div id="ioTopBlock" class="ioBlock isHidden">
+        <div class="header">
+          <div class="hint tiny" style="margin-bottom:6px;">インポートのSC2ファイルは、BLOAD形式を読み込んでください。エクスポートも同様にBLOAD形式が出力されます。
+            <br>個別はBLOAD形式ではなく、データーのみのバイナリファイルです。
+            <br>ファイルサイズもチェックしています(pattern/color:6144バイト,name:768バイト)ので、合わせてから読み込ませてください。</div>
+          <div class=" fileGrid">
+            <h2>インポート</h2>
+            <h2>個別</h2>
+            <div>
+              <button id="impSc2Btn" title="SC2 Import（pcg.sc2）" aria-label="SC2 Import" class="btn btn--orange">
+                <i class="fa-solid fa-file-import"></i>
+                <span class="btnText">SC2 Import</span>
+              </button>
+              <input id="impSc2" type="file" accept=".sc2,.bin,application/octet-stream" style="display:none;">
+            </div>
+            <div>
+              <button id="impPatternBtn" title="pattern.bin" aria-label="pattern.bin 取込" class="btn btn--orange">
+                <i class="fa-solid fa-file-arrow-up"></i>
+                <span class="btnText">pattern.bin 取込</span>
+              </button>
+              <input id="impPattern" type="file" accept=".bin,application/octet-stream" style="display:none;">
+              <button id="impColorBtn" title="color.bin" aria-label="color.bin 取込" class="btn btn--orange">
+                <i class="fa-solid fa-palette"></i>
+                <span class="btnText">color.bin 取込</span>
+              </button>
+              <input id="impColor" type="file" accept=".bin,application/octet-stream" style="display:none;">
+              <button id="impNameBtn" title="name.bin" aria-label="name.bin 取込" class="btn btn--orange">
+                <i class="fa-solid fa-table-cells"></i>
+                <span class="btnText">name.bin 取込</span>
+              </button>
+              <input id="impName" type="file" accept=".bin,application/octet-stream" style="display:none;">
+            </div>
           </div>
-          <div>
-            <button id="impPatternBtn" title="pattern.bin" aria-label="pattern.bin 取込" class="btn btn--orange">
-              <i class="fa-solid fa-file-arrow-up"></i>
-              <span class="btnText">pattern.bin 取込</span>
-            </button>
-            <input id="impPattern" type="file" accept=".bin,application/octet-stream" style="display:none;">
-            <button id="impColorBtn" title="color.bin" aria-label="color.bin 取込" class="btn btn--orange">
-              <i class="fa-solid fa-palette"></i>
-              <span class="btnText">color.bin 取込</span>
-            </button>
-            <input id="impColor" type="file" accept=".bin,application/octet-stream" style="display:none;">
-            <button id="impNameBtn" title="name.bin" aria-label="name.bin 取込" class="btn btn--orange">
-              <i class="fa-solid fa-table-cells"></i>
-              <span class="btnText">name.bin 取込</span>
-            </button>
-            <input id="impName" type="file" accept=".bin,application/octet-stream" style="display:none;">
+          <div class="fileGrid">
+            <h2>エクスポート</h2>
+            <h2>個別</h2>
+            <div>
+              <button id="expSc2" title="SC2 Export（pcg.sc2）" aria-label="SC2 Export" class="btn btn--orange">
+                <i class="fa-solid fa-file-export"></i>
+                <span class="btnText">SC2 Export</span>
+              </button>
+            </div>
+            <div>
+              <button id="expPattern" title="pattern.bin" aria-label="pattern.bin 出力" class="btn btn--orange">
+                <i class="fa-solid fa-file-arrow-down"></i>
+                <span class="btnText">pattern.bin 出力</span>
+              </button>
+              <button id="expColor" title="color.bin" aria-label="color.bin 出力" class="btn btn--orange">
+                <i class="fa-solid fa-palette"></i>
+                <span class="btnText">color.bin 出力</span>
+              </button>
+              <button id="expName" title="name.bin" aria-label="name.bin 出力" class="btn btn--orange">
+                <i class="fa-solid fa-table-cells"></i>
+                <span class="btnText">name.bin 出力</span>
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="fileGrid">
-          <h2>エクスポート</h2>
-          <h2>個別</h2>
-          <div>
-            <button id="expSc2" title="SC2 Export（pcg.sc2）" aria-label="SC2 Export" class="btn btn--orange">
-              <i class="fa-solid fa-file-export"></i>
-              <span class="btnText">SC2 Export</span>
-            </button>
+          <div class="fileGrid">
+            <h2>テキスト出力</h2>
+            <h2>
+            </h2>
+            <div>
+              <button id="expAsm" title="Z80 ASM用 DB出力" aria-label="ASM Export" class="btn btn--orange">
+                <i class="fa-solid fa-microchip"></i>
+                <span class="btnText">ASM 出力</span>
+              </button>
+            </div>
+            <div>
+              <div style="display: inline;">
+                <label for="basicBankSel" style="font-size:12px;opacity:.9;">BASIC出力バンク</label>
+                <select id="basicBankSel" class="selectSmall" title="BASIC出力するPCGバンク">
+                  <option value="cur">現在のバンク</option>
+                  <option value="0">bank0</option>
+                  <option value="1">bank1</option>
+                  <option value="2">bank2</option>
+                  <option value="all">全バンク(3)</option>
+                </select>
+              </div>
+              <button id="expBasic" title="MSX BASIC用 DATA出力" aria-label="MSX BASIC Export" class="btn btn--orange">
+                <i class="fa-solid fa-code"></i>
+                <span class="btnText">BASIC 出力</span>
+              </button>
+            </div>
           </div>
-          <div>
-            <button id="expPattern" title="pattern.bin" aria-label="pattern.bin 出力" class="btn btn--orange">
-              <i class="fa-solid fa-file-arrow-down"></i>
-              <span class="btnText">pattern.bin 出力</span>
-            </button>
-            <button id="expColor" title="color.bin" aria-label="color.bin 出力" class="btn btn--orange">
-              <i class="fa-solid fa-palette"></i>
-              <span class="btnText">color.bin 出力</span>
-            </button>
-            <button id="expName" title="name.bin" aria-label="name.bin 出力" class="btn btn--orange">
-              <i class="fa-solid fa-table-cells"></i>
-              <span class="btnText">name.bin 出力</span>
-            </button>
+          <div class="fileGrid">
+            <h2>クイック</h2>
+            <h2>
+            </h2>
+            <div>
+              <button id="qsSave" title="Quick Save (localStorage)" aria-label="Quick Save" class="btn btn--orange">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span class="btnText">セーブ(
+                  <span class="shortcutText">S</span>)</span>
+              </button>
+            </div>
+            <div>
+              <button id="qsLoad" title="Quick Load (localStorage)" aria-label="Quick Load" class="btn btn--orange">
+                <i class="fa-solid fa-rotate-left"></i>
+                <span class="btnText">ロード</span>
+              </button>
+              <button id="qsClear" title="Quick Save Clear" aria-label="Quick Save Clear" class="btn btn--orange">
+                <i class="fa-solid fa-trash"></i>
+                <span class="btnText">クリア</span>
+              </button>
+            </div>
           </div>
-        </div>
-        
-        <div class="fileGrid">
-          <h2>クイック</h2>
-          <h2></h2>
-          <div>
-            <button id="qsSave" title="Quick Save (localStorage)" aria-label="Quick Save" class="btn btn--orange">
-              <i class="fa-solid fa-floppy-disk"></i>
-              <span class="btnText">Save(<span style="text-decoration: underline;">S</span>)</span>
-            </button>
+          <div>状態:
+            <span id="status" class="ok">OK</span>
           </div>
-          <div>
-            <button id="qsLoad" title="Quick Load (localStorage)" aria-label="Quick Load" class="btn btn--orange">
-              <i class="fa-solid fa-rotate-left"></i>
-              <span class="btnText">Load</span>
-            </button>
-            <button id="qsClear" title="Quick Save Clear" aria-label="Quick Save Clear" class="btn btn--orange">
-              <i class="fa-solid fa-trash"></i>
-              <span class="btnText">Clear</span>
-            </button>
-          </div>
-        </div>
-<div>状態:
-          <span id="status" class="ok">OK</span>
-        </div></fieldset>
-      </div>
-    </div>
-  </div>
-  <div class="wrap">
-    <!-- Left: 16x16 thumbnails -->
-    <div class="panel panelDrag" data-panel-id="chars" draggable="true">
-      <h2 class="dragHandle"><span>文字一覧</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span></h2>
-      <div class="hint tiny" style="margin-bottom:6px;">
-        サムネイルをドラッグ＆ドロップ>すると文字を入れ替えできます。<br />
-        バンク連動中は全てのバンクに編集結果が反映します。
-      </div>
-      <div class="row">
-        <label>バンク
-          <select id="bankSel">
-            <option value="0">0 (上64ライン)</option>
-            <option value="1">1 (中64ライン)</option>
-            <option value="2">2 (下64ライン)</option>
-          </select>
-        </label>
-        <label title="ONにすると編集を3バンクへ同時反映">
-          <input type="checkbox" id="linkBanks" checked>バンク連動</label>
-      </div>
-      <div class="row" style="margin-top:6px;">
-        <div class="copyPasteRow">
-          <fieldset class="btnGroupField"><legend>コピー</legend><div class="btnGroup" aria-label="ペーストオプション"></div>
-        <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
-          <i class="fa-regular fa-copy"></i>
-          <span class="btnText">コピー(<span style="text-decoration: underline;">S</span>)</span>
-        </button>
-        </div>
-        <fieldset class="btnGroupField"><legend>ペースト</legend><div class="btnGroup" aria-label="ペーストオプション">
-        <button id="pasteBtn" title="ペースト（パターン+色）" aria-label="ペースト（パターン+色）" class="btn btn--orange">
-          <i class="fa-solid fa-paste"></i>
-          <span class="btnText">パターン+色(<span style="text-decoration: underline;">V</span>)</span>
-        </button>
-        <button id="pastePatBtn" title="パターンのみペースト" aria-label="パターンのみペースト" class="btn btn--orange">
-          <i class="fa-solid fa-border-all"></i>
-          <span class="btnText">パターン</span>
-        </button>
-        <button id="pasteColBtn" title="色のみペースト" aria-label="色のみペースト" class="btn btn--orange">
-          <i class="fa-solid fa-palette"></i>
-          <span class="btnText">色</span>
-        </button>
-      </div>
-        <span class="tiny" id="clipInfo">クリップ: なし</span>
-      </div>
-      <div class="thumbFrame" style="margin-top:10px;">
-        <div class="hex corner">
-        </div>
-        <div class="hex top">0</div>
-        <div class="hex top">1</div>
-        <div class="hex top">2</div>
-        <div class="hex top">3</div>
-        <div class="hex top">4</div>
-        <div class="hex top">5</div>
-        <div class="hex top">6</div>
-        <div class="hex top">7</div>
-        <div class="hex top">8</div>
-        <div class="hex top">9</div>
-        <div class="hex top">A</div>
-        <div class="hex top">B</div>
-        <div class="hex top">C</div>
-        <div class="hex top">D</div>
-        <div class="hex top">E</div>
-        <div class="hex top">F</div>
-        <div class="hex left">0</div>
-        <div class="hex left">1</div>
-        <div class="hex left">2</div>
-        <div class="hex left">3</div>
-        <div class="hex left">4</div>
-        <div class="hex left">5</div>
-        <div class="hex left">6</div>
-        <div class="hex left">7</div>
-        <div class="hex left">8</div>
-        <div class="hex left">9</div>
-        <div class="hex left">A</div>
-        <div class="hex left">B</div>
-        <div class="hex left">C</div>
-        <div class="hex left">D</div>
-        <div class="hex left">E</div>
-        <div class="hex left">F</div>
-        <div id="thumbGrid" class="grid">
         </div>
       </div>
     </div>
-    <!-- Center: editor + preview + map -->
-    <div class="editPanel panelDrag" data-panel-id="edit" draggable="true">
-      <h2 class="dragHandle"><span>タイル編集</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span></h2>
-      <div class="row">
-        <label>文字コード
-          <select id="charSel">
-          </select>
-        </label>
-      </div>
-      <div class="rowsEdit">
-        <div class="label">適用プレビュー</div>
-        <div class="label">ビット編集(1/0)</div>
-        <div class="label">色(FG/BG)</div>
-        <canvas id="prev" width="256" height="256" title="プレビュー（行ごと2色）">
-        </canvas>
-        <div class="editOuter">
-          <div id="rowMarker" class="rowMarker" title="編集中の行"></div>
-          <canvas id="edit" width="256" height="256" title="クリックでON/OFF"></canvas>
-        </div>
-        <div class="rowsColor" id="rowsColor">
-        </div>
-      </div>
-      <div>
-        <h2 style="margin-top:12px;">MSX1パレット(近似)</h2>
-        <div class="row tiny" style="margin-top:6px; align-items:center;">
-          <label>背景色
-            <select id="backdropSel" style="width:72px;">
+    <div class="wrap">
+      <!-- Left: 16x16 thumbnails -->
+      <div class="panel panelDrag" data-panel-id="chars" draggable="true">
+        <h2 class="dragHandle">
+          <span>文字一覧</span>
+          <span class="dragHint" title="ドラッグで並び替え">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </span>
+        </h2>
+        <div class="hint tiny" style="margin-bottom:6px;">サムネイルをドラッグ＆ドロップ>すると文字を入れ替えできます。
+          <br>バンク連動中は全てのバンクに編集結果が反映します。</div>
+        <div class="row">
+          <label>バンク
+            <select id="bankSel">
+              <option value="0">0 (上64ライン)</option>
+              <option value="1">1 (中64ライン)</option>
+              <option value="2">2 (下64ライン)</option>
             </select>
           </label>
-          <span>※ 色0はこの色で描画されます</span>
+          <label title="ONにすると編集を3バンクへ同時反映">
+            <input type="checkbox" id="linkBanks" checked>バンク連動</label>
         </div>
-        <div class="palette" id="pal">
+        <div class="row" style="margin-top:6px;">
+          <div class="copyPasteRow">
+            <fieldset class="btnGroupField">
+              <legend>コピー</legend>
+              <div class="btnGroup" aria-label="ペーストオプション">
+              </div>
+              <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
+                <i class="fa-regular fa-copy"></i>
+                <span class="btnText">コピー(
+                  <span class="shortcutText">C</span>)</span>
+              </button>
+            </fieldset>
+          </div>
+          <fieldset class="btnGroupField">
+            <legend>ペースト</legend>
+            <div class="btnGroup" aria-label="ペーストオプション">
+              <button id="pasteBtn" title="ペースト（パターン+色）" aria-label="ペースト（パターン+色）" class="btn btn--orange">
+                <i class="fa-solid fa-paste"></i>
+                <span class="btnText">パターン+色(
+                  <span class="shortcutText">V</span>)</span>
+              </button>
+              <button id="pastePatBtn" title="パターンのみペースト" aria-label="パターンのみペースト" class="btn btn--orange">
+                <i class="fa-solid fa-border-all"></i>
+                <span class="btnText">パターン</span>
+              </button>
+              <button id="pasteColBtn" title="色のみペースト" aria-label="色のみペースト" class="btn btn--orange">
+                <i class="fa-solid fa-palette"></i>
+                <span class="btnText">色</span>
+              </button>
+            </div>
+            <span class="tiny" id="clipInfo">クリップ: なし</span>
+          </fieldset>
         </div>
-        <div class="tiny">編集行の色を 左:FG / 右:BG で適用</div>
+        <div class="thumbFrame" style="margin-top:10px;">
+          <div class="hex corner">
+          </div>
+          <div class="hex top">0</div>
+          <div class="hex top">1</div>
+          <div class="hex top">2</div>
+          <div class="hex top">3</div>
+          <div class="hex top">4</div>
+          <div class="hex top">5</div>
+          <div class="hex top">6</div>
+          <div class="hex top">7</div>
+          <div class="hex top">8</div>
+          <div class="hex top">9</div>
+          <div class="hex top">A</div>
+          <div class="hex top">B</div>
+          <div class="hex top">C</div>
+          <div class="hex top">D</div>
+          <div class="hex top">E</div>
+          <div class="hex top">F</div>
+          <div class="hex left">0</div>
+          <div class="hex left">1</div>
+          <div class="hex left">2</div>
+          <div class="hex left">3</div>
+          <div class="hex left">4</div>
+          <div class="hex left">5</div>
+          <div class="hex left">6</div>
+          <div class="hex left">7</div>
+          <div class="hex left">8</div>
+          <div class="hex left">9</div>
+          <div class="hex left">A</div>
+          <div class="hex left">B</div>
+          <div class="hex left">C</div>
+          <div class="hex left">D</div>
+          <div class="hex left">E</div>
+          <div class="hex left">F</div>
+          <div id="thumbGrid" class="grid">
+          </div>
+        </div>
       </div>
-      <div class="row" style="margin-top:10px;">
-        <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="btn btn--orange">
-          <i class="fa-solid fa-rotate-left"></i>
-          <span class="btnText">Undo(<span style="text-decoration: underline;">Z</span>)</span>
-        </button>
-        <button id="redoBtn" title="Redo (Ctrl+Y / Ctrl+Shift+Z)" aria-label="Redo" class="btn btn--orange">
-          <i class="fa-solid fa-rotate-right"></i>
-          <span class="btnText">Redo(<span style="text-decoration: underline;">Y</span>)</span>
-        </button>
+      <!-- Center: editor + preview + map -->
+      <div class="editPanel panelDrag" data-panel-id="edit" draggable="true">
+        <h2 class="dragHandle">
+          <span>タイル編集</span>
+          <span class="dragHint" title="ドラッグで並び替え">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </span>
+        </h2>
+        <div class="row">
+          <label>文字コード
+            <select id="charSel">
+            </select>
+          </label>
+        </div>
+        <div class="rowsEdit">
+          <div class="label">適用プレビュー</div>
+          <div class="label">ビット編集(1/0)</div>
+          <div class="label">色(FG/BG)</div>
+          <canvas id="prev" width="256" height="256" title="プレビュー（行ごと2色）">
+          </canvas>
+          <div class="editOuter">
+            <div id="rowMarker" class="rowMarker" title="編集中の行">
+            </div>
+            <canvas id="edit" width="256" height="256" title="クリックでON/OFF">
+            </canvas>
+          </div>
+          <div class="rowsColor" id="rowsColor">
+          </div>
+        </div>
+        <div>
+          <h2 style="margin-top:12px;">MSX1パレット(近似)</h2>
+          <div class="row tiny" style="margin-top:6px; align-items:center;">
+            <label>背景色
+              <select id="backdropSel" style="width:72px;">
+              </select>
+            </label>
+            <span>※ 色0はこの色で描画されます</span>
+          </div>
+          <div class="palette" id="pal">
+          </div>
+          <div class="tiny">編集行の色を 左:FG / 右:BG で適用</div>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="btn btn--orange">
+            <i class="fa-solid fa-rotate-left"></i>
+            <span class="btnText">Undo(
+              <span class="shortcutText">Z</span>)</span>
+          </button>
+          <button id="redoBtn" title="Redo (Ctrl+Y / Ctrl+Shift+Z)" aria-label="Redo" class="btn btn--orange">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span class="btnText">Redo(
+              <span class="shortcutText">Y</span>)</span>
+          </button>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button id="clearBtn" title="クリア" aria-label="クリア" class="btn btn--orange">
+            <i class="fa-solid fa-eraser"></i>
+            <span class="btnText">クリア</span>
+          </button>
+          <button id="invBtn" title="反転(1↔0)" aria-label="反転(1↔0)" class="btn btn--orange">
+            <i class="fa-solid fa-right-left"></i>
+            <span class="btnText">反転(1↔0)</span>
+          </button>
+          <button id="flipHBtn" title="左右反転" aria-label="左右反転" class="btn btn--orange">
+            <i class="fa-solid fa-arrows-left-right"></i>
+            <span class="btnText">左右反転</span>
+          </button>
+          <button id="flipVBtn" title="上下反転" aria-label="上下反転" class="btn btn--orange">
+            <i class="fa-solid fa-arrows-up-down"></i>
+            <span class="btnText">上下反転</span>
+          </button>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button id="shiftLBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span class="btnText">ローテート</span>
+          </button>
+          <button id="shiftRBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span class="btnText">ローテート</span>
+          </button>
+          <button id="shiftUBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span class="btnText">ローテート</span>
+          </button>
+          <button id="shiftDBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span class="btnText">ローテート</span>
+          </button>
+        </div>
       </div>
-      <div class="row" style="margin-top:10px;">
-        <button id="clearBtn" title="クリア" aria-label="クリア" class="btn btn--orange">
-          <i class="fa-solid fa-eraser"></i>
-          <span class="btnText">クリア</span>
-        </button>
-        <button id="invBtn" title="反転(1↔0)" aria-label="反転(1↔0)" class="btn btn--orange">
-          <i class="fa-solid fa-right-left"></i>
-          <span class="btnText">反転(1↔0)</span>
-        </button>
-        <button id="flipHBtn" title="左右反転" aria-label="左右反転" class="btn btn--orange">
-          <i class="fa-solid fa-arrows-left-right"></i>
-          <span class="btnText">左右反転</span>
-        </button>
-        <button id="flipVBtn" title="上下反転" aria-label="上下反転" class="btn btn--orange">
-          <i class="fa-solid fa-arrows-up-down"></i>
-          <span class="btnText">上下反転</span>
-        </button>
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <button id="shiftLBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
-          <i class="fa-solid fa-arrow-left"></i>
-          <span class="btnText">ローテート</span>
-        </button>
-        <button id="shiftRBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
-          <i class="fa-solid fa-arrow-right"></i>
-          <span class="btnText">ローテート</span>
-        </button>
-        <button id="shiftUBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
-          <i class="fa-solid fa-arrow-up"></i>
-          <span class="btnText">ローテート</span>
-        </button>
-        <button id="shiftDBtn" title=" ローテート" aria-label=" ローテート" class="btn btn--orange">
-          <i class="fa-solid fa-arrow-down"></i>
-          <span class="btnText">ローテート</span>
-        </button>
-      </div>
-    </div>
-    <div class="mapPanel panelDrag" data-panel-id="map" draggable="true">
-      <h2 class="dragHandle"><span>マップ (32×24)</span><span class="dragHint" title="ドラッグで並び替え"><i class="fa-solid fa-grip-vertical"></i></span>
-      </h2>
-      <div class="row mapCanvasRow">
-        <canvas id="map" width="640" height="480" title="左クリック:配置 / 右クリック:消去 / Shift+クリック:スポイト">
-        </canvas>
-      </div>
-      <div id="mapCoord" class="row tiny" style="margin-left:10px;">(x: -, y: -)</div>
-      <div class="row">
-        <button id="mapClear" title="マップクリア" aria-label="マップクリア" class="btn btn--orange">
-          <i class="fa-solid fa-broom"></i>
-          <span class="btnText">マップクリア</span>
-        </button>
-      </div>
-      <div class="hint tiny">操作：
-        <span class="kbd">左クリック</span>文字配置 /
-        <span class="kbd">右クリック</span>消去(0) /
-        <span class="kbd">Shift</span>+
-        <span class="kbd">クリック</span>スポイト（そのセルの文字を選択）
-        <br>描画参照：行0-7→bank0、行8-15→bank1、行16-23→bank2
+      <div class="mapPanel panelDrag" data-panel-id="map" draggable="true">
+        <h2 class="dragHandle">
+          <span>マップ (32×24)</span>
+          <span class="dragHint" title="ドラッグで並び替え">
+            <i class="fa-solid fa-grip-vertical"></i>
+          </span>
+        </h2>
+        <div class="metaTilePanel">
+          <div class="row">
+            <fieldset class="btnGroupField">
+              <legend>メタタイル</legend>
+                <select id="metaSelect" title="部品棚" style="display:none;">
+                </select>
+                <div class="metaDropdown" id="metaDropdown" title="部品棚（サムネ付き）">
+                  <button type="button" class="metaDropBtn" id="metaDropBtn">
+                    <canvas id="metaDropThumb" width="24" height="24">
+                    </canvas>
+                    <span id="metaDropText">(なし)</span>
+                    <span class="metaDropCaret">▾</span>
+                  </button>
+                  <div class="metaDropList" id="metaDropList" style="display:none;">
+                  </div>
+                </div>
+                <button id="metaDupBtn" style="display: none;" class="btn btn--orange" title="選択中のメタタイルを複製">複製</button>
+                <button id="metaRenameBtn" class="btn btn--orange" title="選択中のメタタイル名を変更">名前変更</button>
+                <button id="metaDeleteBtn" class="btn btn--orange" title="選択中のメタタイルを削除">削除</button>
+                <div style="display:none;">
+                  <label class="tiny" style="margin-left:8px; user-select:none;">
+                    <input type="checkbox" id="metaPersistChk">保存</label>
+                </div>
+                
+                <label>取得サイズ</label>
+                <select id="metaSizeSel" title="登録/表示サイズ">
+                  <option value="2">2×2</option>
+                  <option value="4">4×4</option>
+                </select>
+
+                <label class="metaToggle" title="スタンプONで貼り付けモード">
+                  <input type="checkbox" id="metaStampChk">
+                  <span>スタンプ</span>
+                  <canvas id="metaPreview" width="40" height="40" title="選択中メタタイルのプレビュー">
+                  </canvas>
+                </label>
+                <span style="display: none;" id="metaStampStatus" class="tiny">
+                </span>
+              </fieldset>
+
+              
+          </div>
+        </div>
+        <div class="row mapCanvasRow">
+          <canvas id="map" width="640" height="480" title="左クリック:配置 / 右クリック:消去 / Shift+クリック:スポイト">
+          </canvas>
+        </div>
+        <div id="mapCoord" class="row tiny" style="margin-left:10px;">(x: -, y: -)</div>
+        <div class="row">
+          <button id="mapClear" title="マップクリア" aria-label="マップクリア" class="btn btn--orange">
+            <i class="fa-solid fa-broom"></i>
+            <span class="btnText">マップクリア</span>
+          </button>
+        </div>
+        <div class="hint tiny">操作：
+          <br>
+          <span class="kbd">左クリック</span>文字配置 /
+          <span class="kbd">右クリック</span>消去(0) /
+          <span class="kbd">Shift</span>+
+          <span class="kbd">クリック</span>スポイト（そのセルの文字を選択）
+          <br>描画参照：行0-7→bank0、行8-15→bank1、行16-23→bank2
+          <br>
+          <br>
+          <div>メタタイル</div>登録: サイズ 2×2/4×4を選択の上、カーソル位置を左上として
+          <span class="kbd">Ctrl+クリック</span>で、リストに保存。
+          <br>
+          <b>スタンプ</b>をONで貼付モード → 左クリックで貼る / 右クリックで同サイズを消去。
+          <br>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<script>
-(() => {
-
-  // ===== Panel reorder (drag within .wrap) =====
-  const wrapEl = document.querySelector('.wrap');
-  const panelEls = () => wrapEl ? Array.from(wrapEl.querySelectorAll('.panelDrag')) : [];
-
-  function savePanelOrder(){
-    try{
-      const order = panelEls().map(p => p.dataset.panelId);
-      localStorage.setItem('pcg_panel_order', JSON.stringify(order));
-    }catch(_){}
-  }
-
-  function loadPanelOrder(){
-    try{
-      if (!wrapEl) return;
-      const raw = localStorage.getItem('pcg_panel_order');
-      if (!raw) return;
-      const order = JSON.parse(raw);
-      if (!Array.isArray(order)) return;
-
-      const map = new Map(panelEls().map(p => [p.dataset.panelId, p]));
-      for (const id of order){
-        const el = map.get(id);
-        if (el) wrapEl.appendChild(el);
-      }
-      // any new panels not in order go to the end
-      for (const [_, el] of map.entries()){
-        if (el.parentElement !== wrapEl) wrapEl.appendChild(el);
-      }
-    }catch(_){}
-  }
-
-  // Compute insertion point based on nearest panel center (works with flex-wrap)
-  function getInsertBeforeEl(draggingEl, clientX, clientY){
-    const els = panelEls().filter(el => el !== draggingEl);
-    let bestEl = null;
-    let bestRect = null;
-    let bestDist = Infinity;
-
-    for (const el of els){
-      const r = el.getBoundingClientRect();
-      const cx = r.left + r.width * 0.5;
-      const cy = r.top  + r.height * 0.5;
-      const dx = clientX - cx;
-      const dy = clientY - cy;
-      const d2 = dx*dx + dy*dy;
-      if (d2 < bestDist){
-        bestDist = d2;
-        bestEl = el;
-        bestRect = r;
-      }
+  <script>
+  (() => {
+  
+    // ===== Panel reorder (drag within .wrap) =====
+    const wrapEl = document.querySelector('.wrap');
+    const panelEls = () => wrapEl ? Array.from(wrapEl.querySelectorAll('.panelDrag')) : [];
+  
+    function savePanelOrder(){
+      try{
+        const order = panelEls().map(p => p.dataset.panelId);
+        localStorage.setItem('pcg_panel_order', JSON.stringify(order));
+      }catch(_){}
     }
-    if (!bestEl || !bestRect) return null;
-
-    const cx = bestRect.left + bestRect.width * 0.5;
-    const cy = bestRect.top  + bestRect.height * 0.5;
-    const before = (clientY < cy) || (Math.abs(clientY - cy) < 40 && clientX < cx);
-    return before ? bestEl : bestEl.nextSibling;
-  }
-
-  let draggingPanel = null;
-  let dragEnabled = false;
-
-  function isFromHandle(e){
-    return !!(e.target && e.target.closest && e.target.closest('.dragHandle'));
-  }
-  function setDraggableMode(on){
-    dragEnabled = on;
-    for (const p of panelEls()) p.draggable = on;
-  }
-
-  // Enable dragging only when starting from header (prevents interfering with editing)
-  for (const p of panelEls()){
-    p.addEventListener('pointerdown', (e) => setDraggableMode(isFromHandle(e)));
-    p.addEventListener('pointerup', () => setDraggableMode(false));
-    p.addEventListener('pointercancel', () => setDraggableMode(false));
-
-    p.addEventListener('dragstart', (e) => {
-      // dragEnabled is set by pointerdown on the header handle.
-      // IMPORTANT: Do not block drag&drop that starts from inside the panel content (e.g. character thumbnails).
-      if (!dragEnabled){
-        if (e.target !== p) return; // allow child drag to bubble through
+  
+    function loadPanelOrder(){
+      try{
+        if (!wrapEl) return;
+        const raw = localStorage.getItem('pcg_panel_order');
+        if (!raw) return;
+        const order = JSON.parse(raw);
+        if (!Array.isArray(order)) return;
+  
+        const map = new Map(panelEls().map(p => [p.dataset.panelId, p]));
+        for (const id of order){
+          const el = map.get(id);
+          if (el) wrapEl.appendChild(el);
+        }
+        // any new panels not in order go to the end
+        for (const [_, el] of map.entries()){
+          if (el.parentElement !== wrapEl) wrapEl.appendChild(el);
+        }
+      }catch(_){}
+    }
+  
+    // Compute insertion point based on nearest panel center (works with flex-wrap)
+    function getInsertBeforeEl(draggingEl, clientX, clientY){
+      const els = panelEls().filter(el => el !== draggingEl);
+      let bestEl = null;
+      let bestRect = null;
+      let bestDist = Infinity;
+  
+      for (const el of els){
+        const r = el.getBoundingClientRect();
+        const cx = r.left + r.width * 0.5;
+        const cy = r.top  + r.height * 0.5;
+        const dx = clientX - cx;
+        const dy = clientY - cy;
+        const d2 = dx*dx + dy*dy;
+        if (d2 < bestDist){
+          bestDist = d2;
+          bestEl = el;
+          bestRect = r;
+        }
+      }
+      if (!bestEl || !bestRect) return null;
+  
+      const cx = bestRect.left + bestRect.width * 0.5;
+      const cy = bestRect.top  + bestRect.height * 0.5;
+      const before = (clientY < cy) || (Math.abs(clientY - cy) < 40 && clientX < cx);
+      return before ? bestEl : bestEl.nextSibling;
+    }
+  
+    let draggingPanel = null;
+    let dragEnabled = false;
+  
+    function isFromHandle(e){
+      return !!(e.target && e.target.closest && e.target.closest('.dragHandle'));
+    }
+    function setDraggableMode(on){
+      dragEnabled = on;
+      for (const p of panelEls()) p.draggable = on;
+    }
+  
+    // Enable dragging only when starting from header (prevents interfering with editing)
+    for (const p of panelEls()){
+      p.addEventListener('pointerdown', (e) => setDraggableMode(isFromHandle(e)));
+      p.addEventListener('pointerup', () => setDraggableMode(false));
+      p.addEventListener('pointercancel', () => setDraggableMode(false));
+  
+      p.addEventListener('dragstart', (e) => {
+        // dragEnabled is set by pointerdown on the header handle.
+        // IMPORTANT: Do not block drag&drop that starts from inside the panel content (e.g. character thumbnails).
+        if (!dragEnabled){
+          if (e.target !== p) return; // allow child drag to bubble through
+          e.preventDefault();
+          return;
+        }
+        draggingPanel = p;
+        p.classList.add('isDragging');
+        if (e.dataTransfer){
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', p.dataset.panelId || '');
+        }
+      });
+  
+      p.addEventListener('dragend', () => {
+        if (draggingPanel){
+          draggingPanel.classList.remove('isDragging');
+          draggingPanel = null;
+          savePanelOrder();
+        }
+        setDraggableMode(false);
+      });
+    }
+  
+    if (wrapEl){
+      wrapEl.addEventListener('dragover', (e) => {
+        if (!draggingPanel) return;
         e.preventDefault();
-        return;
-      }
-      draggingPanel = p;
-      p.classList.add('isDragging');
-      if (e.dataTransfer){
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', p.dataset.panelId || '');
-      }
-    });
-
-    p.addEventListener('dragend', () => {
-      if (draggingPanel){
-        draggingPanel.classList.remove('isDragging');
-        draggingPanel = null;
-        savePanelOrder();
-      }
-      setDraggableMode(false);
-    });
-  }
-
-  if (wrapEl){
-    wrapEl.addEventListener('dragover', (e) => {
-      if (!draggingPanel) return;
-      e.preventDefault();
-      const beforeEl = getInsertBeforeEl(draggingPanel, e.clientX, e.clientY);
-      if (beforeEl === null) return;
-      wrapEl.insertBefore(draggingPanel, beforeEl);
-    });
-    wrapEl.addEventListener('drop', (e) => {
-      if (!draggingPanel) return;
-      e.preventDefault();
-    });
-  }
-
-  loadPanelOrder();
-
-
-  // ===== Undo / Redo =====
-  const undoBtn = document.getElementById('undoBtn');
-  const redoBtn = document.getElementById('redoBtn');
-
-  const undoStack = [];
-  const redoStack = [];
-  const MAX_HISTORY = 200;
-
-  // Transaction groups a drag (or multi-step op) into one undo item
-  let tx = null;
-
-  function snapshotState(){
-    return {
-      pattern: new Uint8Array(pattern),
-      color: new Uint8Array(color),
-      nameTable: new Uint8Array(nameTable),
-      backdropIdx,
-      curBank,
-      curChar
-    };
-  }
-
-  function restoreState(st){
-    if (!st) return;
-    pattern.set(st.pattern);
-    color.set(st.color);
-    nameTable.set(st.nameTable);
-    backdropIdx = st.backdropIdx ?? backdropIdx;
-    curBank = st.curBank ?? curBank;
-    curChar = st.curChar ?? curChar;
-
-    bankSel.value = String(curBank);
-    charSel.value = String(curChar);
-
-    if (backdropSel){
-      backdropSel.value = String(backdropIdx);
-    setSelectColorStyle(backdropSel, backdropIdx);
+        const beforeEl = getInsertBeforeEl(draggingPanel, e.clientX, e.clientY);
+        if (beforeEl === null) return;
+        wrapEl.insertBefore(draggingPanel, beforeEl);
+      });
+      wrapEl.addEventListener('drop', (e) => {
+        if (!draggingPanel) return;
+        e.preventDefault();
+      });
+    }
+  
+    loadPanelOrder();
+  
+  
+    // ===== Undo / Redo =====
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+  
+    const undoStack = [];
+    const redoStack = [];
+    const MAX_HISTORY = 200;
+  
+    // Transaction groups a drag (or multi-step op) into one undo item
+    let tx = null;
+  
+    function snapshotState(){
+      return {
+        pattern: new Uint8Array(pattern),
+        color: new Uint8Array(color),
+        nameTable: new Uint8Array(nameTable),
+        backdropIdx,
+        curBank,
+        curChar
+      };
+    }
+  
+    function restoreState(st){
+      if (!st) return;
+      pattern.set(st.pattern);
+      color.set(st.color);
+      nameTable.set(st.nameTable);
+      backdropIdx = st.backdropIdx ?? backdropIdx;
+      curBank = st.curBank ?? curBank;
+      curChar = st.curChar ?? curChar;
+  
+      bankSel.value = String(curBank);
+      charSel.value = String(curChar);
+  
+      if (backdropSel){
+        backdropSel.value = String(backdropIdx);
       setSelectColorStyle(backdropSel, backdropIdx);
-    }
-
-    syncRowUI();
-  redrawAllFull();
-  updateRowMarker();
-    drawMap();
-    updateUndoRedoUI();
-  }
-
-  function beginTx(label){
-    if (tx) return;
-    tx = { label: label || 'Edit', before: snapshotState(), changed: false };
-  }
-  function markTxChanged(){
-    if (tx) tx.changed = true;
-  }
-  function endTx(){
-    if (!tx) return;
-    if (tx.changed){
-      undoStack.push(tx.before);
-      if (undoStack.length > MAX_HISTORY) undoStack.shift();
-      redoStack.length = 0;
-    }
-    tx = null;
-    updateUndoRedoUI();
-  }
-
-  function updateUndoRedoUI(){
-    if (undoBtn) undoBtn.disabled = (undoStack.length === 0) || !!tx;
-    if (redoBtn) redoBtn.disabled = (redoStack.length === 0) || !!tx;
-  }
-
-  function doUndo(){
-    if (tx) endTx();
-    if (undoStack.length === 0) return;
-    const cur = snapshotState();
-    const prev = undoStack.pop();
-    redoStack.push(cur);
-    restoreState(prev);
-  }
-
-  function doRedo(){
-    if (tx) endTx();
-    if (redoStack.length === 0) return;
-    const cur = snapshotState();
-    const nxt = redoStack.pop();
-    undoStack.push(cur);
-    restoreState(nxt);
-  }
-
-  if (undoBtn) undoBtn.addEventListener('click', doUndo);
-  if (redoBtn) redoBtn.addEventListener('click', doRedo);
-
-    // Keyboard: Ctrl/Cmd+Z / Ctrl/Cmd+Y / Ctrl/Cmd+Shift+Z / Ctrl/Cmd+S / Ctrl/Cmd+C / Ctrl/Cmd+V
-  window.addEventListener('keydown', (e) => {
-    const key = e.key.toLowerCase();
-    const isMac = navigator.platform.toUpperCase().includes('MAC');
-    const ctrl = isMac ? e.metaKey : e.ctrlKey;
-
-    if (!ctrl) return;
-
-    // Don't steal shortcuts while typing
-    const t = e.target;
-    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
-
-    // Undo / Redo
-    if (key === 'z' && !e.shiftKey){
-      e.preventDefault(); doUndo(); return;
-    }
-    if (key === 'y' || (key === 'z' && e.shiftKey)){
-      e.preventDefault(); doRedo(); return;
-    }
-
-    // Quick Save
-    if (key === 's'){
-      e.preventDefault();
-      if (typeof quickSave === 'function') quickSave();
-      return;
-    }
-
-    // Copy / Paste (character clipboard)
-    if (key === 'c'){
-      e.preventDefault();
-      document.getElementById('copyBtn')?.click();
-      return;
-    }
-    if (key === 'v'){
-      e.preventDefault();
-      document.getElementById('pasteBtn')?.click();
-      return;
-    }
-  });
-
-// ===== Embedded default font (3 banks, 256 chars each, 6144 bytes) =====
-  const DEFAULT_FONT_B64 = "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";
-  function decodeB64ToU8(b64s){
-    const bin = atob(b64s);
-    const out = new Uint8Array(bin.length);
-    for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i) & 0xFF;
-    return out;
-  }
-
-  // ===== Sizes =====
-  const PAT_SIZE = 6144;
-  const COL_SIZE = 6144;
-  const NAM_SIZE = 768;
-
-  // ===== SC2 (BLOAD,S VRAM) Header / Layout =====
-  const SC2_FILENAME = 'pcg.sc2';
-
-  // Header: FE 00 00 FF 37 00 00
-  const MSX_BINHDR_SIZE = 7;
-  const MSX_LOAD_START = 0x0000;
-  const MSX_LOAD_END   = 0x37FF; // inclusive
-  const MSX_EXEC_ADDR  = 0x0000;
-
-  const MSX_PAYLOAD_SIZE = (MSX_LOAD_END - MSX_LOAD_START + 1); // 0x3800 = 14336
-  const SC2_TOTAL = MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE;
-
-  // SCREEN2 default VRAM layout for this tool
-  const VRAM_PAT_OFF  = 0x0000; // 6144
-  const VRAM_NAME_OFF = 0x1800; // 768
-  const VRAM_COL_OFF  = 0x2000; // 6144
-
-  // ===== MSX1 palette (approx) =====
-  const MSX = [
-    [0,0,0],[0,0,0],[33,200,66],[94,220,120],
-    [84,85,237],[125,118,252],[212,82,77],[66,235,245],
-    [252,85,84],[255,121,120],[212,193,84],[230,206,128],
-    [33,176,59],[201,91,186],[204,204,204],[255,255,255]
-  ];
-  const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
-
-  // Backdrop color (MSX VDP reg7 lower nibble equivalent): used when FG/BG nibble is 0
-  let backdropIdx = 4; // default: dark blue-ish (more MSX-like than black)
-  function effIdx(idx){
-    idx = idx & 15;
-    return (idx === 0) ? backdropIdx : idx;
-  }
-
-
-  // ===== Data =====
-  const pattern = new Uint8Array(PAT_SIZE);
-  const color   = new Uint8Array(COL_SIZE);
-  const nameTable = new Uint8Array(NAM_SIZE);
-
-  // init colors default (ink=15, paper=1)
-  for (let i=0; i<COL_SIZE; i++) color[i] = (15<<4) | 0;
-
-
-  // Load embedded default font into PCG patterns (bank0..2)
-  (function loadDefaultFont(){
-    try{
-      const buf = decodeB64ToU8(DEFAULT_FONT_B64);
-      if (buf.length !== PAT_SIZE){
-        console.warn('DEFAULT_FONT size mismatch', buf.length);
-        return;
+        setSelectColorStyle(backdropSel, backdropIdx);
       }
-      pattern.set(buf); // bank0..2 contiguous
-    }catch(err){
-      console.warn('DEFAULT_FONT decode failed', err);
+  
+      syncRowUI();
+    redrawAllFull();
+    updateRowMarker();
+      drawMap();
+      updateUndoRedoUI();
     }
-  })();
-
-  // ===== UI =====
-  const bankSel   = document.getElementById('bankSel');
-  const linkBanks = document.getElementById('linkBanks');
-  const charSel   = document.getElementById('charSel');
-
-  const editCv    = document.getElementById('edit');
-  const prevCv    = document.getElementById('prev');
-  const mapCv     = document.getElementById('map');
-
-  const mapCoordEl = document.getElementById('mapCoord');
-  function setMapCoordText(mx, my){
-    if (mx < 0 || my < 0) mapCoordEl.textContent = '(x: -, y: -)';
-    else mapCoordEl.textContent = `(x: ${mx}, y: ${my})`;
-  }
-  function mapCoordFromEvent(e){
-    // Use the same coordinate mapping as map editing to stay correct under CSS scaling
-    return mapCoordsFromEvent(e);
-  }
-
-  const ectx = editCv.getContext('2d');
-  const pctx = prevCv.getContext('2d');
-  const mctx = mapCv.getContext('2d');
-
-  const thumbGrid = document.getElementById('thumbGrid');
-  const rowsColor = document.getElementById('rowsColor');
-  const palDiv    = document.getElementById('pal');
-  const backdropSel = document.getElementById('backdropSel');
-const statusEl  = document.getElementById('status');
-
-  // ===== Collapsible top Import/Export =====
-  const ioTopToggle = document.getElementById('ioTopToggle');
-  const ioTopBlock  = document.getElementById('ioTopBlock');
-  const ioTopChevron= document.getElementById('ioTopChevron');
-  if (ioTopToggle && ioTopBlock && ioTopChevron){
-    ioTopToggle.addEventListener('click', () => {
-      const hidden = ioTopBlock.classList.toggle('isHidden');
-      ioTopChevron.textContent = hidden ? '▶' : '▼';
+  
+    function beginTx(label){
+      if (tx) return;
+      tx = { label: label || 'Edit', before: snapshotState(), changed: false };
+    }
+    function markTxChanged(){
+      if (tx) tx.changed = true;
+    }
+    function endTx(){
+      if (!tx) return;
+      if (tx.changed){
+        undoStack.push(tx.before);
+        if (undoStack.length > MAX_HISTORY) undoStack.shift();
+        redoStack.length = 0;
+      }
+      tx = null;
+      updateUndoRedoUI();
+    }
+  
+    function updateUndoRedoUI(){
+      if (undoBtn) undoBtn.disabled = (undoStack.length === 0) || !!tx;
+      if (redoBtn) redoBtn.disabled = (redoStack.length === 0) || !!tx;
+    }
+  
+    function doUndo(){
+      if (tx) endTx();
+      if (undoStack.length === 0) return;
+      const cur = snapshotState();
+      const prev = undoStack.pop();
+      redoStack.push(cur);
+      restoreState(prev);
+    }
+  
+    function doRedo(){
+      if (tx) endTx();
+      if (redoStack.length === 0) return;
+      const cur = snapshotState();
+      const nxt = redoStack.pop();
+      undoStack.push(cur);
+      restoreState(nxt);
+    }
+  
+    if (undoBtn) undoBtn.addEventListener('click', doUndo);
+    if (redoBtn) redoBtn.addEventListener('click', doRedo);
+  
+    // Keyboard: Ctrl+Z / Ctrl+Y / Ctrl+Shift+Z
+    window.addEventListener('keydown', (e) => {
+      const key = (e.key || '').toLowerCase();
+      const isMac = navigator.platform.toUpperCase().includes('MAC');
+      const ctrl = isMac ? e.metaKey : e.ctrlKey;
+      if (!ctrl) return;
+  
+      // Undo / Redo
+      if (key === 'z' && !e.shiftKey){
+        e.preventDefault(); doUndo(); return;
+      }
+      if (key === 'y' || (key === 'z' && e.shiftKey)){
+        e.preventDefault(); doRedo(); return;
+      }
+  
+      // Quick Save / Load
+      if (key === 's'){
+        e.preventDefault(); quickSave(); return;
+      }
+      if (key === 'l'){
+        e.preventDefault(); quickLoad(); return;
+      }
     });
-  }
-
-  // Export/Import controls
-  const expSc2Btn = document.getElementById('expSc2');
-  const impSc2Btn = document.getElementById('impSc2Btn');
-  const impSc2Inp = document.getElementById('impSc2');
-
-  const impPatternBtn = document.getElementById('impPatternBtn');
-  const impColorBtn   = document.getElementById('impColorBtn');
-  const impNameBtn    = document.getElementById('impNameBtn');
-  const impPatternInp = document.getElementById('impPattern');
-  const impColorInp   = document.getElementById('impColor');
-  const impNameInp    = document.getElementById('impName');
-
-  // ===== State =====
-  const CELL = 32;      // 256/8
-  const TH_SIZE = 16;
-  let curBank = 0;
-  let curChar = 0;
-  let clip = null;
-  let activeRow = 0; // last touched row (0-7)
-
-  const rowMarkerEl = document.getElementById('rowMarker');
-  function updateRowMarker(){
-    if (!rowMarkerEl) return;
-    // place at center of active row (0..7)
-    rowMarkerEl.style.top = ((activeRow + 0.5) * 100 / 8) + '%';
-  }
-  // ===== Helpers =====
-  const addr = (bank, ch, row) => bank*2048 + ch*8 + row;
-  const clampNibble = (n) => Math.max(0, Math.min(15, n|0));
-
-  function setStatus(msg, ok=true){
-    statusEl.textContent = msg;
-    statusEl.className = ok ? 'ok' : 'bad';
-  }
-
-  function getRowPattern(bank, ch, row){ return pattern[addr(bank,ch,row)]; }
-  function setRowPattern(bank, ch, row, v){ pattern[addr(bank,ch,row)] = v & 0xFF; }
-  function getRowColor(bank, ch, row){ return color[addr(bank,ch,row)]; }
-  function setRowColor(bank, ch, row, v){ color[addr(bank,ch,row)] = v & 0xFF; }
-
-  function applyToBanks(fn){
-    if (linkBanks.checked) for (let b=0;b<3;b++) fn(b);
-    else fn(curBank);
-  }
-
-  function downloadBytes(bytes, filename){
-    const blob = new Blob([bytes], { type: 'application/octet-stream' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  async function readFileToUint8(file){
-    return new Uint8Array(await file.arrayBuffer());
-  }
-
-  function importInto(target, bytes, expectedSize, label){
-    if (bytes.byteLength !== expectedSize){
-      alert(`${label} のサイズが違います。\n期待: ${expectedSize} bytes\n実際: ${bytes.byteLength} bytes`);
-      setStatus(`${label} import NG`, false);
-      return false;
+  // ===== Embedded default font (3 banks, 256 chars each, 6144 bytes) =====
+    const DEFAULT_FONT_B64 = "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";
+    function decodeB64ToU8(b64s){
+      const bin = atob(b64s);
+      const out = new Uint8Array(bin.length);
+      for(let i=0;i<bin.length;i++) out[i] = bin.charCodeAt(i) & 0xFF;
+      return out;
     }
-    target.set(bytes);
-    setStatus(`${label} import OK`);
-    return true;
-  }
-
-  // ===== Build char select =====
-  for (let i=0; i<256; i++){
-    const o = document.createElement('option');
-    o.value = String(i);
-    o.textContent = i.toString(10).padStart(3,'0') + ` (0x${i.toString(16).toUpperCase().padStart(2,'0')})`;
-    charSel.appendChild(o);
-  }
-
-  // ===== Row color selects =====
-  function setSelectColorStyle(sel, idx){
-    // Give the select itself a preview color (works in most browsers)
-    sel.style.background = rgb(MSX[effIdx(idx)]);
-    // Choose text color based on luminance
-    const c = MSX[idx];
-    const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
-    sel.style.color = (lum < 140) ? '#fff' : '#111';
-  }
-
-  function fillColorOptions(sel){
-    sel.innerHTML = '';
-    for (let i=0; i<16; i++){
+  
+    // ===== Sizes =====
+    const PAT_SIZE = 6144;
+    const COL_SIZE = 6144;
+    const NAM_SIZE = 768;
+  
+    // ===== SC2 (BLOAD,S VRAM) Header / Layout =====
+    const SC2_FILENAME = 'pcg.sc2';
+  
+    // Header: FE 00 00 FF 37 00 00
+    const MSX_BINHDR_SIZE = 7;
+    const MSX_LOAD_START = 0x0000;
+    const MSX_LOAD_END   = 0x37FF; // inclusive
+    const MSX_EXEC_ADDR  = 0x0000;
+  
+    const MSX_PAYLOAD_SIZE = (MSX_LOAD_END - MSX_LOAD_START + 1); // 0x3800 = 14336
+    const SC2_TOTAL = MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE;
+  
+    // SCREEN2 default VRAM layout for this tool
+    const VRAM_PAT_OFF  = 0x0000; // 6144
+    const VRAM_NAME_OFF = 0x1800; // 768
+    const VRAM_COL_OFF  = 0x2000; // 6144
+  
+    // ===== MSX1 palette (approx) =====
+    const MSX = [
+      [0,0,0],[0,0,0],[33,200,66],[94,220,120],
+      [84,85,237],[125,118,252],[212,82,77],[66,235,245],
+      [252,85,84],[255,121,120],[212,193,84],[230,206,128],
+      [33,176,59],[201,91,186],[204,204,204],[255,255,255]
+    ];
+    const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+  
+    // Backdrop color (MSX VDP reg7 lower nibble equivalent): used when FG/BG nibble is 0
+    let backdropIdx = 4; // default: dark blue-ish (more MSX-like than black)
+    function effIdx(idx){
+      idx = idx & 15;
+      return (idx === 0) ? backdropIdx : idx;
+    }
+  
+  
+    // ===== Data =====
+    const pattern = new Uint8Array(PAT_SIZE);
+    const color   = new Uint8Array(COL_SIZE);
+    const nameTable = new Uint8Array(NAM_SIZE);
+  
+    // init colors default (ink=15, paper=1)
+    for (let i=0; i<COL_SIZE; i++) color[i] = (15<<4) | 0;
+  
+  
+    // Load embedded default font into PCG patterns (bank0..2)
+    (function loadDefaultFont(){
+      try{
+        const buf = decodeB64ToU8(DEFAULT_FONT_B64);
+        if (buf.length !== PAT_SIZE){
+          console.warn('DEFAULT_FONT size mismatch', buf.length);
+          return;
+        }
+        pattern.set(buf); // bank0..2 contiguous
+      }catch(err){
+        console.warn('DEFAULT_FONT decode failed', err);
+      }
+    })();
+  
+    // ===== UI =====
+    const bankSel   = document.getElementById('bankSel');
+    const linkBanks = document.getElementById('linkBanks');
+    const charSel   = document.getElementById('charSel');
+  
+    const editCv    = document.getElementById('edit');
+    const prevCv    = document.getElementById('prev');
+    const mapCv     = document.getElementById('map');
+  
+    const mapCoordEl = document.getElementById('mapCoord');
+    function setMapCoordText(mx, my){
+      if (mx < 0 || my < 0) mapCoordEl.textContent = '(x: -, y: -)';
+      else mapCoordEl.textContent = `(x: ${mx}, y: ${my})`;
+    }
+    function mapCoordFromEvent(e){
+      // Use the same coordinate mapping as map editing to stay correct under CSS scaling
+      return mapCoordsFromEvent(e);
+    }
+  
+    const ectx = editCv.getContext('2d');
+    const pctx = prevCv.getContext('2d');
+    const mctx = mapCv.getContext('2d');
+  
+    const thumbGrid = document.getElementById('thumbGrid');
+    const rowsColor = document.getElementById('rowsColor');
+    const palDiv    = document.getElementById('pal');
+    const backdropSel = document.getElementById('backdropSel');
+  const statusEl  = document.getElementById('status');
+  
+    // ===== Collapsible top Import/Export =====
+    const ioTopToggle = document.getElementById('ioTopToggle');
+    const ioTopBlock  = document.getElementById('ioTopBlock');
+    const ioTopChevron= document.getElementById('ioTopChevron');
+    if (ioTopToggle && ioTopBlock && ioTopChevron){
+      ioTopToggle.addEventListener('click', () => {
+        const hidden = ioTopBlock.classList.toggle('isHidden');
+        ioTopChevron.textContent = hidden ? '▶' : '▼';
+      });
+    }
+  
+    // Export/Import controls
+    const expSc2Btn = document.getElementById('expSc2');
+    const impSc2Btn = document.getElementById('impSc2Btn');
+    const impSc2Inp = document.getElementById('impSc2');
+  
+    const impPatternBtn = document.getElementById('impPatternBtn');
+    const impColorBtn   = document.getElementById('impColorBtn');
+    const impNameBtn    = document.getElementById('impNameBtn');
+    const impPatternInp = document.getElementById('impPattern');
+    const impColorInp   = document.getElementById('impColor');
+    const impNameInp    = document.getElementById('impName');
+  
+    // ===== State =====
+    const CELL = 32;      // 256/8
+    const TH_SIZE = 16;
+    let curBank = 0;
+    let curChar = 0;
+    let clip = null;
+    let activeRow = 0; // last touched row (0-7)
+  
+    const rowMarkerEl = document.getElementById('rowMarker');
+    function updateRowMarker(){
+      if (!rowMarkerEl) return;
+      // place at center of active row (0..7)
+      rowMarkerEl.style.top = ((activeRow + 0.5) * 100 / 8) + '%';
+    }
+    // ===== Helpers =====
+    const addr = (bank, ch, row) => bank*2048 + ch*8 + row;
+    const clampNibble = (n) => Math.max(0, Math.min(15, n|0));
+  
+    function setStatus(msg, ok=true){
+      statusEl.textContent = msg;
+      statusEl.className = ok ? 'ok' : 'bad';
+    }
+  
+    function getRowPattern(bank, ch, row){ return pattern[addr(bank,ch,row)]; }
+    function setRowPattern(bank, ch, row, v){ pattern[addr(bank,ch,row)] = v & 0xFF; }
+    function getRowColor(bank, ch, row){ return color[addr(bank,ch,row)]; }
+    function setRowColor(bank, ch, row, v){ color[addr(bank,ch,row)] = v & 0xFF; }
+  
+    function applyToBanks(fn){
+      if (linkBanks.checked) for (let b=0;b<3;b++) fn(b);
+      else fn(curBank);
+    }
+  
+    function downloadBytes(bytes, filename){
+      const blob = new Blob([bytes], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }
+  
+    async function readFileToUint8(file){
+      return new Uint8Array(await file.arrayBuffer());
+    }
+  
+    function importInto(target, bytes, expectedSize, label){
+      if (bytes.byteLength !== expectedSize){
+        alert(`${label} のサイズが違います。\n期待: ${expectedSize} bytes\n実際: ${bytes.byteLength} bytes`);
+        setStatus(`${label} import NG`, false);
+        return false;
+      }
+      target.set(bytes);
+      setStatus(`${label} import OK`);
+      return true;
+    }
+  
+    // ===== Build char select =====
+    for (let i=0; i<256; i++){
       const o = document.createElement('option');
       o.value = String(i);
-      o.textContent = String(i).padStart(2,'0');
-      // Option styling (supported on many browsers; if ignored, text still works)
-      o.style.background = rgb(MSX[effIdx(i)]);
-      const c = MSX[i];
-      const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
-      o.style.color = (lum < 140) ? '#fff' : '#111';
-      sel.appendChild(o);
+      o.textContent = i.toString(10).padStart(3,'0') + ` (0x${i.toString(16).toUpperCase().padStart(2,'0')})`;
+      charSel.appendChild(o);
     }
-  }
-
-  const inkSel = [];
-  const papSel = [];
-  for (let r=0; r<8; r++){
-    const si = document.createElement('select');
-    const sp = document.createElement('select');
-    fillColorOptions(si);
-    fillColorOptions(sp);
-    inkSel.push(si); papSel.push(sp);
-    setSelectColorStyle(si, 15);
-    setSelectColorStyle(sp, 1);
-
-    const onChange = () => {
-      beginTx('Row color');
-      const ink = clampNibble(parseInt(si.value,10));
-      const pap = clampNibble(parseInt(sp.value,10));
-      setSelectColorStyle(si, ink);
-      setSelectColorStyle(sp, pap);
-      applyToBanks((b) => setRowColor(b, curChar, r, (ink<<4)|pap));
+  
+    // ===== Row color selects =====
+    function setSelectColorStyle(sel, idx){
+      // Give the select itself a preview color (works in most browsers)
+      sel.style.background = rgb(MSX[effIdx(idx)]);
+      // Choose text color based on luminance
+      const c = MSX[idx];
+      const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+      sel.style.color = (lum < 140) ? '#fff' : '#111';
+    }
+  
+    function fillColorOptions(sel){
+      sel.innerHTML = '';
+      for (let i=0; i<16; i++){
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = String(i).padStart(2,'0');
+        // Option styling (supported on many browsers; if ignored, text still works)
+        o.style.background = rgb(MSX[effIdx(i)]);
+        const c = MSX[i];
+        const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+        o.style.color = (lum < 140) ? '#fff' : '#111';
+        sel.appendChild(o);
+      }
+    }
+  
+    const inkSel = [];
+    const papSel = [];
+    for (let r=0; r<8; r++){
+      const si = document.createElement('select');
+      const sp = document.createElement('select');
+      fillColorOptions(si);
+      fillColorOptions(sp);
+      inkSel.push(si); papSel.push(sp);
+      setSelectColorStyle(si, 15);
+      setSelectColorStyle(sp, 1);
+  
+      const onChange = () => {
+        beginTx('Row color');
+        const ink = clampNibble(parseInt(si.value,10));
+        const pap = clampNibble(parseInt(sp.value,10));
+        setSelectColorStyle(si, ink);
+        setSelectColorStyle(sp, pap);
+        applyToBanks((b) => setRowColor(b, curChar, r, (ink<<4)|pap));
+        markTxChanged();
+        redrawAll();
+        endTx();
+      };
+      si.addEventListener('change', onChange);
+      sp.addEventListener('change', onChange);
+  
+      // Track last touched row for palette targeting
+      const setActive = () => { activeRow = r;
+        updateRowMarker(); };
+      si.addEventListener('pointerdown', setActive);
+      sp.addEventListener('pointerdown', setActive);
+      si.addEventListener('focus', setActive);
+      sp.addEventListener('focus', setActive);
+  
+      rowsColor.appendChild(si);
+      rowsColor.appendChild(sp);
+    }
+  
+    // ===== Palette UI =====
+    // Right click menu suppress (so BG assignment via right click works)
+    palDiv.addEventListener('contextmenu', (e) => e.preventDefault());
+    for (let i=0; i<16; i++){
+      const d = document.createElement('div');
+      d.className = 'sw';
+      d.dataset.i = String(i);
+      d.style.background = rgb(MSX[i]);
+      d.title = `Color ${i}`;
+  
+      // 左クリック=FG / 右クリック=BG を、選択中Rowへ即反映
+      d.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        const row = activeRow;
+        const col = i & 15;
+        if (e.button === 2) {
+          // BG
+          papSel[row].value = String(col);
+        } else {
+          // FG
+          inkSel[row].value = String(col);
+        }
+        // 既存のchange処理に任せて反映（バンク連動・再描画含む）
+        inkSel[row].dispatchEvent(new Event('change'));
+      });
+  
+      palDiv.appendChild(d);
+    }
+  
+    // ===== Backdrop (color 0) selector =====
+    (function initBackdrop(){
+      if (!backdropSel) return;
+  
+      // populate 0..15
+      backdropSel.innerHTML = '';
+      for (let i=0; i<16; i++){
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = String(i).padStart(2,'0');
+        o.style.background = rgb(MSX[i]);
+        const c = MSX[i];
+        const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
+        o.style.color = (lum < 140) ? '#fff' : '#111';
+        backdropSel.appendChild(o);
+      }
+      backdropSel.value = String(backdropIdx);
+      setSelectColorStyle(backdropSel, backdropIdx);
+  
+      const refreshAllSelectOptions = () => {
+        // Refill options so option[0] uses new backdrop preview color
+        for (let r=0; r<8; r++){
+          fillColorOptions(inkSel[r]);
+          fillColorOptions(papSel[r]);
+          const cb = getRowColor(curBank, curChar, r);
+          inkSel[r].value = String((cb>>4)&15);
+          papSel[r].value = String(cb&15);
+          setSelectColorStyle(inkSel[r], (cb>>4)&15);
+          setSelectColorStyle(papSel[r], cb&15);
+        }
+      };
+  
+      backdropSel.addEventListener('change', () => {
+        beginTx('Backdrop');
+        backdropIdx = clampNibble(parseInt(backdropSel.value,10));
+        setSelectColorStyle(backdropSel, backdropIdx);
+        markTxChanged();
+        refreshAllSelectOptions();
+        redrawAllFull();
+        endTx();
+      });
+    })();
+  
+  
+    // ===== Thumbnails =====
+    const thCanvases = [];
+  // Drag & drop swap (HTML5 DnD)
+    let dragSrcChar = -1;
+  
+    function swapChars(a, b){
+      a &= 0xFF; b &= 0xFF;
+      if (a === b) return;
+  
+      beginTx('Swap chars');
+  
+      applyToBanks((bank)=> {
+        const tp = new Uint8Array(8);
+        const tc = new Uint8Array(8);
+        for (let r=0; r<8; r++){
+          tp[r] = getRowPattern(bank, a, r);
+          tc[r] = getRowColor(bank, a, r);
+        }
+        for (let r=0; r<8; r++){
+          setRowPattern(bank, a, r, getRowPattern(bank, b, r));
+          setRowColor  (bank, a, r, getRowColor  (bank, b, r));
+        }
+        for (let r=0; r<8; r++){
+          setRowPattern(bank, b, r, tp[r]);
+          setRowColor  (bank, b, r, tc[r]);
+        }
+      });
+  
+      
+      // Keep map appearance: swap indices A<->B in nameTable
+      for (let i = 0; i < nameTable.length; i++){
+        const v = nameTable[i] & 0xFF;
+        if (v === a) {
+          nameTable[i] = b;
+        } else if (v === b) {
+          nameTable[i] = a;
+        }
+      }
+  
       markTxChanged();
-      redrawAll();
+      syncRowUI();
+      redrawAllFull();
       endTx();
-    };
-    si.addEventListener('change', onChange);
-    sp.addEventListener('change', onChange);
-
-    // Track last touched row for palette targeting
-    const setActive = () => { activeRow = r;
-      updateRowMarker(); };
-    si.addEventListener('pointerdown', setActive);
-    sp.addEventListener('pointerdown', setActive);
-    si.addEventListener('focus', setActive);
-    sp.addEventListener('focus', setActive);
-
-    rowsColor.appendChild(si);
-    rowsColor.appendChild(sp);
-  }
-
-  // ===== Palette UI =====
-  // Right click menu suppress (so BG assignment via right click works)
-  palDiv.addEventListener('contextmenu', (e) => e.preventDefault());
-  for (let i=0; i<16; i++){
-    const d = document.createElement('div');
-    d.className = 'sw';
-    d.dataset.i = String(i);
-    d.style.background = rgb(MSX[i]);
-    d.title = `Color ${i}`;
-
-    // 左クリック=FG / 右クリック=BG を、選択中Rowへ即反映
-    d.addEventListener('pointerdown', (e) => {
-      e.preventDefault();
-      const row = activeRow;
-      const col = i & 15;
-      if (e.button === 2) {
-        // BG
-        papSel[row].value = String(col);
-      } else {
-        // FG
-        inkSel[row].value = String(col);
-      }
-      // 既存のchange処理に任せて反映（バンク連動・再描画含む）
-      inkSel[row].dispatchEvent(new Event('change'));
-    });
-
-    palDiv.appendChild(d);
-  }
-
-  // ===== Backdrop (color 0) selector =====
-  (function initBackdrop(){
-    if (!backdropSel) return;
-
-    // populate 0..15
-    backdropSel.innerHTML = '';
-    for (let i=0; i<16; i++){
-      const o = document.createElement('option');
-      o.value = String(i);
-      o.textContent = String(i).padStart(2,'0');
-      o.style.background = rgb(MSX[i]);
-      const c = MSX[i];
-      const lum = (c[0]*0.299 + c[1]*0.587 + c[2]*0.114);
-      o.style.color = (lum < 140) ? '#fff' : '#111';
-      backdropSel.appendChild(o);
     }
-    backdropSel.value = String(backdropIdx);
-    setSelectColorStyle(backdropSel, backdropIdx);
-
-    const refreshAllSelectOptions = () => {
-      // Refill options so option[0] uses new backdrop preview color
+    function makeThumb(i){
+      const box = document.createElement('div');
+      box.className = 'thumb';
+      box.dataset.idx = String(i);
+      box.draggable = true;
+  
+      const c = document.createElement('canvas');
+      c.width = TH_SIZE; c.height = TH_SIZE;
+      box.appendChild(c);
+  
+      // click selects
+      box.addEventListener('click', () => {
+        curChar = i;
+        charSel.value = String(i);
+        syncRowUI();
+        redrawAll();
+      });
+  
+      // HTML5 drag & drop swap
+      box.addEventListener('dragstart', (e) => {
+        dragSrcChar = i;
+        box.classList.add('dragSrc');
+        if (e.dataTransfer){
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', String(i));
+        }
+      });
+  
+      box.addEventListener('dragend', () => {
+        dragSrcChar = -1;
+        box.classList.remove('dragSrc');
+        // clear highlights
+        for (let k=0;k<thCanvases.length;k++){
+          thCanvases[k].box.classList.remove('dragOver');
+          thCanvases[k].box.classList.remove('dragSrc');
+        }
+      });
+  
+      box.addEventListener('dragover', (e) => {
+        // required to allow drop
+        e.preventDefault();
+        if (dragSrcChar >= 0 && dragSrcChar !== i){
+          box.classList.add('dragOver');
+          if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+        }
+      });
+  
+      box.addEventListener('dragleave', () => box.classList.remove('dragOver'));
+  
+      box.addEventListener('drop', (e) => {
+        e.preventDefault();
+        box.classList.remove('dragOver');
+        let src = dragSrcChar;
+        if (e.dataTransfer){
+          const t = e.dataTransfer.getData('text/plain');
+          const n = parseInt(t, 10);
+          if (!Number.isNaN(n)) src = n;
+        }
+        const dst = i;
+        if (src >= 0 && src !== dst){
+          swapChars(src, dst);
+        }
+      });
+  
+      thumbGrid.appendChild(box);
+      thCanvases.push({ box, ctx: c.getContext('2d') });
+    }
+    for (let i=0; i<256; i++) makeThumb(i);
+  
+    // ===== Rendering =====
+    function drawCharTo(ctx, bank, ch, w, h){
+      const img = ctx.createImageData(w,h);
+      for (let y=0; y<h; y++){
+        const row = Math.floor(y * 8 / h);
+        const colByte = getRowColor(bank, ch, row);
+        const ink = (colByte>>4)&15;
+        const pap = colByte&15;
+        const pat = getRowPattern(bank, ch, row);
+  
+        for (let x=0; x<w; x++){
+          const bit = 7 - Math.floor(x * 8 / w);
+          const on = (pat >> bit) & 1;
+          const c = MSX[effIdx(on ? ink : pap)];
+          const p = (y*w + x)*4;
+          img.data[p+0]=c[0]; img.data[p+1]=c[1]; img.data[p+2]=c[2]; img.data[p+3]=255;
+        }
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+  
+    function redrawThumb(i){
+      const t = thCanvases[i];
+      drawCharTo(t.ctx, curBank, i, TH_SIZE, TH_SIZE);
+      t.box.classList.toggle('sel', i === curChar);
+    }
+    // ===== Thumbnails: incremental redraw (dirty) =====
+    const dirtyThumbs = new Set();
+    let thumbsRaf = 0;
+  
+    function updateThumbSelection(){
+      for (let i=0;i<256;i++){
+        const t = thCanvases[i];
+        if (!t) continue;
+        t.box.classList.toggle('sel', i === curChar);
+      }
+    }
+  
+    function redrawAllThumbs(){
+      // Full refresh (used on bank/backdrop/import/restore)
+      for (let i=0;i<256;i++) dirtyThumbs.add(i);
+      flushThumbsNow();
+    }
+  
+    function markDirtyThumb(i){
+      dirtyThumbs.add(i & 0xFF);
+      scheduleThumbFlush();
+    }
+    function scheduleThumbFlush(){
+      if (thumbsRaf) return;
+      thumbsRaf = requestAnimationFrame(() => {
+        thumbsRaf = 0;
+        flushThumbsNow();
+      });
+    }
+    function flushThumbsNow(){
+      if (dirtyThumbs.size === 0) return;
+      for (const i of dirtyThumbs) redrawThumb(i);
+      dirtyThumbs.clear();
+    }
+  
+    function drawEditorGrid(){
+      ectx.clearRect(0,0,editCv.width,editCv.height);
+      ectx.fillStyle = '#fafafa';
+      ectx.fillRect(0,0,editCv.width,editCv.height);
+  
+      for (let y=0; y<8; y++){
+        const pat = getRowPattern(curBank, curChar, y);
+        for (let x=0; x<8; x++){
+          const on = (pat >> (7-x)) & 1;
+          ectx.fillStyle = on ? '#fff' : '#111';
+          ectx.fillRect(x*CELL, y*CELL, CELL, CELL);
+          ectx.strokeStyle = '#ddd';
+          ectx.strokeRect(x*CELL+0.5, y*CELL+0.5, CELL-1, CELL-1);
+        }
+        ectx.strokeStyle = '#bbb';
+        ectx.strokeRect(0.5, y*CELL+0.5, editCv.width-1, CELL-1);
+      }
+    }
+  
+    function drawPreview(){
+      drawCharTo(pctx, curBank, curChar, prevCv.width, prevCv.height);
+      pctx.strokeStyle = 'rgba(0,0,0,0.12)';
+      for (let i=1; i<8; i++){
+        pctx.beginPath(); pctx.moveTo(i*CELL+0.5,0); pctx.lineTo(i*CELL+0.5,prevCv.height); pctx.stroke();
+        pctx.beginPath(); pctx.moveTo(0,i*CELL+0.5); pctx.lineTo(prevCv.width,i*CELL+0.5); pctx.stroke();
+      }
+    }
+  
+    function syncRowUI(){
       for (let r=0; r<8; r++){
-        fillColorOptions(inkSel[r]);
-        fillColorOptions(papSel[r]);
         const cb = getRowColor(curBank, curChar, r);
         inkSel[r].value = String((cb>>4)&15);
         papSel[r].value = String(cb&15);
         setSelectColorStyle(inkSel[r], (cb>>4)&15);
         setSelectColorStyle(papSel[r], cb&15);
       }
-    };
+    }
+  
+    // ===== Map =====
+    const MAP_W = 32, MAP_H = 24;
+    const MAP_CELL_W = mapCv.width / MAP_W;
+    const MAP_CELL_H = mapCv.height / MAP_H;
+  
+    // --- MetaTiles (2x2 / 4x4 parts) ---
+    const META_KEY = 'pcg_metaTiles_v1';
+    // --- MetaTiles (2x2 / 4x4 parts) ---
+    // NOTE: メタタイルは単体では永続化しない（QuickSaveに同梱する）
 
-    backdropSel.addEventListener('change', () => {
-      beginTx('Backdrop');
-      backdropIdx = clampNibble(parseInt(backdropSel.value,10));
-      setSelectColorStyle(backdropSel, backdropIdx);
-      markTxChanged();
-      refreshAllSelectOptions();
-      redrawAllFull();
-      endTx();
-    });
-  })();
+    let metaTiles = [];
+    let metaActiveId = null;
 
+    function metaLoad(){ /* no-op */ }
+    function metaSave(){ /* no-op */ }
 
-  // ===== Thumbnails =====
-  const thCanvases = [];
-// Drag & drop swap (HTML5 DnD)
-  let dragSrcChar = -1;
-
-  function swapChars(a, b){
-    a &= 0xFF; b &= 0xFF;
-    if (a === b) return;
-
-    beginTx('Swap chars');
-
-    applyToBanks((bank)=> {
-      const tp = new Uint8Array(8);
-      const tc = new Uint8Array(8);
-      for (let r=0; r<8; r++){
-        tp[r] = getRowPattern(bank, a, r);
-        tc[r] = getRowColor(bank, a, r);
-      }
-      for (let r=0; r<8; r++){
-        setRowPattern(bank, a, r, getRowPattern(bank, b, r));
-        setRowColor  (bank, a, r, getRowColor  (bank, b, r));
-      }
-      for (let r=0; r<8; r++){
-        setRowPattern(bank, b, r, tp[r]);
-        setRowColor  (bank, b, r, tc[r]);
-      }
-    });
-
+    function metaNewId(){ 
+      return String(Date.now()) + '_' + Math.random().toString(16).slice(2); 
+    }
+    function metaGetById(id){ 
+      return metaTiles.find(x => x.id === id) || null; 
+    }
+  
+    const metaSel = document.getElementById('metaSelect');
+    const metaDropBtn = document.getElementById('metaDropBtn');
+    const metaDropList = document.getElementById('metaDropList');
+    const metaDropThumb = document.getElementById('metaDropThumb');
+    const metaDropText = document.getElementById('metaDropText');
+    const metaDropdown = document.getElementById('metaDropdown');
+  
+    const metaStampChk = document.getElementById('metaStampChk');
+    const metaStampStatus = document.getElementById('metaStampStatus');
+    const metaPersistChk = document.getElementById('metaPersistChk');
     
-    // Keep map appearance: swap indices A<->B in nameTable
-    for (let i = 0; i < nameTable.length; i++){
-      const v = nameTable[i] & 0xFF;
-      if (v === a) {
-        nameTable[i] = b;
-      } else if (v === b) {
-        nameTable[i] = a;
+    const metaSizeSel = document.getElementById('metaSizeSel'); 
+  const metaDupBtn = document.getElementById('metaDupBtn');
+    const metaRenameBtn = document.getElementById('metaRenameBtn');
+    const metaDeleteBtn = document.getElementById('metaDeleteBtn');
+  
+  const metaPrevCv = document.getElementById('metaPreview');
+  const metaPrevCtx = metaPrevCv ? metaPrevCv.getContext('2d') : null;
+  if (metaPrevCtx){
+    metaPrevCtx.imageSmoothingEnabled = false;
+  }
+  const metaPrevOff = document.createElement('canvas');
+  metaPrevOff.width = 16; metaPrevOff.height = 16;
+  const metaPrevOffCtx = metaPrevOff.getContext('2d');
+  if (metaPrevOffCtx){
+    metaPrevOffCtx.imageSmoothingEnabled = false;
+  }
+  
+  
+  function metaDrawToCanvas(canvas, meta, bank, sizePx){
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0,0,canvas.width, canvas.height);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,canvas.width, canvas.height);
+  
+    if (!meta){
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.font = '10px ui-sans-serif, system-ui, -apple-system, Segoe UI';
+      ctx.fillText('none', 3, 14);
+      return;
+    }
+  
+    const w = meta.w, h = meta.h;
+    const cellW = Math.floor(canvas.width / w);
+    const cellH = Math.floor(canvas.height / h);
+  
+    for (let dy=0; dy<h; dy++){
+      for (let dx=0; dx<w; dx++){
+        const code = meta.tiles[dy*w + dx] & 0xFF;
+        drawCharTo(metaPrevOffCtx, bank, code, 16, 16);
+        ctx.drawImage(metaPrevOff, dx*cellW, dy*cellH, cellW, cellH);
       }
     }
-
-    markTxChanged();
-    syncRowUI();
-    redrawAllFull();
-    endTx();
+    // grid
+    ctx.strokeStyle = 'rgba(0,0,0,0.22)';
+    for (let x=1; x<w; x++){
+      ctx.beginPath(); ctx.moveTo(x*cellW+0.5, 0); ctx.lineTo(x*cellW+0.5, canvas.height); ctx.stroke();
+    }
+    for (let y=1; y<h; y++){
+      ctx.beginPath(); ctx.moveTo(0, y*cellH+0.5); ctx.lineTo(canvas.width, y*cellH+0.5); ctx.stroke();
+    }
   }
-  function makeThumb(i){
-    const box = document.createElement('div');
-    box.className = 'thumb';
-    box.dataset.idx = String(i);
-    box.draggable = true;
+  
+  function metaDropdownClose(){
+    if (metaDropList) metaDropList.style.display = 'none';
+  }
+  function metaDropdownOpen(){
+    if (!metaDropList) return;
+    metaDropdownRebuild();
+    metaDropList.style.display = 'block';
+  }
+  function metaDropdownToggle(){
+    if (!metaDropList) return;
+    const willOpen = (metaDropList.style.display === 'none' || !metaDropList.style.display);
+    if (willOpen) metaDropdownRebuild();
+    metaDropList.style.display = willOpen ? 'block' : 'none';
+  }
+  
+  function metaDropdownSyncFromSelect(){
+    const m = metaGetById(metaSel?.value || '');
+    if (metaDropText) metaDropText.textContent = m ? `${m.name}` : '(なし)';
+    if (metaDropThumb){
+      metaDrawToCanvas(metaDropThumb, m, curBank, 24);
+    }
+    // highlight selection in list
+    if (metaDropList){
+      const items = metaDropList.querySelectorAll('.metaDropItem');
+      items.forEach(el => {
+        el.classList.toggle('sel', el.getAttribute('data-id') === (metaSel?.value || ''));
+      });
+    }
+  }
+  
+  function metaDropdownRebuild(){
+    if (!metaDropList) return;
+    metaDropList.innerHTML = '';
+  
+    // none option
+    const none = document.createElement('div');
+    none.className = 'metaDropItem';
+    none.setAttribute('data-id', '');
+    const c0 = document.createElement('canvas');
+    c0.width = 32; c0.height = 32;
+    metaDrawToCanvas(c0, null, curBank, 32);
+    const t0 = document.createElement('span');
+    t0.textContent = '(なし)';
+    const d0 = document.createElement('span');
+    d0.className = 'metaDim';
+    d0.textContent = '';
+    none.appendChild(c0); none.appendChild(t0); none.appendChild(d0);
+    none.addEventListener('click', () => {
+      if (metaSel){ metaSel.value = ''; metaUpdatePreview(); metaDropdownSyncFromSelect(); }
+      metaDropdownClose();
+    });
+    metaDropList.appendChild(none);
+  
+    for (const m of metaTiles){
+      const row = document.createElement('div');
+      row.className = 'metaDropItem';
+      row.setAttribute('data-id', m.id);
+  
+      const cv = document.createElement('canvas');
+      cv.width = 32; cv.height = 32;
+      metaDrawToCanvas(cv, m, curBank, 32);
+  
+      const name = document.createElement('span');
+      name.textContent = m.name;
+  
+      const dim = document.createElement('span');
+      dim.className = 'metaDim';
+      dim.textContent = `${m.w}x${m.h}`;
+  
+      row.appendChild(cv); row.appendChild(name); row.appendChild(dim);
+  
+      row.addEventListener('click', () => {
+        if (metaSel){
+          metaSel.value = m.id;
+          metaUpdatePreview();
+          metaDropdownSyncFromSelect();
+        }
+        metaDropdownClose();
+      });
+      metaDropList.appendChild(row);
+    }
+  
+    metaDropdownSyncFromSelect();
+  }
+  
+  function metaUpdatePreview(){
+    if (!metaPrevCtx || !metaPrevCv) return;
+    const m = metaGetById(metaSel?.value || '');
+    // clear
+    metaPrevCtx.clearRect(0,0,metaPrevCv.width, metaPrevCv.height);
+    metaPrevCtx.fillStyle = '#ffffff';
+    metaPrevCtx.fillRect(0,0,metaPrevCv.width, metaPrevCv.height);
+  
+    if (!m){
+      metaPrevCtx.fillStyle = 'rgba(0,0,0,0.35)';
+      metaPrevCtx.font = '11px ui-sans-serif, system-ui, -apple-system, Segoe UI';
+      metaPrevCtx.fillText('no', 6, 20);
+      metaPrevCtx.fillText('meta', 6, 34);
+      return;
+    }
+  
+    const cellW = Math.floor(metaPrevCv.width / m.w);
+    const cellH = Math.floor(metaPrevCv.height / m.h);
+  
+    for (let dy=0; dy<m.h; dy++){
+      for (let dx=0; dx<m.w; dx++){
+        const code = m.tiles[dy*m.w + dx] & 0xFF;
+        // Render at 16x16 then scale up; looks crisp with imageSmoothing disabled
+        drawCharTo(metaPrevOffCtx, curBank, code, 16, 16);
+        metaPrevCtx.drawImage(metaPrevOff, dx*cellW, dy*cellH, cellW, cellH);
+      }
+    }
+  
+    // grid outline
+    metaPrevCtx.strokeStyle = 'rgba(0,0,0,0.22)';
+    for (let x=1; x<m.w; x++){
+      metaPrevCtx.beginPath();
+      metaPrevCtx.moveTo(x*cellW+0.5, 0);
+      metaPrevCtx.lineTo(x*cellW+0.5, metaPrevCv.height);
+      metaPrevCtx.stroke();
+    }
+    for (let y=1; y<m.h; y++){
+      metaPrevCtx.beginPath();
+      metaPrevCtx.moveTo(0, y*cellH+0.5);
+      metaPrevCtx.lineTo(metaPrevCv.width, y*cellH+0.5);
+      metaPrevCtx.stroke();
+    }
+    if (typeof metaUpdateStampUi === 'function') metaUpdateStampUi();
+  }
+  
+    function metaRefreshSelect(){
+      if (!metaSel) return;
+      const prev = metaSel.value;
+      metaSel.innerHTML = '';
+      const opt0 = document.createElement('option');
+      opt0.value = '';
+      opt0.textContent = '(なし)';
+      metaSel.appendChild(opt0);
+  
+      for (const m of metaTiles){
+        const o = document.createElement('option');
+        o.value = m.id;
+        o.textContent = `${m.name} (${m.w}x${m.h})`;
+        metaSel.appendChild(o);
+      }
+      // restore selection if possible
+      if (prev && metaGetById(prev)) metaSel.value = prev;
+      else if (metaActiveId && metaGetById(metaActiveId)) metaSel.value = metaActiveId;
+      else metaSel.value = '';
+      metaUpdatePreview();
+    }
+  
+    function metaSetActive(id){
+      metaActiveId = id || null;
+      scheduleMapRedraw();
+    }
+  
+    function metaCaptureAt(mx, my, w, h){
+      const tiles = [];
+      for (let dy=0; dy<h; dy++){
+        for (let dx=0; dx<w; dx++){
+          const x = mx + dx, y = my + dy;
+          if (x<0 || x>=MAP_W || y<0 || y>=MAP_H) tiles.push(0);
+          else tiles.push(nameTable[y*MAP_W + x] & 0xFF);
+        }
+      }
+      return tiles;
+    }
+  
+    function metaStampInTx(meta, mx, my, erase=false){
+      for (let dy=0; dy<meta.h; dy++){
+        for (let dx=0; dx<meta.w; dx++){
+          const x = mx + dx, y = my + dy;
+          if (x<0 || x>=MAP_W || y<0 || y>=MAP_H) continue;
+          const v = erase ? 0 : (meta.tiles[dy*meta.w + dx] & 0xFF);
+          setMapCell(x, y, v);
+        }
+      }
+    }
+    function metaStampAt(meta, mx, my, erase=false){
+      beginTx(erase ? 'Meta erase' : 'Meta stamp');
+      metaStampInTx(meta, mx, my, erase);
+      endTx();
+      scheduleMapRedraw();
+    }
+  
+    function metaCreateFromMapAt(mx, my){
+      // Safety: stop any in-progress map painting/tx (dialogs can swallow pointerup)
+      mapPainting = false; mapErasing = false; endTx();
+      const s = parseInt(metaSizeSel?.value || '2', 10);
+      const w = (s === 4) ? 4 : 2;
+      const h = w;
+      const tiles = metaCaptureAt(mx, my, w, h);
+      const name = prompt(`メタタイル名を入力してください (${w}x${h})`, `Part_${w}x${h}`) || '';
+      if (!name.trim()) return;
+      const m = { id: metaNewId(), name: name.trim(), w, h, tiles };
+      metaTiles.push(m);
+      metaSave();
+      metaRefreshSelect();
+      metaSel.value = m.id;
+      metaDropdownRebuild();
+      metaDropdownSyncFromSelect();
+      metaUpdatePreview();
+      // If stamp mode is enabled, switch active meta to the newly created one
+      if (metaStampChk && metaStampChk.checked){
+        metaSetActive(m.id);
+        metaUpdateStampUi();
+      }
+    }
+  
+    function bankForMapRow(my){ return my < 8 ? 0 : (my < 16 ? 1 : 2); }
+  
+    const off = document.createElement('canvas');
+    off.width = 16; off.height = 16;
+    const octx = off.getContext('2d');
+  
+    let mapCursor = { mx: -1, my: -1 };
+  
+    function drawMap(){
+      mctx.fillStyle = '#f8f8f8';
+      mctx.fillRect(0,0,mapCv.width,mapCv.height);
+  
+      for (let my=0; my<MAP_H; my++){
+        const bank = bankForMapRow(my);
+        for (let mx=0; mx<MAP_W; mx++){
+          const code = nameTable[my*MAP_W + mx];
+          drawCharTo(octx, bank, code, 16, 16);
+          mctx.drawImage(off, mx*MAP_CELL_W, my*MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
+        }
+  
+      }
+  
+      for (let x=0; x<=MAP_W; x++){
+        mctx.strokeStyle = (x % 8 === 0) ? 'rgba(0,0,0,0.22)' : 'rgba(0,0,0,0.14)';
+        mctx.beginPath(); mctx.moveTo(x*MAP_CELL_W+0.5,0); mctx.lineTo(x*MAP_CELL_W+0.5,mapCv.height); mctx.stroke();
+      }
+      for (let y=0; y<=MAP_H; y++){
+        const strong = (y === 8 || y === 16 || y === 0 || y === MAP_H);
+        mctx.strokeStyle = strong ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.14)';
+        mctx.beginPath(); mctx.moveTo(0,y*MAP_CELL_H+0.5); mctx.lineTo(mapCv.width,y*MAP_CELL_H+0.5); mctx.stroke();
+      }
+  
+      if (mapCursor.mx >= 0 && mapCursor.my >= 0){
+        const meta = metaGetById(metaActiveId);
+        const w = meta ? meta.w : 1;
+        const h = meta ? meta.h : 1;
+        mctx.strokeStyle = 'rgba(43,108,255,0.9)';
+        mctx.lineWidth = 2;
+        mctx.strokeRect(mapCursor.mx*MAP_CELL_W+1, mapCursor.my*MAP_CELL_H+1, MAP_CELL_W*w-2, MAP_CELL_H*h-2);
+        mctx.lineWidth = 1;
+      }
+    }
+  
+    // Throttle map redraw to once per animation frame (improves drag responsiveness)
+    let mapRaf = 0;
+    function scheduleMapRedraw(){
+      if (mapRaf) return;
+      mapRaf = requestAnimationFrame(() => { mapRaf = 0; drawMap(); });
+    }
+  
+  
+  
+    function mapCoordsFromEvent(evt){
+      const rect = mapCv.getBoundingClientRect();
+      const x = (evt.clientX - rect.left) * mapCv.width / rect.width;
+      const y = (evt.clientY - rect.top) * mapCv.height / rect.height;
+      const mx = Math.floor(x / MAP_CELL_W);
+      const my = Math.floor(y / MAP_CELL_H);
+      if (mx<0||mx>=MAP_W||my<0||my>=MAP_H) return null;
+      return { mx, my };
+    }
+    function setMapCell(mx, my, code){
+      const idx = my*MAP_W + mx;
+      const v = code & 0xFF;
+      if (nameTable[idx] !== v){ nameTable[idx] = v; markTxChanged(); }
+    }
+  
+    function pickFromMap(mx, my){
+      const code = nameTable[my*MAP_W + mx];
+      const prevChar = curChar;
+      curChar = code;
+      charSel.value = String(code);
+      syncRowUI();
+      drawEditorGrid();
+      drawPreview();
+      updateThumbSelection();
+      // Only redraw the two thumbnails involved (old selection and new selection)
+      redrawThumb(prevChar);
+      redrawThumb(curChar);
+    }
+  
+    function updateMapCursor(evt){
+      const c = mapCoordsFromEvent(evt);
+      if (!c) return;
+      if (c.mx !== mapCursor.mx || c.my !== mapCursor.my){
+        mapCursor = c;
+        scheduleMapRedraw();
+      }
+    }
+  
+    mapCv.addEventListener('contextmenu', (e) => e.preventDefault());
+  
+    metaLoad();
+    metaRefreshSelect();
+    if (metaSel) metaSel.addEventListener('change', ()=> { metaUpdatePreview(); metaDropdownSyncFromSelect(); if (metaActiveId){ metaSetActive(metaSel.value||null); } metaUpdateStampUi(); });
+    // MetaTile dropdown UI
+    if (metaDropBtn){
+      metaDropBtn.addEventListener('click', (e)=>{ e.stopPropagation(); metaDropdownToggle(); });
+    }
+    // Close when clicking outside
+    window.addEventListener('click', ()=> metaDropdownClose());
+    if (metaDropList){
+      metaDropList.addEventListener('click', (e)=> e.stopPropagation());
+    }
+  
+  
+  
+    let mapPainting = false;
+    let mapErasing = false;
+  
+    // MetaTile UI handlers
+    function metaUpdateStampUi(){
+      const sel = metaSel?.value || '';
+      const m = sel ? metaGetById(sel) : null;
+      if (metaStampChk){
+        const on = !!metaActiveId;
+        metaStampChk.checked = on;
+        // pill highlight
+        const wrap = metaStampChk.closest('.metaToggle');
+        if (wrap) wrap.dataset.on = on ? '1' : '0';
+      }
+      if (metaStampStatus){
+        if (metaActiveId){
+          const am = metaGetById(metaActiveId);
+          metaStampStatus.textContent = am ? `貼付中: ${am.name} (${am.w}×${am.h})` : '貼付中';
+        }else{
+          metaStampStatus.textContent = '';
+        }
+      }
+    }
+  
+    if (metaStampChk){
+      metaStampChk.addEventListener('change', ()=>{
+        if (metaStampChk.checked){
+          const id = metaSel?.value || '';
+          if (!id){
+            metaStampChk.checked = false;
+            metaSetActive(null);
+            metaUpdateStampUi();
+            return;
+          }
+          metaSetActive(id);
+        }else{
+          metaSetActive(null);
+        }
+        metaUpdateStampUi();
+      });
+    }
+    if (metaDupBtn) metaDupBtn.addEventListener('click', ()=>{
+      const m = metaGetById(metaSel?.value || '');
+      if (!m) return;
+      const name = prompt('複製名', m.name + '_copy') || '';
+      if (!name.trim()) return;
+      metaTiles.push({ id: metaNewId(), name: name.trim(), w: m.w, h: m.h, tiles: m.tiles.slice() });
+      metaSave(); metaRefreshSelect(); metaUpdatePreview();
+    });
+    if (metaRenameBtn) metaRenameBtn.addEventListener('click', ()=>{
+      const m = metaGetById(metaSel?.value || '');
+      if (!m) return;
+      const name = prompt('新しい名前', m.name) || '';
+      if (!name.trim()) return;
+      m.name = name.trim();
+      metaSave(); metaRefreshSelect(); metaUpdatePreview();
+    });
+    if (metaDeleteBtn) metaDeleteBtn.addEventListener('click', ()=>{
+      const id = metaSel?.value || '';
+      const m = metaGetById(id);
+      if (!m) return;
+      if (!confirm(`削除しますか？\n${m.name} (${m.w}x${m.h})`)) return;
+      metaTiles = metaTiles.filter(x => x.id !== id);
+      if (metaActiveId === id) metaActiveId = null;
+      metaSave(); metaRefreshSelect(); metaSetActive(metaActiveId);
+    });
+  
+  
+    function mapApplyAt(evt){
+      const c = mapCoordsFromEvent(evt);
+      if (!c) return;
+  
+      if (evt.ctrlKey){
+        metaCreateFromMapAt(c.mx, c.my);
+        mapCursor = c;
+        scheduleMapRedraw();
+        return;
+      }
+  
+      if (evt.shiftKey){
+        pickFromMap(c.mx, c.my);
+        mapCursor = c;
+        scheduleMapRedraw();
+        return;
+      }
+  
+      const meta = metaGetById(metaActiveId);
+      if (meta){
+        // meta stamping: left=stamp, right=erase area
+        metaStampInTx(meta, c.mx, c.my, mapErasing);
+      } else {
+        if (mapErasing) setMapCell(c.mx, c.my, 0);
+        else setMapCell(c.mx, c.my, curChar);
+      }
+  
+      mapCursor = c;
+      scheduleMapRedraw();
+    }
+  
+  
+  
+    // Map cursor coordinate display (0..31, 0..23)
+    mapCv.addEventListener('mousemove', (e)=>{
+      const p = mapCoordsFromEvent(e);
+      if (!p) return setMapCoordText(-1,-1);
+      setMapCoordText(p.mx, p.my);
+    });
+    mapCv.addEventListener('pointermove', (e)=>{
+      const p = mapCoordsFromEvent(e);
+      if (!p) return;
+      setMapCoordText(p.mx, p.my);
+    });
+    mapCv.addEventListener('mouseleave', ()=> setMapCoordText(-1,-1));
+    mapCv.addEventListener('pointerleave', ()=> setMapCoordText(-1,-1));
+  
+    mapCv.addEventListener('pointermove', (e) => {
+      updateMapCursor(e);
+      if (!mapPainting) return;
+      if (e.shiftKey) return;
+      mapApplyAt(e);
+    });
+    mapCv.addEventListener('pointerdown', (e) => {
+      mapCv.setPointerCapture(e.pointerId);
+      // Ctrl+クリック: register metatile at the clicked cell (does not paint)
+      if (e.ctrlKey){
+        const p = mapCoordsFromEvent(e);
+        if (p) metaCreateFromMapAt(p.mx, p.my);
+        return;
+      }
+      if (e.shiftKey){
+        mapPainting = false; mapErasing = false;
+        mapApplyAt(e);
+        return;
+      }
+      // スタンプ有効中は「右クリックで貼る」だけにする（左クリックで消す等はしない）
+      if (metaActiveId){
+        if (e.button !== 0) return;  // 右以外は無視
+        beginTx('Meta stamp');
+        mapPainting = true;
+        mapErasing = false;          // 消しモードは使わない
+        mapApplyAt(e);
+        return;
+      }
 
-    const c = document.createElement('canvas');
-    c.width = TH_SIZE; c.height = TH_SIZE;
-    box.appendChild(c);
-
-    // click selects
-    box.addEventListener('click', () => {
-      curChar = i;
-      charSel.value = String(i);
+      // 通常モード（従来通り）
+      beginTx('Map paint');
+      mapPainting = true;
+      mapErasing = false
+      mapApplyAt(e);
+    });
+    mapCv.addEventListener('pointerup', () => { mapPainting = false; mapErasing = false; endTx(); });
+    mapCv.addEventListener('pointercancel', () => { mapPainting = false; mapErasing = false; endTx(); });
+    // Safety: if pointerup is missed (e.g., due to dialogs or focus changes), ensure painting stops.
+    window.addEventListener('pointerup', () => { if (mapPainting){ mapPainting = false; mapErasing = false; endTx(); } });
+    window.addEventListener('pointercancel', () => { if (mapPainting){ mapPainting = false; mapErasing = false; endTx(); } });
+  
+    // ===== 8x8 Edit interaction =====
+    // Drag paint:
+    // - On pointerdown, determine the new value by toggling the first cell.
+    // - While dragging, force all hovered cells to that same value (paint / erase).
+    let editDragging = false;
+    let editPaintValue = 1;   // 1=paint(on), 0=erase(off)
+    let editPointerId = -1;
+    let lastCellKey = "";     // avoid re-applying to same cell repeatedly
+  
+    function cellFromEvent(evt){
+      const rect = editCv.getBoundingClientRect();
+      const x = Math.floor((evt.clientX - rect.left) * editCv.width / rect.width);
+      const y = Math.floor((evt.clientY - rect.top) * editCv.height / rect.height);
+      const cx = Math.floor(x / CELL);
+      const cy = Math.floor(y / CELL);
+      if (cx<0||cx>7||cy<0||cy>7) return null;
+      return { cx, cy };
+    }
+  
+    function getBitAt(bank, ch, cy, cx){
+      const a = addr(bank, ch, cy);
+      const pat = pattern[a];
+      return (pat >> (7 - cx)) & 1;
+    }
+  
+    function setBitAt(bank, ch, cy, cx, value){
+      const a = addr(bank, ch, cy);
+      const pat = pattern[a];
+      const mask = 1 << (7 - cx);
+      const nv = value ? (pat | mask) : (pat & (~mask));
+      pattern[a] = nv & 0xFF;
+    }
+  
+    function applyPaintAtCell(cx, cy, value){
+      // Track last touched row (for palette targeting)
+      activeRow = cy;
+      updateRowMarker();
+  
+      applyToBanks((b) => {
+        const cur = getBitAt(b, curChar, cy, cx);
+        if (cur === value) return;
+        setBitAt(b, curChar, cy, cx, value);
+        markTxChanged();
+      });
+  
+      // Lightweight redraw while dragging (avoid expensive map/full thumb redraw each cell)
+      drawEditorGrid();
+      drawPreview();
+      redrawThumb(curChar);
+      updateThumbSelection();
+    }
+  
+    editCv.addEventListener('pointerdown', (e) => {
+      const c = cellFromEvent(e);
+      if (!c) return;
+      beginTx('Draw');
+  
+      editPointerId = e.pointerId;
+      editCv.setPointerCapture(editPointerId);
+      editDragging = true;
+      lastCellKey = "";
+  
+      // determine paint value by toggling the first cell
+      const cur = getBitAt(curBank, curChar, c.cy, c.cx);
+      editPaintValue = cur ? 0 : 1;
+  
+      // apply to first cell
+      lastCellKey = `${c.cx},${c.cy}`;
+      applyPaintAtCell(c.cx, c.cy, editPaintValue);
+    });
+  
+    editCv.addEventListener('pointermove', (e) => {
+      if (!editDragging || e.pointerId !== editPointerId) return;
+      const c = cellFromEvent(e);
+      if (!c) return;
+      const key = `${c.cx},${c.cy}`;
+      if (key === lastCellKey) return;
+      lastCellKey = key;
+      applyPaintAtCell(c.cx, c.cy, editPaintValue);
+    });
+  
+    function endEditDrag(e){
+      if (e.pointerId !== editPointerId) return;
+      editDragging = false;
+      editPointerId = -1;
+      lastCellKey = "";
+      const wasChanged = !!(tx && tx.changed);
+      endTx();
+      // Reflect edited character into map only when an undoable change was made
+      if (wasChanged) drawMap();
+    }
+    editCv.addEventListener('pointerup', endEditDrag);
+    editCv.addEventListener('pointercancel', endEditDrag);
+  
+    // ===== Tools =====
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      beginTx('Clear');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,0x00); });
+      redrawAll();
+      markTxChanged();
+      endTx();
+    });
+  
+    document.getElementById('invBtn').addEventListener('click', () => {
+      beginTx('Invert');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,(~getRowPattern(b,curChar,r))&0xFF); });
+      redrawAll();
+      markTxChanged();
+      endTx();
+    });
+  
+    document.getElementById('flipHBtn').addEventListener('click', () => {
+      beginTx('Flip H');
+      const rev8 = (v) => {
+        v = ((v & 0xF0) >> 4) | ((v & 0x0F) << 4);
+        v = ((v & 0xCC) >> 2) | ((v & 0x33) << 2);
+        v = ((v & 0xAA) >> 1) | ((v & 0x55) << 1);
+        return v & 0xFF;
+      };
+      applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rev8(getRowPattern(b,curChar,r))); });
+      redrawAll();
+      markTxChanged();
+      endTx();
+    });
+  
+    document.getElementById('flipVBtn').addEventListener('click', () => {
+      beginTx('Flip V');
+      applyToBanks((b)=> {
+        const tp = new Uint8Array(8);
+        const tc = new Uint8Array(8);
+        for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+        for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[7-r]); setRowColor(b,curChar,r,tc[7-r]); }
+      markTxChanged();
+      endTx();
+    });
       syncRowUI();
       redrawAll();
     });
-
-    // HTML5 drag & drop swap
-    box.addEventListener('dragstart', (e) => {
-      dragSrcChar = i;
-      box.classList.add('dragSrc');
-      if (e.dataTransfer){
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/plain', String(i));
-      }
-    });
-
-    box.addEventListener('dragend', () => {
-      dragSrcChar = -1;
-      box.classList.remove('dragSrc');
-      // clear highlights
-      for (let k=0;k<thCanvases.length;k++){
-        thCanvases[k].box.classList.remove('dragOver');
-        thCanvases[k].box.classList.remove('dragSrc');
-      }
-    });
-
-    box.addEventListener('dragover', (e) => {
-      // required to allow drop
-      e.preventDefault();
-      if (dragSrcChar >= 0 && dragSrcChar !== i){
-        box.classList.add('dragOver');
-        if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
-      }
-    });
-
-    box.addEventListener('dragleave', () => box.classList.remove('dragOver'));
-
-    box.addEventListener('drop', (e) => {
-      e.preventDefault();
-      box.classList.remove('dragOver');
-      let src = dragSrcChar;
-      if (e.dataTransfer){
-        const t = e.dataTransfer.getData('text/plain');
-        const n = parseInt(t, 10);
-        if (!Number.isNaN(n)) src = n;
-      }
-      const dst = i;
-      if (src >= 0 && src !== dst){
-        swapChars(src, dst);
-      }
-    });
-
-    thumbGrid.appendChild(box);
-    thCanvases.push({ box, ctx: c.getContext('2d') });
-  }
-  for (let i=0; i<256; i++) makeThumb(i);
-
-  // ===== Rendering =====
-  function drawCharTo(ctx, bank, ch, w, h){
-    const img = ctx.createImageData(w,h);
-    for (let y=0; y<h; y++){
-      const row = Math.floor(y * 8 / h);
-      const colByte = getRowColor(bank, ch, row);
-      const ink = (colByte>>4)&15;
-      const pap = colByte&15;
-      const pat = getRowPattern(bank, ch, row);
-
-      for (let x=0; x<w; x++){
-        const bit = 7 - Math.floor(x * 8 / w);
-        const on = (pat >> bit) & 1;
-        const c = MSX[effIdx(on ? ink : pap)];
-        const p = (y*w + x)*4;
-        img.data[p+0]=c[0]; img.data[p+1]=c[1]; img.data[p+2]=c[2]; img.data[p+3]=255;
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-  }
-
-  function redrawThumb(i){
-    const t = thCanvases[i];
-    drawCharTo(t.ctx, curBank, i, TH_SIZE, TH_SIZE);
-    t.box.classList.toggle('sel', i === curChar);
-  }
-  // ===== Thumbnails: incremental redraw (dirty) =====
-  const dirtyThumbs = new Set();
-  let thumbsRaf = 0;
-
-  function updateThumbSelection(){
-    for (let i=0;i<256;i++){
-      const t = thCanvases[i];
-      if (!t) continue;
-      t.box.classList.toggle('sel', i === curChar);
-    }
-  }
-
-  function redrawAllThumbs(){
-    // Full refresh (used on bank/backdrop/import/restore)
-    for (let i=0;i<256;i++) dirtyThumbs.add(i);
-    flushThumbsNow();
-  }
-
-  function markDirtyThumb(i){
-    dirtyThumbs.add(i & 0xFF);
-    scheduleThumbFlush();
-  }
-  function scheduleThumbFlush(){
-    if (thumbsRaf) return;
-    thumbsRaf = requestAnimationFrame(() => {
-      thumbsRaf = 0;
-      flushThumbsNow();
-    });
-  }
-  function flushThumbsNow(){
-    if (dirtyThumbs.size === 0) return;
-    for (const i of dirtyThumbs) redrawThumb(i);
-    dirtyThumbs.clear();
-  }
-
-  function drawEditorGrid(){
-    ectx.clearRect(0,0,editCv.width,editCv.height);
-    ectx.fillStyle = '#fafafa';
-    ectx.fillRect(0,0,editCv.width,editCv.height);
-
-    for (let y=0; y<8; y++){
-      const pat = getRowPattern(curBank, curChar, y);
-      for (let x=0; x<8; x++){
-        const on = (pat >> (7-x)) & 1;
-        ectx.fillStyle = on ? '#fff' : '#111';
-        ectx.fillRect(x*CELL, y*CELL, CELL, CELL);
-        ectx.strokeStyle = '#ddd';
-        ectx.strokeRect(x*CELL+0.5, y*CELL+0.5, CELL-1, CELL-1);
-      }
-      ectx.strokeStyle = '#bbb';
-      ectx.strokeRect(0.5, y*CELL+0.5, editCv.width-1, CELL-1);
-    }
-  }
-
-  function drawPreview(){
-    drawCharTo(pctx, curBank, curChar, prevCv.width, prevCv.height);
-    pctx.strokeStyle = 'rgba(0,0,0,0.12)';
-    for (let i=1; i<8; i++){
-      pctx.beginPath(); pctx.moveTo(i*CELL+0.5,0); pctx.lineTo(i*CELL+0.5,prevCv.height); pctx.stroke();
-      pctx.beginPath(); pctx.moveTo(0,i*CELL+0.5); pctx.lineTo(prevCv.width,i*CELL+0.5); pctx.stroke();
-    }
-  }
-
-  function syncRowUI(){
-    for (let r=0; r<8; r++){
-      const cb = getRowColor(curBank, curChar, r);
-      inkSel[r].value = String((cb>>4)&15);
-      papSel[r].value = String(cb&15);
-      setSelectColorStyle(inkSel[r], (cb>>4)&15);
-      setSelectColorStyle(papSel[r], cb&15);
-    }
-  }
-
-  // ===== Map =====
-  const MAP_W = 32, MAP_H = 24;
-  const MAP_CELL_W = mapCv.width / MAP_W;
-  const MAP_CELL_H = mapCv.height / MAP_H;
-
-  function bankForMapRow(my){ return my < 8 ? 0 : (my < 16 ? 1 : 2); }
-
-  const off = document.createElement('canvas');
-  off.width = 16; off.height = 16;
-  const octx = off.getContext('2d');
-
-  let mapCursor = { mx: -1, my: -1 };
-
-  function drawMap(){
-    mctx.fillStyle = '#f8f8f8';
-    mctx.fillRect(0,0,mapCv.width,mapCv.height);
-
-    for (let my=0; my<MAP_H; my++){
-      const bank = bankForMapRow(my);
-      for (let mx=0; mx<MAP_W; mx++){
-        const code = nameTable[my*MAP_W + mx];
-        drawCharTo(octx, bank, code, 16, 16);
-        mctx.drawImage(off, mx*MAP_CELL_W, my*MAP_CELL_H, MAP_CELL_W, MAP_CELL_H);
-      }
-
-    }
-
-    for (let x=0; x<=MAP_W; x++){
-      mctx.strokeStyle = (x % 8 === 0) ? 'rgba(0,0,0,0.22)' : 'rgba(0,0,0,0.14)';
-      mctx.beginPath(); mctx.moveTo(x*MAP_CELL_W+0.5,0); mctx.lineTo(x*MAP_CELL_W+0.5,mapCv.height); mctx.stroke();
-    }
-    for (let y=0; y<=MAP_H; y++){
-      const strong = (y === 8 || y === 16 || y === 0 || y === MAP_H);
-      mctx.strokeStyle = strong ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.14)';
-      mctx.beginPath(); mctx.moveTo(0,y*MAP_CELL_H+0.5); mctx.lineTo(mapCv.width,y*MAP_CELL_H+0.5); mctx.stroke();
-    }
-
-    if (mapCursor.mx >= 0 && mapCursor.my >= 0){
-      mctx.strokeStyle = 'rgba(43,108,255,0.9)';
-      mctx.lineWidth = 2;
-      mctx.strokeRect(mapCursor.mx*MAP_CELL_W+1, mapCursor.my*MAP_CELL_H+1, MAP_CELL_W-2, MAP_CELL_H-2);
-      mctx.lineWidth = 1;
-    }
-  }
-
-  // Throttle map redraw to once per animation frame (improves drag responsiveness)
-  let mapRaf = 0;
-  function scheduleMapRedraw(){
-    if (mapRaf) return;
-    mapRaf = requestAnimationFrame(() => { mapRaf = 0; drawMap(); });
-  }
-
-
-
-  function mapCoordsFromEvent(evt){
-    const rect = mapCv.getBoundingClientRect();
-    const x = (evt.clientX - rect.left) * mapCv.width / rect.width;
-    const y = (evt.clientY - rect.top) * mapCv.height / rect.height;
-    const mx = Math.floor(x / MAP_CELL_W);
-    const my = Math.floor(y / MAP_CELL_H);
-    if (mx<0||mx>=MAP_W||my<0||my>=MAP_H) return null;
-    return { mx, my };
-  }
-  function setMapCell(mx, my, code){
-    const idx = my*MAP_W + mx;
-    const v = code & 0xFF;
-    if (nameTable[idx] !== v){ nameTable[idx] = v; markTxChanged(); }
-  }
-
-  function pickFromMap(mx, my){
-    const code = nameTable[my*MAP_W + mx];
-    const prevChar = curChar;
-    curChar = code;
-    charSel.value = String(code);
-    syncRowUI();
-    drawEditorGrid();
-    drawPreview();
-    updateThumbSelection();
-    // Only redraw the two thumbnails involved (old selection and new selection)
-    redrawThumb(prevChar);
-    redrawThumb(curChar);
-  }
-
-  function updateMapCursor(evt){
-    const c = mapCoordsFromEvent(evt);
-    if (!c) return;
-    if (c.mx !== mapCursor.mx || c.my !== mapCursor.my){
-      mapCursor = c;
-      scheduleMapRedraw();
-    }
-  }
-
-  mapCv.addEventListener('contextmenu', (e) => e.preventDefault());
-
-  let mapPainting = false;
-  let mapErasing = false;
-
-  function mapApplyAt(evt){
-    const c = mapCoordsFromEvent(evt);
-    if (!c) return;
-
-    if (evt.shiftKey){
-      pickFromMap(c.mx, c.my);
-      mapCursor = c;
-      scheduleMapRedraw();
-      return;
-    }
-
-    if (mapErasing) setMapCell(c.mx, c.my, 0);
-    else setMapCell(c.mx, c.my, curChar);
-
-    mapCursor = c;
-    scheduleMapRedraw();
-  }
-
-  mapCv.addEventListener('contextmenu', (e) => e.preventDefault());
-
-  // Map cursor coordinate display (0..31, 0..23)
-  mapCv.addEventListener('mousemove', (e)=>{
-    const p = mapCoordsFromEvent(e);
-    if (!p) return setMapCoordText(-1,-1);
-    setMapCoordText(p.mx, p.my);
-  });
-  mapCv.addEventListener('pointermove', (e)=>{
-    const p = mapCoordsFromEvent(e);
-    if (!p) return;
-    setMapCoordText(p.mx, p.my);
-  });
-  mapCv.addEventListener('mouseleave', ()=> setMapCoordText(-1,-1));
-  mapCv.addEventListener('pointerleave', ()=> setMapCoordText(-1,-1));
-
-  mapCv.addEventListener('pointermove', (e) => {
-    updateMapCursor(e);
-    if (!mapPainting) return;
-    if (e.shiftKey) return;
-    mapApplyAt(e);
-  });
-  mapCv.addEventListener('pointerdown', (e) => {
-    mapCv.setPointerCapture(e.pointerId);
-    if (e.shiftKey){
-      mapPainting = false; mapErasing = false;
-      mapApplyAt(e);
-      return;
-    }
-    beginTx('Map paint');
-    mapPainting = true;
-    mapErasing = (e.button === 2);
-    mapApplyAt(e);
-  });
-  mapCv.addEventListener('pointerup', () => { mapPainting = false; mapErasing = false; endTx(); });
-  mapCv.addEventListener('pointercancel', () => { mapPainting = false; mapErasing = false; endTx(); });
-  // ===== 8x8 Edit interaction =====
-  // Drag paint:
-  // - On pointerdown, determine the new value by toggling the first cell.
-  // - While dragging, force all hovered cells to that same value (paint / erase).
-  let editDragging = false;
-  let editPaintValue = 1;   // 1=paint(on), 0=erase(off)
-  let editPointerId = -1;
-  let lastCellKey = "";     // avoid re-applying to same cell repeatedly
-
-  function cellFromEvent(evt){
-    const rect = editCv.getBoundingClientRect();
-    const x = Math.floor((evt.clientX - rect.left) * editCv.width / rect.width);
-    const y = Math.floor((evt.clientY - rect.top) * editCv.height / rect.height);
-    const cx = Math.floor(x / CELL);
-    const cy = Math.floor(y / CELL);
-    if (cx<0||cx>7||cy<0||cy>7) return null;
-    return { cx, cy };
-  }
-
-  function getBitAt(bank, ch, cy, cx){
-    const a = addr(bank, ch, cy);
-    const pat = pattern[a];
-    return (pat >> (7 - cx)) & 1;
-  }
-
-  function setBitAt(bank, ch, cy, cx, value){
-    const a = addr(bank, ch, cy);
-    const pat = pattern[a];
-    const mask = 1 << (7 - cx);
-    const nv = value ? (pat | mask) : (pat & (~mask));
-    pattern[a] = nv & 0xFF;
-  }
-
-  function applyPaintAtCell(cx, cy, value){
-    // Track last touched row (for palette targeting)
-    activeRow = cy;
-    updateRowMarker();
-
-    applyToBanks((b) => {
-      const cur = getBitAt(b, curChar, cy, cx);
-      if (cur === value) return;
-      setBitAt(b, curChar, cy, cx, value);
-      markTxChanged();
-    });
-
-    // Lightweight redraw while dragging (avoid expensive map/full thumb redraw each cell)
-    drawEditorGrid();
-    drawPreview();
-    redrawThumb(curChar);
-    updateThumbSelection();
-  }
-
-    editCv.addEventListener('contextmenu', (e)=> e.preventDefault());
-
-editCv.addEventListener('pointerdown', (e) => {
-    const c = cellFromEvent(e);
-    if (!c) return;
-    // Right click: change active row only (no edit / no undo)
-    if (e.button === 2){
-      activeRow = c.cy;
-      updateRowMarker();
-      drawEditorGrid();
-      drawPreview();
-      return;
-    }
-    beginTx('Draw');
-
-    editPointerId = e.pointerId;
-    editCv.setPointerCapture(editPointerId);
-    editDragging = true;
-    lastCellKey = "";
-
-    // determine paint value by toggling the first cell
-    const cur = getBitAt(curBank, curChar, c.cy, c.cx);
-    editPaintValue = cur ? 0 : 1;
-
-    // apply to first cell
-    lastCellKey = `${c.cx},${c.cy}`;
-    applyPaintAtCell(c.cx, c.cy, editPaintValue);
-  });
-
-  editCv.addEventListener('pointermove', (e) => {
-    if (!editDragging || e.pointerId !== editPointerId) return;
-    const c = cellFromEvent(e);
-    if (!c) return;
-    const key = `${c.cx},${c.cy}`;
-    if (key === lastCellKey) return;
-    lastCellKey = key;
-    applyPaintAtCell(c.cx, c.cy, editPaintValue);
-  });
-
-  function endEditDrag(e){
-    if (e.pointerId !== editPointerId) return;
-    editDragging = false;
-    editPointerId = -1;
-    lastCellKey = "";
-    const wasChanged = !!(tx && tx.changed);
-    endTx();
-    // Reflect edited character into map only when an undoable change was made
-    if (wasChanged) drawMap();
-  }
-  editCv.addEventListener('pointerup', endEditDrag);
-  editCv.addEventListener('pointercancel', endEditDrag);
-
-  // ===== Tools =====
-  document.getElementById('clearBtn').addEventListener('click', () => {
-    beginTx('Clear');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,0x00); });
-    redrawAll();
-    markTxChanged();
-    endTx();
-  });
-
-  document.getElementById('invBtn').addEventListener('click', () => {
-    beginTx('Invert');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,(~getRowPattern(b,curChar,r))&0xFF); });
-    redrawAll();
-    markTxChanged();
-    endTx();
-  });
-
-  document.getElementById('flipHBtn').addEventListener('click', () => {
-    beginTx('Flip H');
-    const rev8 = (v) => {
-      v = ((v & 0xF0) >> 4) | ((v & 0x0F) << 4);
-      v = ((v & 0xCC) >> 2) | ((v & 0x33) << 2);
-      v = ((v & 0xAA) >> 1) | ((v & 0x55) << 1);
-      return v & 0xFF;
-    };
-    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rev8(getRowPattern(b,curChar,r))); });
-    redrawAll();
-    markTxChanged();
-    endTx();
-  });
-
-  document.getElementById('flipVBtn').addEventListener('click', () => {
-    beginTx('Flip V');
-    applyToBanks((b)=> {
-      const tp = new Uint8Array(8);
-      const tc = new Uint8Array(8);
-      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
-      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[7-r]); setRowColor(b,curChar,r,tc[7-r]); }
-    markTxChanged();
-    endTx();
-  });
-    syncRowUI();
-    redrawAll();
-  });
-
-  const rotRowBits = (v, dir) => {
-    v &= 0xFF;
-    if (dir==='L') return ((v<<1) | (v>>7)) & 0xFF;
-    if (dir==='R') return ((v>>1) | ((v&1)<<7)) & 0xFF;
-    return v;
-  };
-
-  document.getElementById('shiftLBtn').addEventListener('click', () => {
-    beginTx('Rotate L');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'L')); });
-    markTxChanged();
-    redrawAll();
-    endTx();
-  });
-  document.getElementById('shiftRBtn').addEventListener('click', () => {
-    beginTx('Rotate R');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'R')); });
-    markTxChanged();
-    redrawAll();
-    endTx();
-  });
-
-  document.getElementById('shiftUBtn').addEventListener('click', () => {
-    beginTx('Rotate Up');
-    applyToBanks((b)=> {
-      const tp = new Uint8Array(8);
-      const tc = new Uint8Array(8);
-      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
-      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+1)&7]); setRowColor(b,curChar,r,tc[(r+1)&7]); }
-    });
-    markTxChanged();
-    syncRowUI(); redrawAll();
-    endTx();
-  });
-
-  document.getElementById('shiftDBtn').addEventListener('click', () => {
-    beginTx('Rotate Down');
-    applyToBanks((b)=> {
-      const tp = new Uint8Array(8);
-      const tc = new Uint8Array(8);
-      for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
-      for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+7)&7]); setRowColor(b,curChar,r,tc[(r+7)&7]); }
-    });
-    markTxChanged();
-    syncRowUI(); redrawAll();
-    endTx();
-  });
-
-  document.getElementById('copyBtn').addEventListener('click', () => {
-    const pat = new Uint8Array(8);
-    const col = new Uint8Array(8);
-    for (let r=0;r<8;r++){ pat[r]=getRowPattern(curBank,curChar,r); col[r]=getRowColor(curBank,curChar,r); }
-    clip = { pat, col };
-    redrawAll();
-  });
-
-  document.getElementById('pasteBtn').addEventListener('click', () => {
-    if (!clip) return;
-    beginTx('Paste');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); setRowColor(b,curChar,r,clip.col[r]); } });
-    markTxChanged();
-    syncRowUI(); redrawAll();
-    endTx();
-  });
-  document.getElementById('pastePatBtn').addEventListener('click', () => {
-    if (!clip) return;
-    beginTx('Paste Pattern');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); } });
-    markTxChanged();
-    redrawAll();
-    endTx();
-  });
-
-  document.getElementById('pasteColBtn').addEventListener('click', () => {
-    if (!clip) return;
-    beginTx('Paste Color');
-    applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowColor(b,curChar,r,clip.col[r]); } });
-    markTxChanged();
-    syncRowUI(); redrawAll();
-    endTx();
-  });
-
-
-  // ===== Bank/Char selection =====
-  bankSel.addEventListener('change', () => {
-    curBank = parseInt(bankSel.value,10);
-    syncRowUI();
-    redrawAllFull();
-  });
-  charSel.addEventListener('change', () => {
-    curChar = parseInt(charSel.value,10);
-    syncRowUI();
-    redrawAll();
-  });
-
-  // ===== Individual Export =====
-  document.getElementById('expPattern').addEventListener('click', () => downloadBytes(pattern, 'pattern.bin'));
-  document.getElementById('expColor').addEventListener('click',   () => downloadBytes(color,   'color.bin'));
-  //document.getElementById('expBoth').addEventListener('click', () => { downloadBytes(pattern,'pattern.bin'); downloadBytes(color,'color.bin'); });
-
-  document.getElementById('expName').addEventListener('click', () => downloadBytes(nameTable, 'name.bin'));
-
-  // ===== Individual Import =====
-  impPatternBtn.addEventListener('click', () => impPatternInp.click());
-  impColorBtn.addEventListener('click',   () => impColorInp.click());
-  impNameBtn.addEventListener('click',    () => impNameInp.click());
-
-  impPatternInp.addEventListener('change', async () => {
-    const f = impPatternInp.files?.[0];
-    impPatternInp.value = "";
-    if (!f) return;
-    const bytes = await readFileToUint8(f);
-    if (importInto(pattern, bytes, PAT_SIZE, "pattern.bin")) redrawAllFull();
-  });
-
-  impColorInp.addEventListener('change', async () => {
-    const f = impColorInp.files?.[0];
-    impColorInp.value = "";
-    if (!f) return;
-    const bytes = await readFileToUint8(f);
-    if (importInto(color, bytes, COL_SIZE, "color.bin")) { syncRowUI(); redrawAllFull(); }
-  });
-
-  impNameInp.addEventListener('change', async () => {
-    const f = impNameInp.files?.[0];
-    impNameInp.value = "";
-    if (!f) return;
-    const bytes = await readFileToUint8(f);
-    if (importInto(nameTable, bytes, NAM_SIZE, "name.bin")) drawMap();
-  });
-
-  // ===== Map Clear =====
-  document.getElementById('mapClear').addEventListener('click', () => {
-    nameTable.fill(0);
-    drawMap();
-  });
-
-  // ===== SC2 Export/Import (VRAM layout) =====
-  function buildSc2PayloadVRAM(){
-    const vram = new Uint8Array(MSX_PAYLOAD_SIZE); // 0埋め
-    vram.set(pattern,   VRAM_PAT_OFF);
-    vram.set(nameTable, VRAM_NAME_OFF);
-    vram.set(color,     VRAM_COL_OFF);
-    return vram;
-  }
-
-  function buildSc2File(){
-    const payload = buildSc2PayloadVRAM();
-    const out = new Uint8Array(SC2_TOTAL);
-
-    // MSX binary header: FE 00 00 FF 37 00 00
-    out[0] = 0xFE;
-    out[1] = MSX_LOAD_START & 0xFF;
-    out[2] = (MSX_LOAD_START >> 8) & 0xFF;
-    out[3] = MSX_LOAD_END & 0xFF;
-    out[4] = (MSX_LOAD_END >> 8) & 0xFF;
-    out[5] = MSX_EXEC_ADDR & 0xFF;
-    out[6] = (MSX_EXEC_ADDR >> 8) & 0xFF;
-
-    out.set(payload, MSX_BINHDR_SIZE);
-    return out;
-  }
-
-  function tryParseSc2File(bytes){
-    if (bytes.byteLength !== SC2_TOTAL) return { ok:false, reason:`size ${bytes.byteLength} != ${SC2_TOTAL}` };
-    if (bytes[0] !== 0xFE) return { ok:false, reason:`missing 0xFE` };
-
-    const start = bytes[1] | (bytes[2]<<8);
-    const end   = bytes[3] | (bytes[4]<<8);
-    const exec  = bytes[5] | (bytes[6]<<8);
-
-    // ヘッダはあなた指定に合わせて厳密チェック
-    if (start !== MSX_LOAD_START || end !== MSX_LOAD_END || exec !== MSX_EXEC_ADDR) {
-      return { ok:false, reason:`header mismatch start=0x${start.toString(16)} end=0x${end.toString(16)} exec=0x${exec.toString(16)}` };
-    }
-
-    const vram = bytes.subarray(MSX_BINHDR_SIZE, MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE);
-
-    // Extract by VRAM layout
-    pattern.set(vram.subarray(VRAM_PAT_OFF,  VRAM_PAT_OFF  + PAT_SIZE));
-    nameTable.set(vram.subarray(VRAM_NAME_OFF, VRAM_NAME_OFF + NAM_SIZE));
-    color.set(vram.subarray(VRAM_COL_OFF,  VRAM_COL_OFF  + COL_SIZE));
-
-    return { ok:true, reason:'ok' };
-  }
-
-  expSc2Btn.addEventListener('click', () => {
-    downloadBytes(buildSc2File(), SC2_FILENAME);
-    setStatus('SC2 Export OK');
-  });
-
-  impSc2Btn.addEventListener('click', () => impSc2Inp.click());
-  impSc2Inp.addEventListener('change', async () => {
-    const f = impSc2Inp.files?.[0];
-    impSc2Inp.value = "";
-    if (!f) return;
-
-    const bytes = await readFileToUint8(f);
-    const r = tryParseSc2File(bytes);
-    if (!r.ok){
-      alert(`SC2 Import失敗: ${r.reason}`);
-      setStatus('SC2 Import NG', false);
-      return;
-    }
-    syncRowUI();
-    redrawAllFull();
-    setStatus('SC2 Import OK');
-  });
-
-  // ===== Final redraw =====
-  function redrawAll(){
-    drawEditorGrid();
-    drawPreview();
-
-    // Fast path: redraw only the currently edited character thumbnail
-    redrawThumb(curChar);
-    updateThumbSelection();
-
-    // Map can be heavy, but keep it here for non-drag operations
-    drawMap();
-    document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
-
-    updateRowMarker();
-  }
-
-  // Full refresh (all thumbnails) when global state changes
-  function redrawAllFull(){
-    drawEditorGrid();
-    drawPreview();
-    redrawAllThumbs();
-    updateThumbSelection();
-    drawMap();
-    document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
-    updateRowMarker();
-  }
-
-
-
   
-  // ===== Quick Save / Load (localStorage) =====
-  const QS_KEY = 'pcg_quicksave_v1';
-
-  function u8ToB64(u8){
-    // Chunked to avoid call stack limits
-    let s = '';
-    const chunk = 0x8000;
-    for (let i=0;i<u8.length;i+=chunk){
-      s += String.fromCharCode.apply(null, u8.subarray(i, i+chunk));
-    }
-    return btoa(s);
-  }
-  function b64ToU8(b64){
-    const bin = atob(b64);
-    const u8 = new Uint8Array(bin.length);
-    for (let i=0;i<bin.length;i++) u8[i] = bin.charCodeAt(i) & 0xFF;
-    return u8;
-  }
-
-  function buildQuickSaveObject(){
-    return {
-      v: 1,
-      t: Date.now(),
-      curBank,
-      curChar,
-      backdropIdx,
-      linkBanks: !!document.getElementById('linkBanks')?.checked,
-
-      // arrays
-      pattern_b64: u8ToB64(new Uint8Array(pattern)),
-      color_b64:   u8ToB64(new Uint8Array(color)),
-      name_b64:    u8ToB64(new Uint8Array(nameTable)),
+    const rotRowBits = (v, dir) => {
+      v &= 0xFF;
+      if (dir==='L') return ((v<<1) | (v>>7)) & 0xFF;
+      if (dir==='R') return ((v>>1) | ((v&1)<<7)) & 0xFF;
+      return v;
     };
-  }
-
-  function applyQuickSaveObject(obj){
-    if (!obj || obj.v !== 1) throw new Error('Unknown quicksave version');
-    const p = b64ToU8(obj.pattern_b64);
-    const c = b64ToU8(obj.color_b64);
-    const n = b64ToU8(obj.name_b64);
-    if (p.length !== 6144 || c.length !== 6144 || n.length !== 768) throw new Error('Bad quicksave sizes');
-
-    // overwrite buffers
-    pattern.set(p);
-    color.set(c);
-    nameTable.set(n);
-
-    backdropIdx = (obj.backdropIdx ?? backdropIdx) & 0x0F;
-    curBank = (obj.curBank ?? curBank) | 0;
-    curChar = (obj.curChar ?? curChar) | 0;
-    bankSel.value = String(curBank);
-    charSel.value = String(curChar);
-    const lb = document.getElementById('linkBanks');
-    if (lb) lb.checked = !!obj.linkBanks;
-
-    syncRowUI();
-
-    // Reset undo/redo as this is a "new loaded state"
-    undoStack.length = 0;
-    redoStack.length = 0;
-
-    redrawAllFull();
-  }
-
-  function quickSave(){
-    try{
-      const obj = buildQuickSaveObject();
-      localStorage.setItem(QS_KEY, JSON.stringify(obj));
-      setStatus('Quick Saved');
-    }catch(e){
-      console.error(e);
-      alert('Quick Save できませんでした: ' + e.message);
+  
+    document.getElementById('shiftLBtn').addEventListener('click', () => {
+      beginTx('Rotate L');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'L')); });
+      markTxChanged();
+      redrawAll();
+      endTx();
+    });
+    document.getElementById('shiftRBtn').addEventListener('click', () => {
+      beginTx('Rotate R');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++) setRowPattern(b,curChar,r,rotRowBits(getRowPattern(b,curChar,r),'R')); });
+      markTxChanged();
+      redrawAll();
+      endTx();
+    });
+  
+    document.getElementById('shiftUBtn').addEventListener('click', () => {
+      beginTx('Rotate Up');
+      applyToBanks((b)=> {
+        const tp = new Uint8Array(8);
+        const tc = new Uint8Array(8);
+        for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+        for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+1)&7]); setRowColor(b,curChar,r,tc[(r+1)&7]); }
+      });
+      markTxChanged();
+      syncRowUI(); redrawAll();
+      endTx();
+    });
+  
+    document.getElementById('shiftDBtn').addEventListener('click', () => {
+      beginTx('Rotate Down');
+      applyToBanks((b)=> {
+        const tp = new Uint8Array(8);
+        const tc = new Uint8Array(8);
+        for (let r=0;r<8;r++){ tp[r]=getRowPattern(b,curChar,r); tc[r]=getRowColor(b,curChar,r); }
+        for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,tp[(r+7)&7]); setRowColor(b,curChar,r,tc[(r+7)&7]); }
+      });
+      markTxChanged();
+      syncRowUI(); redrawAll();
+      endTx();
+    });
+  
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      const pat = new Uint8Array(8);
+      const col = new Uint8Array(8);
+      for (let r=0;r<8;r++){ pat[r]=getRowPattern(curBank,curChar,r); col[r]=getRowColor(curBank,curChar,r); }
+      clip = { pat, col };
+      redrawAll();
+    });
+  
+    document.getElementById('pasteBtn').addEventListener('click', () => {
+      if (!clip) return;
+      beginTx('Paste');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); setRowColor(b,curChar,r,clip.col[r]); } });
+      markTxChanged();
+      syncRowUI(); redrawAll();
+      endTx();
+    });
+    document.getElementById('pastePatBtn').addEventListener('click', () => {
+      if (!clip) return;
+      beginTx('Paste Pattern');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowPattern(b,curChar,r,clip.pat[r]); } });
+      markTxChanged();
+      redrawAll();
+      endTx();
+    });
+  
+    document.getElementById('pasteColBtn').addEventListener('click', () => {
+      if (!clip) return;
+      beginTx('Paste Color');
+      applyToBanks((b)=>{ for (let r=0;r<8;r++){ setRowColor(b,curChar,r,clip.col[r]); } });
+      markTxChanged();
+      syncRowUI(); redrawAll();
+      endTx();
+    });
+  
+  
+    // ===== Bank/Char selection =====
+    bankSel.addEventListener('change', () => {
+      curBank = parseInt(bankSel.value,10);
+      syncRowUI();
+      redrawAllFull();
+    });
+    charSel.addEventListener('change', () => {
+      curChar = parseInt(charSel.value,10);
+      syncRowUI();
+      redrawAll();
+    });
+  
+    // ===== Individual Export =====
+    document.getElementById('expPattern').addEventListener('click', () => downloadBytes(pattern, 'pattern.bin'));
+    document.getElementById('expColor').addEventListener('click',   () => downloadBytes(color,   'color.bin'));
+    //document.getElementById('expBoth').addEventListener('click', () => { downloadBytes(pattern,'pattern.bin'); downloadBytes(color,'color.bin'); });
+  
+    document.getElementById('expName').addEventListener('click', () => downloadBytes(nameTable, 'name.bin'));
+  
+    // ===== Individual Import =====
+    impPatternBtn.addEventListener('click', () => impPatternInp.click());
+    impColorBtn.addEventListener('click',   () => impColorInp.click());
+    impNameBtn.addEventListener('click',    () => impNameInp.click());
+  
+    impPatternInp.addEventListener('change', async () => {
+      const f = impPatternInp.files?.[0];
+      impPatternInp.value = "";
+      if (!f) return;
+      const bytes = await readFileToUint8(f);
+      if (importInto(pattern, bytes, PAT_SIZE, "pattern.bin")) redrawAllFull();
+    });
+  
+    impColorInp.addEventListener('change', async () => {
+      const f = impColorInp.files?.[0];
+      impColorInp.value = "";
+      if (!f) return;
+      const bytes = await readFileToUint8(f);
+      if (importInto(color, bytes, COL_SIZE, "color.bin")) { syncRowUI(); redrawAllFull(); }
+    });
+  
+    impNameInp.addEventListener('change', async () => {
+      const f = impNameInp.files?.[0];
+      impNameInp.value = "";
+      if (!f) return;
+      const bytes = await readFileToUint8(f);
+      if (importInto(nameTable, bytes, NAM_SIZE, "name.bin")) drawMap();
+    });
+  
+    // ===== Map Clear =====
+    document.getElementById('mapClear').addEventListener('click', () => {
+      nameTable.fill(0);
+      drawMap();
+    });
+  
+    // ===== SC2 Export/Import (VRAM layout) =====
+    function buildSc2PayloadVRAM(){
+      const vram = new Uint8Array(MSX_PAYLOAD_SIZE); // 0埋め
+      vram.set(pattern,   VRAM_PAT_OFF);
+      vram.set(nameTable, VRAM_NAME_OFF);
+      vram.set(color,     VRAM_COL_OFF);
+      return vram;
     }
-  }
-
-  function quickLoad(){
-    try{
-      const raw = localStorage.getItem(QS_KEY);
-      if (!raw){
-        alert('Quick Save がありません。');
+  
+    function buildSc2File(){
+      const payload = buildSc2PayloadVRAM();
+      const out = new Uint8Array(SC2_TOTAL);
+  
+      // MSX binary header: FE 00 00 FF 37 00 00
+      out[0] = 0xFE;
+      out[1] = MSX_LOAD_START & 0xFF;
+      out[2] = (MSX_LOAD_START >> 8) & 0xFF;
+      out[3] = MSX_LOAD_END & 0xFF;
+      out[4] = (MSX_LOAD_END >> 8) & 0xFF;
+      out[5] = MSX_EXEC_ADDR & 0xFF;
+      out[6] = (MSX_EXEC_ADDR >> 8) & 0xFF;
+  
+      out.set(payload, MSX_BINHDR_SIZE);
+      return out;
+    }
+  
+    function tryParseSc2File(bytes){
+      if (bytes.byteLength !== SC2_TOTAL) return { ok:false, reason:`size ${bytes.byteLength} != ${SC2_TOTAL}` };
+      if (bytes[0] !== 0xFE) return { ok:false, reason:`missing 0xFE` };
+  
+      const start = bytes[1] | (bytes[2]<<8);
+      const end   = bytes[3] | (bytes[4]<<8);
+      const exec  = bytes[5] | (bytes[6]<<8);
+  
+      // ヘッダはあなた指定に合わせて厳密チェック
+      if (start !== MSX_LOAD_START || end !== MSX_LOAD_END || exec !== MSX_EXEC_ADDR) {
+        return { ok:false, reason:`header mismatch start=0x${start.toString(16)} end=0x${end.toString(16)} exec=0x${exec.toString(16)}` };
+      }
+  
+      const vram = bytes.subarray(MSX_BINHDR_SIZE, MSX_BINHDR_SIZE + MSX_PAYLOAD_SIZE);
+  
+      // Extract by VRAM layout
+      pattern.set(vram.subarray(VRAM_PAT_OFF,  VRAM_PAT_OFF  + PAT_SIZE));
+      nameTable.set(vram.subarray(VRAM_NAME_OFF, VRAM_NAME_OFF + NAM_SIZE));
+      color.set(vram.subarray(VRAM_COL_OFF,  VRAM_COL_OFF  + COL_SIZE));
+  
+      return { ok:true, reason:'ok' };
+    }
+  
+    expSc2Btn.addEventListener('click', () => {
+      downloadBytes(buildSc2File(), SC2_FILENAME);
+      setStatus('SC2 Export OK');
+    });
+  
+    impSc2Btn.addEventListener('click', () => impSc2Inp.click());
+    impSc2Inp.addEventListener('change', async () => {
+      const f = impSc2Inp.files?.[0];
+      impSc2Inp.value = "";
+      if (!f) return;
+  
+      const bytes = await readFileToUint8(f);
+      const r = tryParseSc2File(bytes);
+      if (!r.ok){
+        alert(`SC2 Import失敗: ${r.reason}`);
+        setStatus('SC2 Import NG', false);
         return;
       }
-      const obj = JSON.parse(raw);
-      applyQuickSaveObject(obj);
-      setStatus('Quick Loaded');
-    }catch(e){
-      console.error(e);
-      alert('Quick Load できませんでした: ' + e.message);
+      syncRowUI();
+      redrawAllFull();
+      setStatus('SC2 Import OK');
+    });
+  
+    // ===== Final redraw =====
+    function redrawAll(){
+      drawEditorGrid();
+      drawPreview();
+  
+      // Fast path: redraw only the currently edited character thumbnail
+      redrawThumb(curChar);
+      updateThumbSelection();
+  
+      // Map can be heavy, but keep it here for non-drag operations
+      drawMap();
+      metaUpdatePreview();
+      document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
+      updateRowMarker();
     }
-  }
-
-  function quickClear(){
-    try{
-      localStorage.removeItem(QS_KEY);
-      setStatus('Quick Cleared');
-    }catch(e){
-      console.error(e);
-      alert('Clear できませんでした: ' + e.message);
+  
+    // Full refresh (all thumbnails) when global state changes
+    function redrawAllFull(){
+      drawEditorGrid();
+      drawPreview();
+      redrawAllThumbs();
+      updateThumbSelection();
+      drawMap();
+      metaUpdatePreview();
+      document.getElementById('clipInfo').textContent = clip ? 'クリップ: あり' : 'クリップ: なし';
+      updateRowMarker();
     }
-  }
+  
+  
+  
+    
+    // ===== Quick Save / Load (localStorage) =====
+    const QS_KEY = 'pcg_quicksave_v1';
+  
+    function u8ToB64(u8){
+      // Chunked to avoid call stack limits
+      let s = '';
+      const chunk = 0x8000;
+      for (let i=0;i<u8.length;i+=chunk){
+        s += String.fromCharCode.apply(null, u8.subarray(i, i+chunk));
+      }
+      return btoa(s);
+    }
+    function b64ToU8(b64){
+      const bin = atob(b64);
+      const u8 = new Uint8Array(bin.length);
+      for (let i=0;i<bin.length;i++) u8[i] = bin.charCodeAt(i) & 0xFF;
+      return u8;
+    }
+  
+    function buildQuickSaveObject(){
+      return {
+        v: 1,
+        t: Date.now(),
+        curBank,
+        curChar,
+        backdropIdx,
+        linkBanks: !!document.getElementById('linkBanks')?.checked,
+        // arrays
+        pattern_b64: u8ToB64(new Uint8Array(pattern)),
+        color_b64:   u8ToB64(new Uint8Array(color)),
+        name_b64:    u8ToB64(new Uint8Array(nameTable)),
+        metaTiles: metaTiles,
+        metaSelId: (metaSel?.value || ''),
+        metaActiveId: metaActiveId,
+        metaStampOn: !!metaActiveId,
+        metaSizeSel: (metaSizeSel?.value || '2'),
+      };
+    }
+  
+    function applyQuickSaveObject(obj){
+      if (!obj || obj.v !== 1) throw new Error('Unknown quicksave version');
+      const p = b64ToU8(obj.pattern_b64);
+      const c = b64ToU8(obj.color_b64);
+      const n = b64ToU8(obj.name_b64);
+      if (p.length !== 6144 || c.length !== 6144 || n.length !== 768) throw new Error('Bad quicksave sizes');
+  
+      // overwrite buffers
+      pattern.set(p);
+      color.set(c);
+      nameTable.set(n);
+  
+      backdropIdx = (obj.backdropIdx ?? backdropIdx) & 0x0F;
+      curBank = (obj.curBank ?? curBank) | 0;
+      curChar = (obj.curChar ?? curChar) | 0;
+      bankSel.value = String(curBank);
+      charSel.value = String(curChar);
+      const lb=document.getElementById('linkBanks'); if(lb) lb.checked=!!obj.linkBanks;
+  
+      syncRowUI();
+  
+      // --- MetaTiles restore ---
+      metaTiles = Array.isArray(obj.metaTiles) ? obj.metaTiles : [];
 
-  const qsSaveBtn = document.getElementById('qsSave');
-  const qsLoadBtn = document.getElementById('qsLoad');
-  const qsClearBtn = document.getElementById('qsClear');
-  if (qsSaveBtn) qsSaveBtn.addEventListener('click', quickSave);
-  if (qsLoadBtn) qsLoadBtn.addEventListener('click', quickLoad);
-  if (qsClearBtn) qsClearBtn.addEventListener('click', quickClear);
+      metaRefreshSelect();
+      metaDropdownRebuild();
+
+      if (metaSel){
+        const id = obj.metaSelId || '';
+        metaSel.value = metaGetById(id) ? id : '';
+      }
+
+      metaActiveId = null;
+      if (obj.metaActiveId && metaGetById(obj.metaActiveId)){
+        metaActiveId = obj.metaActiveId;
+      } else if (obj.metaStampOn && metaSel?.value){
+        metaActiveId = metaSel.value;
+      }
+
+      if (metaSizeSel){
+        metaSizeSel.value = (obj.metaSizeSel === '4') ? '4' : '2';
+      }
+
+      metaUpdatePreview();
+      metaDropdownSyncFromSelect();
+      metaUpdateStampUi();
+      scheduleMapRedraw();
 
 
-// ===== Init =====
-  curBank = 0; curChar = 0;
-  bankSel.value = "0";
-  charSel.value = "0";
-  syncRowUI();
-  // Initial full render after layout (thumbnails)
-  requestAnimationFrame(() => {
-    redrawAllFull();
-    setStatus('OK');
-    updateUndoRedoUI();
-  });
-})();
-</script>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV35LYVWE"></script>
-<script>
+      // Reset undo/redo as this is a "new loaded state"
+      undoStack.length = 0;
+      redoStack.length = 0;
+  
+      redrawAllFull();
+    }
+  
+    function quickSave(){
+      try{
+        const obj = buildQuickSaveObject();
+        localStorage.setItem(QS_KEY, JSON.stringify(obj));
+        setStatus('Quick Saved');
+      }catch(e){
+        console.error(e);
+        alert('Quick Save できませんでした: ' + e.message);
+      }
+    }
+  
+    function quickLoad(){
+      try{
+        const raw = localStorage.getItem(QS_KEY);
+        if (!raw){
+          alert('Quick Save がありません。');
+          return;
+        }
+        const obj = JSON.parse(raw);
+        applyQuickSaveObject(obj);
+        setStatus('Quick Loaded');
+      }catch(e){
+        console.error(e);
+        alert('Quick Load できませんでした: ' + e.message);
+      }
+    }
+  
+    function quickClear(){
+      try{
+        localStorage.removeItem(QS_KEY);
+        setStatus('Quick Cleared');
+      }catch(e){
+        console.error(e);
+        alert('Clear できませんでした: ' + e.message);
+      }
+    }
+  
+    const qsSaveBtn = document.getElementById('qsSave');
+    const qsLoadBtn = document.getElementById('qsLoad');
+    const qsClearBtn = document.getElementById('qsClear');
+    if (qsSaveBtn) qsSaveBtn.addEventListener('click', quickSave);
+    if (qsLoadBtn) qsLoadBtn.addEventListener('click', quickLoad);
+    if (qsClearBtn) qsClearBtn.addEventListener('click', quickClear);
+  
+  
+  
+    // ===== Text Export (MSX BASIC / Z80 ASM) =====
+    function downloadText(filename, text){
+      const blob = new Blob([text], {type:'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 0);
+    }
+  
+    function hex2(n){ return (n & 0xFF).toString(16).toUpperCase().padStart(2,'0'); }
+  
+    // Z80 ASM: DB $xx,$yy,...
+    function formatAsmDb(comment, u8, itemsPerLine=16){
+      let out = [];
+      if (comment) out.push("; " + comment + " (" + u8.length + " bytes)");
+      for (let i=0;i<u8.length;i+=itemsPerLine){
+        const chunk = Array.from(u8.subarray(i, i+itemsPerLine))
+          .map(b => "$" + hex2(b))
+          .join(",");
+        out.push("    db " + chunk);
+      }
+      return out.join("\n");
+    }
+  
+    
+    function formatBasicData(label, u8, itemsPerLine=32, startLine=1000, step=10){
+      // MSX BASIC: DATA xx,yy,... (hex strings without &H)
+      let line = startLine;
+      let out = [];
+      for (let i=0;i<u8.length;i+=itemsPerLine){
+        const chunk = Array.from(u8.subarray(i, i+itemsPerLine)).map(b=>hex2(b)).join(",");
+        out.push(line + " DATA " + chunk);
+        line += step;
+      }
+      return out.join("\r\n");
+    }
+  
+    function buildBasicExport(){
+      // VRAM bases for SCREEN2
+      const PATT_BASE  = 0x0000; // 0
+      const COLOR_BASE = 0x2000; // 8192
+      const NAME_BASE  = 0x1800; // 6144
+  
+      const pattAll = new Uint8Array(pattern);
+      const colAll  = new Uint8Array(color);
+      const nam     = new Uint8Array(nameTable);
+  
+      const sel = document.getElementById('basicBankSel');
+      const mode = sel ? sel.value : 'cur';
+      let bank = curBank;
+      if (mode === '0' || mode === '1' || mode === '2') bank = parseInt(mode,10);
+      const exportAllBanks = (mode === 'all');
+  
+      // Slice bank (2048 bytes) if needed
+      const bankSlice = (u8, bk) => u8.subarray(bk*2048, (bk+1)*2048);
+      const patt = exportAllBanks ? pattAll : bankSlice(pattAll, bank);
+      const col  = exportAllBanks ? colAll  : bankSlice(colAll,  bank);
+  
+      // DATA start lines (roomy but compact)
+      const PAT_LINE = 1000;
+      const COL_LINE = 3000;
+      const NAM_LINE = 5000;
+  
+      // Program lines: 10.. (step 10)
+      let L = 10;
+      const step = 10;
+      const out = [];
+      const emit = (s) => { out.push(L + " " + s); L += step; };
+  
+      emit("REM ================================================");
+      emit("REM  PCG Editor Export (SCREEN2)  " + new Date().toISOString());
+      emit("REM  pattern:" + patt.length + "  color:" + col.length + "  name:768");
+      emit("REM  backdropIdx=" + backdropIdx + " (color0=backdrop)");
+      emit("REM  exportBank=" + (exportAllBanks ? "all(3)" : ("bank"+bank)));
+      emit("REM ================================================");
+      emit("DEFINT A-Z");
+      emit("BD=" + (backdropIdx & 0x0F) + ": SCREEN 1: COLOR 15,BD,0");
+      emit("DEFUSR=&H7E:A=USR(0)");
+      emit("GOSUB 200 ' PATTERN");
+      emit("GOSUB 300 ' COLOR");
+      emit("GOSUB 400 ' NAME");
+      emit("END");
+  
+      // Subroutines (keep under 1000 to avoid DATA region)
+      // PATTERN
+      out.push("200 REM PATTERN");
+      if (exportAllBanks){
+        out.push("210 RESTORE "+PAT_LINE+": ADR=0");
+        out.push("220 FOR I=0 TO 6143: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
+      } else {
+        // Single-bank export: write the selected bank data, but copy to all 3 banks in VRAM
+        out.push("210 BK="+bank+": RESTORE "+PAT_LINE);
+        out.push("220 ADR=0");
+        out.push("230 FOR I=0 TO 2047: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X:VPOKE ADR+2048,X:VPOKE ADR+4096,X: ADR=ADR+1: NEXT I");
+      }
+      out.push("240 RETURN");
+  
+      // COLOR
+      out.push("300 REM COLOR");
+      if (exportAllBanks){
+        out.push("310 RESTORE "+COL_LINE+": ADR=8192");
+        out.push("320 FOR I=0 TO 6143: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
+      } else {
+        // Single-bank export: write the selected bank data, but copy to all 3 banks in VRAM
+        out.push("310 BK="+bank+": RESTORE "+COL_LINE);
+        out.push("320 ADR=8192");
+        out.push("330 FOR I=0 TO 2047: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X:VPOKE ADR+2048,X:VPOKE ADR+4096,X: ADR=ADR+1: NEXT I");
+      }
+      out.push("340 RETURN");
+  
+      // NAME (always 768)
+      out.push("400 REM NAME");
+      out.push("410 RESTORE "+NAM_LINE+": ADR=6144");
+      out.push("420 FOR I=0 TO 767: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
+      out.push("430 RETURN");
+      out.push("");
+  
+      // DATA blocks with numbered REM headers
+      out.push((PAT_LINE-10) + " REM ----- DATA PATTERN ("+patt.length+" bytes) -----");
+      out.push(formatBasicData("PATTERN", patt, 32, PAT_LINE, 10));
+      out.push("");
+      out.push((COL_LINE-10) + " REM ----- DATA COLOR ("+col.length+" bytes) -----");
+      out.push(formatBasicData("COLOR", col, 32, COL_LINE, 10));
+      out.push("");
+      out.push((NAM_LINE-10) + " REM ----- DATA NAME (768 bytes) -----");
+      out.push(formatBasicData("NAME", nam, 32, NAM_LINE, 10));
+      out.push("");
+  
+      return out.join("\r\n");
+    }
+  
+  function buildAsmExport(){
+      const patt = new Uint8Array(pattern);
+      const col  = new Uint8Array(color);
+      const nam  = new Uint8Array(nameTable);
+  
+      function sliceBank(u8, bank){ return u8.subarray(bank*2048, (bank+1)*2048); }
+  
+      let out = [];
+      out.push("; ================================================");
+      out.push("; PCG Editor Export (SCREEN2)  " + new Date().toISOString());
+      out.push("; pattern:6144  color:6144  name:768");
+      out.push("; backdropIdx=" + backdropIdx + " (color0=backdrop)");
+      out.push("; ================================================");
+      out.push("");
+      out.push("PCG_PATT_BANK0:");
+      out.push(formatAsmDb("pattern bank0", sliceBank(patt,0)));
+      out.push("");
+      out.push("PCG_PATT_BANK1:");
+      out.push(formatAsmDb("pattern bank1", sliceBank(patt,1)));
+      out.push("");
+      out.push("PCG_PATT_BANK2:");
+      out.push(formatAsmDb("pattern bank2", sliceBank(patt,2)));
+      out.push("");
+      out.push("PCG_COL_BANK0:");
+      out.push(formatAsmDb("color bank0", sliceBank(col,0)));
+      out.push("");
+      out.push("PCG_COL_BANK1:");
+      out.push(formatAsmDb("color bank1", sliceBank(col,1)));
+      out.push("");
+      out.push("PCG_COL_BANK2:");
+      out.push(formatAsmDb("color bank2", sliceBank(col,2)));
+      out.push("");
+      out.push("PCG_NAME_TABLE:");
+      out.push(formatAsmDb("name table", nam, 16));
+      out.push("");
+      return out.join("\n");
+    }
+  
+    const expBasicBtn = document.getElementById('expBasic');
+    const expAsmBtn   = document.getElementById('expAsm');
+    if (expBasicBtn) expBasicBtn.addEventListener('click', ()=> downloadText('pcg_export_basic.bas', buildBasicExport()));
+    if (expAsmBtn)   expAsmBtn.addEventListener('click', ()=> downloadText('pcg_export_asm.asm', buildAsmExport()));
+  
+  
+  // ===== Init =====
+    curBank = 0; curChar = 0;
+    bankSel.value = "0";
+    charSel.value = "0";
+    syncRowUI();
+    // Initial full render after layout (thumbnails)
+    requestAnimationFrame(() => {
+      redrawAllFull();
+      setStatus('OK');
+      updateUndoRedoUI();
+    });
+  })();
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VBV35LYVWE"></script>
+  <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-VBV35LYVWE');
-</script>
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-VBV35LYVWE');
+  </script>
 </body>
+
 </html>
