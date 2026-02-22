@@ -2864,7 +2864,7 @@ fieldset.btnGroupField .btnGroup {
       const exec  = bytes[5] | (bytes[6]<<8);
   
       // ヘッダはあなた指定に合わせて厳密チェック
-      if (start !== MSX_LOAD_START || end !== MSX_LOAD_END || exec !== MSX_EXEC_ADDR) {
+      if (start !== MSX_LOAD_START || end !== MSX_LOAD_END) {
         return { ok:false, reason:`header mismatch start=0x${start.toString(16)} end=0x${end.toString(16)} exec=0x${exec.toString(16)}` };
       }
   
@@ -3074,7 +3074,10 @@ fieldset.btnGroupField .btnGroup {
   
   
     // ===== Text Export (MSX BASIC / Z80 ASM) =====
-    function downloadText(filename, text){
+    function downloadText(filename, text, addCtrlZ=false){
+      // MSX-DOS TEXT expects 0x1A (Ctrl+Z) as end-of-file marker in some tools.
+      // Append it optionally (used for BASIC export).
+      if (addCtrlZ) text += String.fromCharCode(0x1A);
       const blob = new Blob([text], {type:'text/plain'});
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
@@ -3246,7 +3249,7 @@ fieldset.btnGroupField .btnGroup {
   
     const expBasicBtn = document.getElementById('expBasic');
     const expAsmBtn   = document.getElementById('expAsm');
-    if (expBasicBtn) expBasicBtn.addEventListener('click', ()=> downloadText('pcg_export_basic.bas', buildBasicExport()));
+    if (expBasicBtn) expBasicBtn.addEventListener('click', ()=> downloadText('pcg_export_basic.bas', buildBasicExport(), true));
     if (expAsmBtn)   expAsmBtn.addEventListener('click', ()=> downloadText('pcg_export_asm.asm', buildAsmExport()));
   
   
