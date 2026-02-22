@@ -172,13 +172,25 @@ body {
 
 .fileGrid {
   display: grid;
-  grid-template-columns: 175px 550px;
-  grid-template-rows: 20px 50px;
+  /* 左列は見出し/ラベル、右列はボタン群。右列は可変にして狭い画面で折り返す */
+  grid-template-columns: minmax(150px, 175px) minmax(0, 1fr);
+  grid-auto-rows: auto;
+  column-gap: 10px;
+  row-gap: 2px;
+  max-width: 100%;
+  align-items: center;
+}
+
+/* 画面が狭いときは2カラムを縦積みにする（はみ出し防止） */
+@media (max-width: 720px) {
+  .fileGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 h2 {
   font-size: 14px;
-  margin: 0 0 8px;
+  margin: 8px 0 0 0;
 }
 
 label {
@@ -825,7 +837,7 @@ fieldset.btnGroupField .btnGroup {
 
 <body>
   <div class="header title">HTML-based Standalone PCG Editor for MSX
-    <span class="tiny">Ver.1.0.2</span>
+    <span class="tiny">Ver.1.0.3</span>
     <div class="filePanel">
       <button id="ioTopToggle" class="ioToggleBtn" type="button">
         <i class="fa-solid fa-right-left"></i>
@@ -845,24 +857,29 @@ fieldset.btnGroupField .btnGroup {
                 <i class="fa-solid fa-file-import"></i>
                 <span class="btnText">SC2 Import</span>
               </button>
-              <input id="impSc2" type="file" accept=".sc2,.bin,application/octet-stream" style="display:none;">
+              <input id="impSc2" type="file" accept=".sc2,.bin" style="display:none;">
             </div>
             <div>
-              <button id="impPatternBtn" title="pattern.bin" aria-label="pattern.bin 取込" class="btn btn--orange">
+              <button id="impPatternBtn" title="pattern.pat" aria-label="pattern.pat 取込" class="btn btn--orange">
                 <i class="fa-solid fa-file-arrow-up"></i>
-                <span class="btnText">pattern.bin 取込</span>
+                <span class="btnText">pattern.pat 取込</span>
               </button>
-              <input id="impPattern" type="file" accept=".bin,application/octet-stream" style="display:none;">
-              <button id="impColorBtn" title="color.bin" aria-label="color.bin 取込" class="btn btn--orange">
+              <input id="impPattern" type="file" accept=".pat,.bin" style="display:none;">
+              <button id="impColorBtn" title="color.col" aria-label="color.col 取込" class="btn btn--orange">
                 <i class="fa-solid fa-palette"></i>
-                <span class="btnText">color.bin 取込</span>
+                <span class="btnText">color.col 取込</span>
               </button>
-              <input id="impColor" type="file" accept=".bin,application/octet-stream" style="display:none;">
-              <button id="impNameBtn" title="name.bin" aria-label="name.bin 取込" class="btn btn--orange">
+              <input id="impColor" type="file" accept=".col,.bin" style="display:none;">
+              <button id="impNameBtn" title="name.nam" aria-label="name.nam 取込" class="btn btn--orange">
                 <i class="fa-solid fa-table-cells"></i>
-                <span class="btnText">name.bin 取込</span>
+                <span class="btnText">name.nam 取込</span>
               </button>
-              <input id="impName" type="file" accept=".bin,application/octet-stream" style="display:none;">
+              <input id="impName" type="file" accept=".nam,.bin" style="display:none;">
+              <button id="impMetaBinBtn" title="metatile.mtl" aria-label="メタタイル バイナリ取込" class="btn btn--orange">
+                <i class="fa-solid fa-cubes"></i>
+                <span class="btnText">meta.mtl 取込</span>
+              </button>
+              <input id="impMetaBin" type="file" accept=".mtl,.bin" style="display:none;">
             </div>
           </div>
           <div class="fileGrid">
@@ -877,15 +894,19 @@ fieldset.btnGroupField .btnGroup {
             <div>
               <button id="expPattern" title="pattern.bin" aria-label="pattern.bin 出力" class="btn btn--orange">
                 <i class="fa-solid fa-file-arrow-down"></i>
-                <span class="btnText">pattern.bin 出力</span>
+                <span class="btnText">pattern.pat 出力</span>
               </button>
               <button id="expColor" title="color.bin" aria-label="color.bin 出力" class="btn btn--orange">
                 <i class="fa-solid fa-palette"></i>
-                <span class="btnText">color.bin 出力</span>
+                <span class="btnText">color.col 出力</span>
               </button>
               <button id="expName" title="name.bin" aria-label="name.bin 出力" class="btn btn--orange">
                 <i class="fa-solid fa-table-cells"></i>
-                <span class="btnText">name.bin 出力</span>
+                <span class="btnText">name.nam 出力</span>
+              </button>
+              <button id="expMetaBin" title="metatile.mtl" aria-label="メタタイル バイナリ出力" class="btn btn--orange">
+                <i class="fa-solid fa-cubes"></i>
+                <span class="btnText">meta.mtl 出力</span>
               </button>
             </div>
           </div>
@@ -896,7 +917,7 @@ fieldset.btnGroupField .btnGroup {
             <div>
               <button id="expAsm" title="Z80 ASM用 DB出力" aria-label="ASM Export" class="btn btn--orange">
                 <i class="fa-solid fa-microchip"></i>
-                <span class="btnText">ASM 出力</span>
+                <span class="btnText">ASM</span>
               </button>
             </div>
             <div>
@@ -912,7 +933,23 @@ fieldset.btnGroupField .btnGroup {
               </div>
               <button id="expBasic" title="MSX BASIC用 DATA出力" aria-label="MSX BASIC Export" class="btn btn--orange">
                 <i class="fa-solid fa-code"></i>
-                <span class="btnText">BASIC 出力</span>
+                <span class="btnText">BASIC</span>
+              </button>
+            </div>
+          </div>
+          <div class="fileGrid">
+            <h2>メタタイル出力</h2>
+            <h2></h2>
+            <div>
+              <button id="expMetaAsm" title="メタタイルをZ80 ASM用にDB出力" aria-label="MetaTile ASM Export" class="btn btn--orange">
+                <i class="fa-solid fa-border-all"></i>
+                <span class="btnText">ASM</span>
+              </button>
+            </div>
+            <div>
+              <button id="expMetaBasic" title="メタタイルをMSX BASIC用にDATA出力" aria-label="MetaTile BASIC Export" class="btn btn--orange">
+                <i class="fa-solid fa-border-all"></i>
+                <span class="btnText">BASIC</span>
               </button>
             </div>
           </div>
@@ -923,14 +960,13 @@ fieldset.btnGroupField .btnGroup {
             <div>
               <button id="qsSave" title="Quick Save (localStorage)" aria-label="Quick Save" class="btn btn--orange">
                 <i class="fa-solid fa-floppy-disk"></i>
-                <span class="btnText">セーブ(
-                  <span class="shortcutText">S</span>)</span>
+                <span class="btnText">セーブ(<span class="shortcutText">S</span>)</span>
               </button>
             </div>
             <div>
               <button id="qsLoad" title="Quick Load (localStorage)" aria-label="Quick Load" class="btn btn--orange">
                 <i class="fa-solid fa-rotate-left"></i>
-                <span class="btnText">ロード</span>
+                <span class="btnText">ロード(<span class="shortcutText">L</span>)</span>
               </button>
               <button id="qsClear" title="Quick Save Clear" aria-label="Quick Save Clear" class="btn btn--orange">
                 <i class="fa-solid fa-trash"></i>
@@ -974,8 +1010,7 @@ fieldset.btnGroupField .btnGroup {
               </div>
               <button id="copyBtn" title="コピー" aria-label="コピー" class="btn btn--orange">
                 <i class="fa-regular fa-copy"></i>
-                <span class="btnText">コピー(
-                  <span class="shortcutText">C</span>)</span>
+                <span class="btnText">コピー(<span class="shortcutText">C</span>)</span>
               </button>
             </fieldset>
           </div>
@@ -984,8 +1019,7 @@ fieldset.btnGroupField .btnGroup {
             <div class="btnGroup" aria-label="ペーストオプション">
               <button id="pasteBtn" title="ペースト（パターン+色）" aria-label="ペースト（パターン+色）" class="btn btn--orange">
                 <i class="fa-solid fa-paste"></i>
-                <span class="btnText">パターン+色(
-                  <span class="shortcutText">V</span>)</span>
+                <span class="btnText">パターン+色(<span class="shortcutText">V</span>)</span>
               </button>
               <button id="pastePatBtn" title="パターンのみペースト" aria-label="パターンのみペースト" class="btn btn--orange">
                 <i class="fa-solid fa-border-all"></i>
@@ -1083,13 +1117,11 @@ fieldset.btnGroupField .btnGroup {
         <div class="row" style="margin-top:10px;">
           <button id="undoBtn" title="Undo (Ctrl+Z)" aria-label="Undo" class="btn btn--orange">
             <i class="fa-solid fa-rotate-left"></i>
-            <span class="btnText">Undo(
-              <span class="shortcutText">Z</span>)</span>
+            <span class="btnText">Undo(<span class="shortcutText">Z</span>)</span>
           </button>
           <button id="redoBtn" title="Redo (Ctrl+Y / Ctrl+Shift+Z)" aria-label="Redo" class="btn btn--orange">
             <i class="fa-solid fa-rotate-right"></i>
-            <span class="btnText">Redo(
-              <span class="shortcutText">Y</span>)</span>
+            <span class="btnText">Redo(<span class="shortcutText">Y</span>)</span>
           </button>
         </div>
         <div class="row" style="margin-top:10px;">
@@ -1202,7 +1234,7 @@ fieldset.btnGroupField .btnGroup {
           <div>メタタイル</div>登録: サイズ 2×2/4×4を選択の上、カーソル位置を左上として
           <span class="kbd">Ctrl+クリック</span>で、リストに保存。
           <br>
-          <b>スタンプ</b>をONで貼付モード → 左クリックで貼る / 右クリックで同サイズを消去。
+          <b>スタンプ</b>をONで貼付モード → 左クリックで貼る
           <br>
         </div>
       </div>
@@ -1563,9 +1595,11 @@ fieldset.btnGroupField .btnGroup {
     const impPatternBtn = document.getElementById('impPatternBtn');
     const impColorBtn   = document.getElementById('impColorBtn');
     const impNameBtn    = document.getElementById('impNameBtn');
+    const impMetaBinBtn = document.getElementById('impMetaBinBtn');
     const impPatternInp = document.getElementById('impPattern');
     const impColorInp   = document.getElementById('impColor');
     const impNameInp    = document.getElementById('impName');
+    const impMetaBinInp = document.getElementById('impMetaBin');
   
     // ===== State =====
     const CELL = 32;      // 256/8
@@ -2788,16 +2822,18 @@ fieldset.btnGroupField .btnGroup {
     });
   
     // ===== Individual Export =====
-    document.getElementById('expPattern').addEventListener('click', () => downloadBytes(pattern, 'pattern.bin'));
-    document.getElementById('expColor').addEventListener('click',   () => downloadBytes(color,   'color.bin'));
+    document.getElementById('expPattern').addEventListener('click', () => downloadBytes(pattern, 'pattern.pat'));
+    document.getElementById('expColor').addEventListener('click',   () => downloadBytes(color,   'color.col'));
     //document.getElementById('expBoth').addEventListener('click', () => { downloadBytes(pattern,'pattern.bin'); downloadBytes(color,'color.bin'); });
   
-    document.getElementById('expName').addEventListener('click', () => downloadBytes(nameTable, 'name.bin'));
+    document.getElementById('expName').addEventListener('click', () => downloadBytes(nameTable, 'name.nam'));
+    document.getElementById('expMetaBin')?.addEventListener('click', () => downloadBytes(buildMetaBinFile(), 'metatile.mtl'));
   
     // ===== Individual Import =====
     impPatternBtn.addEventListener('click', () => impPatternInp.click());
     impColorBtn.addEventListener('click',   () => impColorInp.click());
     impNameBtn.addEventListener('click',    () => impNameInp.click());
+    impMetaBinBtn?.addEventListener('click', () => impMetaBinInp.click());
   
     impPatternInp.addEventListener('change', async () => {
       const f = impPatternInp.files?.[0];
@@ -2821,6 +2857,19 @@ fieldset.btnGroupField .btnGroup {
       if (!f) return;
       const bytes = await readFileToUint8(f);
       if (importInto(nameTable, bytes, NAM_SIZE, "name.bin")) drawMap();
+    });
+
+    impMetaBinInp?.addEventListener('change', async () => {
+      const f = impMetaBinInp.files?.[0];
+      impMetaBinInp.value = "";
+      if (!f) return;
+      const bytes = await readFileToUint8(f);
+      const res = tryParseMetaBinFile(bytes);
+      if (!res.ok){
+        alert('MetaTile bin import failed: ' + res.reason);
+        return;
+      }
+      setStatus('MetaTiles imported (bin)');
     });
   
     // ===== Map Clear =====
@@ -3147,12 +3196,12 @@ fieldset.btnGroupField .btnGroup {
       const out = [];
       const emit = (s) => { out.push(L + " " + s); L += step; };
   
-      emit("REM ================================================");
-      emit("REM  PCG Editor Export (SCREEN2)  " + new Date().toISOString());
-      emit("REM  pattern:" + patt.length + "  color:" + col.length + "  name:768");
-      emit("REM  backdropIdx=" + backdropIdx + " (color0=backdrop)");
-      emit("REM  exportBank=" + (exportAllBanks ? "all(3)" : ("bank"+bank)));
-      emit("REM ================================================");
+      emit("' ================================================");
+      emit("'  PCG Editor Export (SCREEN2)  " + new Date().toISOString());
+      emit("'  pattern:" + patt.length + "  color:" + col.length + "  name:768");
+      emit("'  backdropIdx=" + backdropIdx + " (color0=backdrop)");
+      emit("'  exportBank=" + (exportAllBanks ? "all(3)" : ("bank"+bank)));
+      emit("' ================================================");
       emit("DEFINT A-Z");
       emit("BD=" + (backdropIdx & 0x0F) + ": SCREEN 1: COLOR 15,BD,0");
       emit("DEFUSR=&H7E:A=USR(0)");
@@ -3163,7 +3212,7 @@ fieldset.btnGroupField .btnGroup {
   
       // Subroutines (keep under 1000 to avoid DATA region)
       // PATTERN
-      out.push("200 REM PATTERN");
+      out.push("200 ' PATTERN");
       if (exportAllBanks){
         out.push("210 RESTORE "+PAT_LINE+": ADR=0");
         out.push("220 FOR I=0 TO 6143: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
@@ -3176,7 +3225,7 @@ fieldset.btnGroupField .btnGroup {
       out.push("240 RETURN");
   
       // COLOR
-      out.push("300 REM COLOR");
+      out.push("300 ' COLOR");
       if (exportAllBanks){
         out.push("310 RESTORE "+COL_LINE+": ADR=8192");
         out.push("320 FOR I=0 TO 6143: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
@@ -3189,20 +3238,20 @@ fieldset.btnGroupField .btnGroup {
       out.push("340 RETURN");
   
       // NAME (always 768)
-      out.push("400 REM NAME");
+      out.push("400 ' NAME");
       out.push("410 RESTORE "+NAM_LINE+": ADR=6144");
       out.push("420 FOR I=0 TO 767: READ A$: X=VAL(\"&H\"+A$): VPOKE ADR,X: ADR=ADR+1: NEXT I");
       out.push("430 RETURN");
       out.push("");
   
-      // DATA blocks with numbered REM headers
-      out.push((PAT_LINE-10) + " REM ----- DATA PATTERN ("+patt.length+" bytes) -----");
+      // DATA blocks with numbered ' headers
+      out.push((PAT_LINE-10) + " ' ----- DATA PATTERN ("+patt.length+" bytes) -----");
       out.push(formatBasicData("PATTERN", patt, 32, PAT_LINE, 10));
       out.push("");
-      out.push((COL_LINE-10) + " REM ----- DATA COLOR ("+col.length+" bytes) -----");
+      out.push((COL_LINE-10) + " ' ----- DATA COLOR ("+col.length+" bytes) -----");
       out.push(formatBasicData("COLOR", col, 32, COL_LINE, 10));
       out.push("");
-      out.push((NAM_LINE-10) + " REM ----- DATA NAME (768 bytes) -----");
+      out.push((NAM_LINE-10) + " ' ----- DATA NAME (768 bytes) -----");
       out.push(formatBasicData("NAME", nam, 32, NAM_LINE, 10));
       out.push("");
   
@@ -3246,11 +3295,246 @@ fieldset.btnGroupField .btnGroup {
       out.push("");
       return out.join("\n");
     }
-  
+
+    // ===== MetaTile Text Export (ASM / BASIC) =====
+    function sanitizeAsmLabel(s){
+      // Keep A-Z0-9_ only
+      return (s || '').toUpperCase().replace(/[^A-Z0-9_]+/g,'_').replace(/^_+|_+$/g,'').slice(0,24) || 'META';
+    }
+
+    function buildMetaAsmExport(){
+      let out = [];
+      out.push("; ================================================");
+      out.push("; PCG Editor MetaTile Export  " + new Date().toISOString());
+      out.push("; count=" + metaTiles.length);
+      out.push("; Each entry: db w,h, then w*h tile codes (0-255)");
+      out.push("; ================================================");
+      out.push("");
+
+      out.push("PCG_META_COUNT:");
+      out.push("    db " + (metaTiles.length & 0xFF));
+      out.push("");
+
+      // Offsets (pointers) for easy iteration
+      out.push("PCG_META_PTRS:");
+      if (metaTiles.length === 0){
+        out.push("    dw 0");
+      } else {
+        const ptrs = metaTiles.map((m,i)=>"PCG_META_" + String(i).padStart(2,'0'));
+        // 8 ptrs per line
+        for (let i=0;i<ptrs.length;i+=8){
+          out.push("    dw " + ptrs.slice(i,i+8).join(","));
+        }
+      }
+      out.push("");
+
+      metaTiles.forEach((m, i) => {
+        const label = "PCG_META_" + String(i).padStart(2,'0');
+        const name = (m && m.name) ? m.name : ('meta'+i);
+        const w = (m && m.w) ? m.w|0 : 2;
+        const h = (m && m.h) ? m.h|0 : 2;
+        const tiles = (m && Array.isArray(m.tiles)) ? m.tiles : [];
+
+        out.push(label + ":");
+        out.push("; name: " + name + " (" + w + "x" + h + ")");
+        // Header: width,height
+        out.push("    db $" + hex2(w & 0xFF) + ",$" + hex2(h & 0xFF));
+        // Data: tile codes (no wrapping per user's request)
+        if (tiles.length){
+          const line = tiles.map(v=>"$" + hex2(v & 0xFF)).join(",");
+          out.push("    db " + line);
+        } else {
+          out.push("    db 0");
+        }
+        out.push("");
+      });
+
+      return out.join("\n");
+    }
+
+    function buildMetaBasicExport(){
+      let L = 10;
+      const step = 10;
+      const out = [];
+      const emit = (s) => { out.push(L + " " + s); L += step; };
+
+      emit("' ================================================");
+      emit("'  PCG Editor MetaTile Export  " + new Date().toISOString());
+      emit("'  count=" + metaTiles.length);
+      emit("'  Each entry: w,h, then w*h tile codes (0-255)");
+      emit("' ================================================");
+      emit("");
+
+      // DATA region start
+      let DL = 1000;
+      const dstep = 10;
+
+      out.push((DL-10) + " ' ----- META COUNT -----");
+      out.push(DL + " DATA " + metaTiles.length);
+      DL += dstep;
+
+      function pushNums(nums, itemsPerLine=32){
+        for (let i=0;i<nums.length;i+=itemsPerLine){
+          const chunk = nums.slice(i, i+itemsPerLine).map(v => (v|0) & 0xFF).join(',');
+          out.push(DL + " DATA " + chunk);
+          DL += dstep;
+        }
+      }
+
+      metaTiles.forEach((m,i) => {
+        const name = (m && m.name) ? m.name : ('meta'+i);
+        const w = (m && m.w) ? m.w|0 : 2;
+        const h = (m && m.h) ? m.h|0 : 2;
+        const tiles = (m && Array.isArray(m.tiles)) ? m.tiles : [];
+        out.push((DL) + " ' META" + i + ": " + name + " (" + w + "x" + h + ")");
+        DL += dstep;
+        pushNums([w,h, ...tiles.map(v=>v&0xFF)], 32);
+      });
+
+      out.push("");
+      return out.join("\r\n");
+    }
+
+    // ===== MetaTile Binary Import/Export (.mtl) =====
+    // File format (little-endian):
+    //  0..3  'MTIL'
+    //  4     version (1)
+    //  5     flags (bit0:hasName, bit1:hasId)  -> we write 0x03
+    //  6..7  count (u16)
+    //  Then for each entry:
+    //   w(u8), h(u8), nTiles(u16), tiles[nTiles](u8)
+    //   nameLen(u8), name[nameLen](utf8)   (if flags&1)
+    //   idLen(u8),   id[idLen](utf8)       (if flags&2)
+
+    function buildMetaBinFile(){
+      const enc = new TextEncoder();
+      const parts = [];
+      let total = 0;
+
+      // header
+      const header = new Uint8Array(8);
+      header[0]=0x4D; header[1]=0x54; header[2]=0x49; header[3]=0x4C; // 'MTIL'
+      header[4]=1; // version
+      header[5]=0x03; // flags: name+id
+      header[6]=metaTiles.length & 0xFF;
+      header[7]=(metaTiles.length >> 8) & 0xFF;
+      parts.push(header); total += header.length;
+
+      metaTiles.forEach((m, i) => {
+        const w = (m?.w|0) || 2;
+        const h = (m?.h|0) || 2;
+        const tiles = Array.isArray(m?.tiles) ? m.tiles : [];
+        const nTiles = (w*h) | 0;
+        // normalize tiles length
+        const tileBytes = new Uint8Array(nTiles);
+        for (let k=0;k<nTiles;k++) tileBytes[k] = (tiles[k] ?? 0) & 0xFF;
+
+        const name = String(m?.name ?? ('meta'+i));
+        const id   = String(m?.id ?? metaNewId());
+        const nameB = enc.encode(name);
+        const idB   = enc.encode(id);
+        if (nameB.length > 255) throw new Error('Meta name too long (>255 bytes utf8)');
+        if (idB.length > 255) throw new Error('Meta id too long (>255 bytes utf8)');
+
+        const recHead = new Uint8Array(4);
+        recHead[0]=w & 0xFF;
+        recHead[1]=h & 0xFF;
+        recHead[2]=nTiles & 0xFF;
+        recHead[3]=(nTiles >> 8) & 0xFF;
+
+        const nameLen = new Uint8Array([nameB.length & 0xFF]);
+        const idLen   = new Uint8Array([idB.length & 0xFF]);
+
+        parts.push(recHead, tileBytes, nameLen, nameB, idLen, idB);
+        total += recHead.length + tileBytes.length + nameLen.length + nameB.length + idLen.length + idB.length;
+      });
+
+      const out = new Uint8Array(total);
+      let o = 0;
+      for (const p of parts){ out.set(p, o); o += p.length; }
+      return out;
+    }
+
+    function tryParseMetaBinFile(bytes){
+      try{
+        if (!bytes || bytes.length < 8) return {ok:false, reason:'too small'};
+        if (bytes[0]!==0x4D || bytes[1]!==0x54 || bytes[2]!==0x49 || bytes[3]!==0x4C) return {ok:false, reason:'bad signature (not MTIL)'};
+        const ver = bytes[4];
+        const flags = bytes[5];
+        if (ver !== 1) return {ok:false, reason:'unsupported version '+ver};
+        const hasName = (flags & 0x01) !== 0;
+        const hasId   = (flags & 0x02) !== 0;
+        const count = bytes[6] | (bytes[7]<<8);
+
+        const dec = new TextDecoder();
+        let o = 8;
+        const imported = [];
+        for (let i=0;i<count;i++){
+          if (o + 4 > bytes.length) return {ok:false, reason:'truncated at entry '+i};
+          const w = bytes[o++];
+          const h = bytes[o++];
+          const nTiles = bytes[o++] | (bytes[o++]<<8);
+          if (nTiles !== (w*h)){
+            // allow mismatch but must have enough data
+            if (nTiles <= 0 || nTiles > 4096) return {ok:false, reason:`invalid tile count at entry ${i}`};
+          }
+          if (o + nTiles > bytes.length) return {ok:false, reason:'truncated tiles at entry '+i};
+          const tiles = Array.from(bytes.subarray(o, o+nTiles)).map(v=>v & 0xFF);
+          o += nTiles;
+
+          let name = 'meta'+i;
+          let id = metaNewId();
+
+          if (hasName){
+            if (o + 1 > bytes.length) return {ok:false, reason:'truncated nameLen at entry '+i};
+            const nl = bytes[o++];
+            if (o + nl > bytes.length) return {ok:false, reason:'truncated name bytes at entry '+i};
+            name = dec.decode(bytes.subarray(o, o+nl));
+            o += nl;
+          }
+          if (hasId){
+            if (o + 1 > bytes.length) return {ok:false, reason:'truncated idLen at entry '+i};
+            const il = bytes[o++];
+            if (o + il > bytes.length) return {ok:false, reason:'truncated id bytes at entry '+i};
+            id = dec.decode(bytes.subarray(o, o+il));
+            o += il;
+          }
+
+          // de-dup id if conflicts
+          if (metaGetById(id)) id = metaNewId();
+          imported.push({ id, name, w, h, tiles });
+        }
+
+        // Apply
+        metaTiles = imported;
+        metaActiveId = null;
+
+        metaRefreshSelect();
+        metaDropdownRebuild();
+
+        if (metaSel){
+          metaSel.value = (metaTiles[0]?.id) ? metaTiles[0].id : '';
+        }
+        metaUpdatePreview();
+        metaDropdownSyncFromSelect();
+        metaUpdateStampUi();
+        scheduleMapRedraw();
+
+        return {ok:true, reason:'ok'};
+      }catch(e){
+        console.error(e);
+        return {ok:false, reason:String(e?.message || e)};
+      }
+    }
+
     const expBasicBtn = document.getElementById('expBasic');
     const expAsmBtn   = document.getElementById('expAsm');
     if (expBasicBtn) expBasicBtn.addEventListener('click', ()=> downloadText('pcg_export_basic.bas', buildBasicExport(), true));
     if (expAsmBtn)   expAsmBtn.addEventListener('click', ()=> downloadText('pcg_export_asm.asm', buildAsmExport()));
+    const expMetaAsmBtn = document.getElementById('expMetaAsm');
+    const expMetaBasicBtn = document.getElementById('expMetaBasic');
+    if (expMetaAsmBtn)   expMetaAsmBtn.addEventListener('click', ()=> downloadText('pcg_export_metatile.asm', buildMetaAsmExport()));
+    if (expMetaBasicBtn) expMetaBasicBtn.addEventListener('click', ()=> downloadText('pcg_export_metatile.bas', buildMetaBasicExport(), true));
   
   
   // ===== Init =====
